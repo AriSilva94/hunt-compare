@@ -28,8 +28,8 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const [datasets, setDatasets] = useState<{
     [id: string]: { name: string; data: string };
   }>({
-    "1": { name: "Dataset 1", data: "" },
-    "2": { name: "Dataset 2", data: "" },
+    "1": { name: "Hunt 1", data: "" },
+    "2": { name: "Hunt 2", data: "" },
   });
 
   const addDataset = () => {
