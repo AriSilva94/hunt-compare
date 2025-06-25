@@ -1,11 +1,17 @@
-import { ChartColumnStacked } from "lucide-react";
+import Image from "next/image";
 
 export default function Header() {
   return (
     <div className="text-center space-y-4">
       <div className="flex items-center justify-center gap-3">
         <div className="p-3 bg-primary/10 rounded-full">
-          <ChartColumnStacked className="h-8 w-8 text-primary" />
+          <Image
+            src="/favicon.jpg"
+            alt="Hunt Compare Logo"
+            width={52}
+            height={52}
+            className="rounded"
+          />
         </div>
         <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text">
           JSON Hunt Compare
