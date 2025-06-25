@@ -6,7 +6,7 @@ export default function Header() {
       <div className="flex items-center justify-center gap-3">
         <div className="p-3 bg-primary/10 rounded-full">
           <Image
-            src="/favicon.jpg"
+            src="/favicon.png"
             alt="Hunt Compare Logo"
             width={52}
             height={52}
