@@ -101,10 +101,11 @@ const JsonTextarea: React.FC<JsonTextareaProps> = ({
       </CardHeader>
       <CardContent>
         <Textarea
+          id={id}
           value={value}
           onChange={(e) => onChange(id, e.target.value)}
           placeholder={placeholder}
-          className="min-h-[200px] font-mono text-sm"
+          className="min-h-[200px] font-mono text-sm border-gray-300"
         />
       </CardContent>
     </Card>

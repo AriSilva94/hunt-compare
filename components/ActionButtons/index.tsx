@@ -13,7 +13,7 @@ export default function ActionButtons() {
     ).toString();
     setDatasets((prev) => ({
       ...prev,
-      [newId]: { name: `Dataset ${newId}`, data: "" },
+      [newId]: { name: `Hunt ${newId}`, data: "" },
     }));
   };
 
@@ -21,7 +21,7 @@ export default function ActionButtons() {
     <div className="flex flex-wrap gap-4 justify-center">
       <Button onClick={addDataset} className="gap-2">
         <Plus className="h-4 w-4" />
-        Add Dataset
+        Add Hunt
       </Button>
     </div>
   );
