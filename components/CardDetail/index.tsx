@@ -33,7 +33,7 @@ export default function CardDetail() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <FileJson className="h-5 w-5" />
-            Dataset Input
+            Paste Hunt Analyser
           </CardTitle>
         </CardHeader>
         <CardContent>

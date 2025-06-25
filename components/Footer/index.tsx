@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function Footer() {
   return (
-    <Card className="bg-muted/30">
+    <Card className="bg-gray-300/30">
       <CardHeader>
         <CardTitle className="text-lg">How to Use</CardTitle>
       </CardHeader>
