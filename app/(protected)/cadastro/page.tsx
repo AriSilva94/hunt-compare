@@ -421,7 +421,7 @@ Looted Items:
             >
               Tornar este registro público
             </label>
-            <span className="ml-2 text-xs text-gray-500">
+            <span className="ml-2 text-xs text-gray-500 text-end">
               (Qualquer pessoa poderá visualizar este registro)
             </span>
           </div>
