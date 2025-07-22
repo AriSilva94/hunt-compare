@@ -19,20 +19,21 @@ export const metadata: Metadata = {
     "análise de hunt",
   ],
   authors: [{ name: "Ari Silva" }],
-  creator: "Ariovaldo Silva",
-  metadataBase: new URL("https://huntcompare.com"),
+  creator: "Ari Silva",
+  metadataBase: new URL("https://www.hunt-compare.com"),
   openGraph: {
     title: "Hunt Compare",
     description:
       "Gerencie seus dados JSON de forma simples, segura e organizada. Crie registros privados ou públicos e compartilhe com facilidade.",
-    url: "https://huntcompare.com",
+    url: "https://www.hunt-compare.com",
     siteName: "Hunt Compare",
     images: [
       {
-        url: "/social.png",
+        url: "https://www.hunt-compare.com/social.png",
         width: 1200,
         height: 630,
-        alt: "Hunt Compare Preview Image",
+        alt: "Hunt Compare - Sistema de Gerenciamento de Sessões",
+        type: "image/png",
       },
     ],
     locale: "pt_BR",
@@ -43,8 +44,11 @@ export const metadata: Metadata = {
     title: "Hunt Compare",
     description:
       "Gerencie seus dados JSON de forma simples, segura e organizada.",
-    images: ["/social.png"],
+    images: ["https://www.hunt-compare.com/social.png"],
     creator: "@seu_twitter",
+  },
+  other: {
+    "og:image:secure_url": "https://www.hunt-compare.com/social.png",
   },
 };
 
@@ -55,6 +59,19 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
+      <head>
+        <meta
+          property="og:image"
+          content="https://www.hunt-compare.com/social.png"
+        />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:type" content="image/png" />
+        <meta
+          name="twitter:image"
+          content="https://www.hunt-compare.com/social.png"
+        />
+      </head>
       <body className={inter.className}>
         <AuthProvider>
           <Header />
