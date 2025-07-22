@@ -181,8 +181,7 @@ export function JsonViewer({ data, title }: JsonViewerProps) {
             <div>
               <p className="text-sm text-gray-600">Lucro Líquido</p>
               <p className="text-xl font-bold text-green-600">
-                {parseInt(data["Loot"].replace(/,/g, "")) -
-                  parseInt(data["Supplies"].replace(/,/g, ""))}
+                {parseInt(data["Loot"]) - parseInt(data["Supplies"])}
               </p>
             </div>
           </div>
