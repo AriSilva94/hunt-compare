@@ -99,7 +99,7 @@ export function JsonViewer({ data, title }: JsonViewerProps) {
                     <div className="flex items-center justify-start gap-2">
                       <Image
                         unoptimized
-                        src={`/imagensTibia/${monster.Name.toLowerCase().replace(
+                        src={`https://pdscifxfuisrczpvofat.supabase.co/storage/v1/object/public/imagens-tibia/${monster.Name.toLowerCase().replace(
                           /\s+/g,
                           "_"
                         )}.gif`}
