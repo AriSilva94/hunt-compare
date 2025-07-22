@@ -18,7 +18,7 @@ export class AuthService {
     const { data, error } = await this.supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `https://pdscifxfuisrczpvofat.supabase.co/auth/v1/callback`,
       },
     });
 
