@@ -80,14 +80,16 @@ export function JsonViewer({ data, title }: JsonViewerProps) {
               </p>
             </div>
             <div>
+              <p className="text-sm text-gray-600">Loot</p>
+              <p className="text-xl font-bold text-yellow-400">
+                {data["Loot"]}
+              </p>
+            </div>
+            <div>
               <p className="text-sm text-gray-600">Balanço</p>
               <p className="text-xl font-bold text-green-600">
                 {data["Balance"]}
               </p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">Loot</p>
-              <p className="text-xl font-bold text-green-800">{data["Loot"]}</p>
             </div>
           </div>
         </Card>
