@@ -87,7 +87,7 @@ export function JsonViewer({ data, title }: JsonViewerProps) {
             <h3 className="text-lg font-semibold mb-3">
               👾 Monstros Eliminados
             </h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {data["Killed Monsters"].map((monster: any, index: number) => (
                 <div
                   key={index}
@@ -179,7 +179,7 @@ export function JsonViewer({ data, title }: JsonViewerProps) {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex flex-wrap justify-center md:justify-between items-center mb-4 gap-4 md:gap-0">
         <h2 className="text-xl font-semibold">{title || "Dados JSON"}</h2>
         <div className="flex gap-2">
           <button

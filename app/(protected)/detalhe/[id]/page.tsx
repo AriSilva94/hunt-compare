@@ -104,14 +104,14 @@ export default function DetalhePage({ params }: PageProps) {
               </p>
             )}
           </div>
-          <div className="flex gap-2">
-            <Button variant="danger" onClick={handleDelete} size="sm">
-              Excluir
-            </Button>
-            <Link href="/home">
-              <Button variant="secondary">Voltar</Button>
-            </Link>
-          </div>
+        </div>
+        <div className="flex gap-2 align-center justify-center md:justify-end my-4 md:my-0">
+          <Button variant="danger" onClick={handleDelete} size="sm">
+            Excluir
+          </Button>
+          <Link href="/home">
+            <Button variant="secondary">Voltar</Button>
+          </Link>
         </div>
       </div>
 
@@ -158,7 +158,7 @@ export default function DetalhePage({ params }: PageProps) {
               <h3 className="font-medium text-gray-700 mb-2">
                 🔗 Link Público
               </h3>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center justify-center gap-2">
                 <input
                   type="text"
                   readOnly
