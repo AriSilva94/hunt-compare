@@ -73,7 +73,7 @@ export function JsonViewer({ data, title }: JsonViewerProps) {
               </p>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Balanço</p>
+              <p className="text-sm text-gray-600">Balance</p>
               <p className="text-xl font-bold text-green-600">
                 {data["Balance"]}
               </p>

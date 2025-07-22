@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -88,7 +89,7 @@ export function AuthForm({ mode }: AuthFormProps) {
         </div>
       )}
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      {/* <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <Input
           {...register("email")}
           type="email"
@@ -122,7 +123,7 @@ export function AuthForm({ mode }: AuthFormProps) {
             ? "Entrar"
             : "Cadastrar"}
         </Button>
-      </form>
+      </form> */}
 
       {mode === "login" && (
         <>
@@ -146,7 +147,7 @@ export function AuthForm({ mode }: AuthFormProps) {
         </>
       )}
 
-      <div className="mt-6 text-center">
+      {/* <div className="mt-6 text-center">
         <p className="text-sm text-gray-600">
           {mode === "login" ? "Não tem uma conta?" : "Já tem uma conta?"}{" "}
           <a
@@ -156,7 +157,7 @@ export function AuthForm({ mode }: AuthFormProps) {
             {mode === "login" ? "Cadastre-se" : "Faça login"}
           </a>
         </p>
-      </div>
+      </div> */}
     </Card>
   );
 }
