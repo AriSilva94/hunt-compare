@@ -1,11 +1,19 @@
-import { type NextRequest } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
 
 export async function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+
+  // IMPORTANTE: Pula completamente o middleware para rotas de autenticação
+  if (pathname.startsWith("/auth/")) {
+    console.log("Pulando middleware para rota de auth:", pathname);
+    return NextResponse.next();
+  }
+
+  // Agora processa a sessão
   const { supabaseResponse, user } = await updateSession(request);
 
   const url = request.nextUrl.clone();
-  const pathname = url.pathname;
 
   // Rotas públicas que NÃO precisam de autenticação
   const publicRoutes = ["/", "/login", "/signup", "/registros-publicos"];
@@ -20,6 +28,9 @@ export async function middleware(request: NextRequest) {
   if (isPublicRoute) {
     // Exceção: redireciona usuários logados tentando acessar login
     if (pathname === "/login" && user) {
+      console.log(
+        "Usuário logado tentando acessar login, redirecionando para /home"
+      );
       url.pathname = "/home";
       return Response.redirect(url);
     }
@@ -28,6 +39,7 @@ export async function middleware(request: NextRequest) {
 
   // Todas as outras rotas precisam de autenticação
   if (!user) {
+    console.log("Rota protegida sem usuário:", pathname);
     url.pathname = "/login";
     return Response.redirect(url);
   }

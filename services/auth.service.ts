@@ -15,11 +15,10 @@ export class AuthService {
   }
 
   async signInWithGoogle() {
-    const redirectUrl = process.env.NEXT_PUBLIC_SUPABASE_REDIRECT_URL;
     const { data, error } = await this.supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${redirectUrl}/auth/v1/callback`,
+        redirectTo: `${window.location.origin}/auth/callback`,
       },
     });
 
