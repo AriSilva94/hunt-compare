@@ -51,7 +51,7 @@ export function JsonViewer({ data, title }: JsonViewerProps) {
           <h3 className="text-lg font-semibold mb-3">
             ⚔️ Estatísticas de Combate
           </h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
             <div>
               <p className="text-sm text-gray-600">Dano Total</p>
               <p className="text-xl font-bold text-orange-600">
@@ -67,18 +67,17 @@ export function JsonViewer({ data, title }: JsonViewerProps) {
               <p className="text-xs text-gray-500">({data["Healing/h"]}/h)</p>
             </div>
             <div>
-              <p className="text-sm text-gray-600">XP Ganho</p>
+              <p className="text-sm text-gray-600">Raw XP Ganho</p>
               <p className="text-xl font-bold text-purple-600">
-                {data["XP Gain"]}
+                {data["Raw XP Gain"]}
               </p>
-              <p className="text-xs text-gray-500">({data["XP/h"]}/h)</p>
+              <p className="text-xs text-gray-500">({data["Raw XP/h"]}/h)</p>
             </div>
             <div>
               <p className="text-sm text-gray-600">Suprimentos Gastos</p>
               <p className="text-xl font-bold text-red-600">
                 {data["Supplies"]}
               </p>
-              <p className="text-xs text-gray-500">Loot: {data["Loot"]}</p>
             </div>
             <div>
               <p className="text-sm text-gray-600">Balanço</p>
