@@ -5,28 +5,30 @@ export async function middleware(request: NextRequest) {
   const { supabaseResponse, user } = await updateSession(request);
 
   const url = request.nextUrl.clone();
+  const pathname = url.pathname;
 
-  // Lista de rotas que requerem autenticação
-  const protectedRoutes = [
-    "/home",
-    "/cadastro",
-    "/detalhe", // Nota: /detalhe/[id] requer auth, mas /detalhe-publico/[id] não
-  ];
+  // Rotas públicas que NÃO precisam de autenticação
+  const publicRoutes = ["/", "/login", "/signup", "/registros-publicos"];
 
-  // Verifica se a rota atual é protegida
-  const isProtectedRoute = protectedRoutes.some((route) =>
-    url.pathname.startsWith(route)
-  );
+  // Verifica se é uma rota pública específica
+  const isPublicRoute =
+    publicRoutes.includes(pathname) ||
+    pathname.startsWith("/detalhe-publico/") ||
+    pathname === "/detalhe-publico";
 
-  // Se é uma rota protegida e o usuário não está autenticado
-  if (isProtectedRoute && !user) {
-    url.pathname = "/login";
-    return Response.redirect(url);
+  // Se é rota pública, permite acesso
+  if (isPublicRoute) {
+    // Exceção: redireciona usuários logados tentando acessar login
+    if (pathname === "/login" && user) {
+      url.pathname = "/home";
+      return Response.redirect(url);
+    }
+    return supabaseResponse;
   }
 
-  // Se está na página de login e já está autenticado
-  if (url.pathname === "/login" && user) {
-    url.pathname = "/home";
+  // Todas as outras rotas precisam de autenticação
+  if (!user) {
+    url.pathname = "/login";
     return Response.redirect(url);
   }
 
@@ -35,13 +37,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
-     */
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
