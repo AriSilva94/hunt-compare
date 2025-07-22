@@ -250,7 +250,7 @@ export default function CadastroPage() {
             <div>
               <h4 className="font-medium text-gray-700">Estatísticas</h4>
               <p className="text-sm text-gray-600">
-                XP Ganho: {jsonPreview["XP Gain"]}
+                Raw XP: {jsonPreview["Raw XP Gain"]}
               </p>
               <p className="text-sm text-gray-600">
                 Dano Total: {jsonPreview["Damage"]}

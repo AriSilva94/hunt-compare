@@ -67,7 +67,7 @@ export function JsonViewer({ data, title }: JsonViewerProps) {
               <p className="text-xs text-gray-500">({data["Healing/h"]}/h)</p>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Raw XP Ganho</p>
+              <p className="text-sm text-gray-600">Raw XP</p>
               <p className="text-xl font-bold text-purple-600">
                 {data["Raw XP Gain"]}
               </p>
@@ -84,7 +84,10 @@ export function JsonViewer({ data, title }: JsonViewerProps) {
               <p className="text-xl font-bold text-green-600">
                 {data["Balance"]}
               </p>
-              <p className="text-xs text-gray-500">Loot: {data["Loot"]}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">Loot</p>
+              <p className="text-xl font-bold text-green-800">{data["Loot"]}</p>
             </div>
           </div>
         </Card>
