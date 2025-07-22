@@ -54,14 +54,14 @@ export function JsonViewer({ data, title }: JsonViewerProps) {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
               <p className="text-sm text-gray-600">Dano Total</p>
-              <p className="text-xl font-bold text-blue-600">
+              <p className="text-xl font-bold text-orange-600">
                 {data["Damage"]}
               </p>
               <p className="text-xs text-gray-500">({data["Damage/h"]}/h)</p>
             </div>
             <div>
               <p className="text-sm text-gray-600">Cura Total</p>
-              <p className="text-xl font-bold text-green-600">
+              <p className="text-xl font-bold text-blue-600">
                 {data["Healing"]}
               </p>
               <p className="text-xs text-gray-500">({data["Healing/h"]}/h)</p>
@@ -75,7 +75,7 @@ export function JsonViewer({ data, title }: JsonViewerProps) {
             </div>
             <div>
               <p className="text-sm text-gray-600">Balanço</p>
-              <p className="text-xl font-bold text-amber-600">
+              <p className="text-xl font-bold text-green-600">
                 {data["Balance"]}
               </p>
               <p className="text-xs text-gray-500">Loot: {data["Loot"]}</p>
@@ -167,25 +167,6 @@ export function JsonViewer({ data, title }: JsonViewerProps) {
             </div>
           </Card>
         )}
-
-        {/* Gastos */}
-        <Card className="bg-orange-50">
-          <h3 className="text-lg font-semibold mb-3">💰 Economia</h3>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm text-gray-600">Suprimentos Gastos</p>
-              <p className="text-xl font-bold text-orange-600">
-                {data["Supplies"]}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">Lucro Líquido</p>
-              <p className="text-xl font-bold text-green-600">
-                {data["Balance"]}
-              </p>
-            </div>
-          </div>
-        </Card>
       </div>
     );
   };
