@@ -10,15 +10,97 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 
+// Parser para converter texto em JSON
+function parseSessionText(text: string): any {
+  const lines = text
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line);
+  const result: any = {};
+
+  let currentSection = "";
+
+  for (const line of lines) {
+    // Session data
+    if (line.startsWith("Session data:")) {
+      const match = line.match(/From (.*) to (.*)/);
+      if (match) {
+        result["Session start"] = match[1].trim();
+        result["Session end"] = match[2].trim();
+      }
+    }
+    // Session duration
+    else if (line.startsWith("Session:")) {
+      result["Session length"] = line.replace("Session:", "").trim();
+    }
+    // Simple key-value pairs
+    else if (line.includes(":") && !line.endsWith(":")) {
+      const [key, value] = line.split(":").map((s) => s.trim());
+      result[key] = value;
+    }
+    // Section headers
+    else if (line.endsWith(":")) {
+      currentSection = line.replace(":", "");
+      if (currentSection === "Killed Monsters") {
+        result["Killed Monsters"] = [];
+      } else if (currentSection === "Looted Items") {
+        result["Looted Items"] = [];
+      }
+    }
+    // Items in sections
+    else if (currentSection && line.match(/^\d+x\s+/)) {
+      const match = line.match(/^(\d+)x\s+(.+)$/);
+      if (match) {
+        const count = parseInt(match[1]);
+        const name = match[2].trim();
+
+        if (currentSection === "Killed Monsters") {
+          result["Killed Monsters"].push({ Count: count, Name: name });
+        } else if (currentSection === "Looted Items") {
+          result["Looted Items"].push({ Count: count, Name: name });
+        }
+      }
+    }
+  }
+
+  return result;
+}
+
+// Função para detectar se é JSON ou texto
+function detectFormat(input: string): "json" | "text" | "invalid" {
+  const trimmed = input.trim();
+
+  // Tenta detectar JSON
+  if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
+    try {
+      JSON.parse(trimmed);
+      return "json";
+    } catch (error) {
+      console.error("Erro ao parsear JSON:", error);
+      return "invalid";
+    }
+  }
+
+  // Verifica se parece com o formato de texto
+  if (trimmed.includes("Session data:") || trimmed.includes("Session:")) {
+    return "text";
+  }
+
+  // Tenta parse como JSON mesmo assim
+  try {
+    JSON.parse(trimmed);
+    return "json";
+  } catch (error) {
+    console.error("Erro ao parsear JSON:", error);
+    return "invalid";
+  }
+}
+
 const recordSchema = z.object({
   jsonData: z.string().refine((val) => {
-    try {
-      JSON.parse(val);
-      return true;
-    } catch {
-      return false;
-    }
-  }, "JSON inválido"),
+    const format = detectFormat(val);
+    return format !== "invalid";
+  }, "Formato inválido. Use JSON ou o formato de texto de sessão."),
   isPublic: z.boolean(),
   title: z.string().optional(),
   description: z.string().optional(),
@@ -31,6 +113,7 @@ export default function CadastroPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [jsonPreview, setJsonPreview] = useState<any>(null);
+  const [inputFormat, setInputFormat] = useState<"json" | "text" | null>(null);
 
   const {
     register,
@@ -41,7 +124,7 @@ export default function CadastroPage() {
   } = useForm<RecordFormData>({
     resolver: zodResolver(recordSchema),
     defaultValues: {
-      jsonData: "{}",
+      jsonData: "",
       isPublic: false,
       title: "",
       description: "",
@@ -51,11 +134,23 @@ export default function CadastroPage() {
   const watchJsonData = watch("jsonData");
 
   // Atualiza preview do JSON
-  const updateJsonPreview = (jsonString: string) => {
+  const updatePreview = (input: string) => {
+    const format = detectFormat(input);
+    setInputFormat(format === "invalid" ? null : format);
+
     try {
-      const parsed = JSON.parse(jsonString);
+      let parsed;
+      if (format === "json") {
+        parsed = JSON.parse(input);
+      } else if (format === "text") {
+        parsed = parseSessionText(input);
+      } else {
+        setJsonPreview(null);
+        return;
+      }
       setJsonPreview(parsed);
-    } catch {
+    } catch (error) {
+      console.error("Erro ao parsear dados:", error);
       setJsonPreview(null);
     }
   };
@@ -65,8 +160,18 @@ export default function CadastroPage() {
     setError(null);
 
     try {
-      // Parse e enriqueça o JSON com metadados
-      const parsedData = JSON.parse(data.jsonData);
+      let parsedData;
+      const format = detectFormat(data.jsonData);
+
+      if (format === "json") {
+        parsedData = JSON.parse(data.jsonData);
+      } else if (format === "text") {
+        parsedData = parseSessionText(data.jsonData);
+      } else {
+        throw new Error("Formato inválido");
+      }
+
+      // Enriqueça com metadados
       const enrichedData = {
         ...parsedData,
         _metadata: {
@@ -78,6 +183,7 @@ export default function CadastroPage() {
           description: data.description || "",
           createdAt: new Date().toISOString(),
           type: detectDataType(parsedData),
+          originalFormat: format,
         },
       };
 
@@ -90,7 +196,6 @@ export default function CadastroPage() {
           data: enrichedData,
           is_public: data.isPublic,
         }),
-        credentials: "include",
       });
 
       if (!response.ok) {
@@ -105,13 +210,15 @@ export default function CadastroPage() {
     }
   };
 
-  const formatJSON = () => {
+  const formatInput = () => {
     try {
-      const currentValue = watch("jsonData");
-      const formatted = JSON.stringify(JSON.parse(currentValue), null, 2);
-      setValue("jsonData", formatted);
-      updateJsonPreview(formatted);
-    } catch {
+      if (inputFormat === "json") {
+        const formatted = JSON.stringify(JSON.parse(watchJsonData), null, 2);
+        setValue("jsonData", formatted);
+      }
+      // Para texto, não formatamos
+    } catch (error) {
+      console.error("Erro ao formatar entrada:", error);
       // Ignora erros de formatação
     }
   };
@@ -123,10 +230,10 @@ export default function CadastroPage() {
     return "generic";
   };
 
-  const renderJsonPreview = () => {
+  const renderPreview = () => {
     if (!jsonPreview) return null;
 
-    // Renderização especial para dados de sessão de jogo
+    // Renderização especial para dados de sessão
     if (jsonPreview["Session start"]) {
       return (
         <div className="space-y-4">
@@ -181,7 +288,7 @@ export default function CadastroPage() {
       );
     }
 
-    // Renderização padrão para outros tipos
+    // Renderização padrão
     return (
       <div className="text-sm text-gray-600">
         <p>Chaves encontradas: {Object.keys(jsonPreview).length}</p>
@@ -189,12 +296,32 @@ export default function CadastroPage() {
     );
   };
 
+  // Exemplo de texto formatado
+  const textExample = `Session data: From 2025-04-27, 20:32:56 to 2025-04-27, 21:27:29
+Session: 00:54h
+XP Gain: 5,079,482
+Damage: 5,321,554
+Killed Monsters:
+  178x betrayed wraith
+  267x dark torturer
+Looted Items:
+  1x a magma coat
+  26x a black pearl`;
+
+  // Exemplo de JSON
+  const jsonExample = `{
+  "Session start": "2025-06-19, 02:56:37",
+  "Session end": "2025-06-19, 03:57:06",
+  "XP Gain": "5,369,570",
+  "Damage": "5,846,810"
+}`;
+
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900">Novo Registro</h1>
         <p className="mt-2 text-lg text-gray-600">
-          Crie um novo registro com dados JSON personalizados
+          Crie um novo registro usando JSON ou formato de texto
         </p>
       </div>
 
@@ -210,7 +337,7 @@ export default function CadastroPage() {
             <Input
               {...register("title")}
               label="Título (opcional)"
-              placeholder="Ex: Sessão de Farm - Junho 2025"
+              placeholder="Ex: Sessão de Farm - Abril 2025"
             />
 
             <Input
@@ -221,19 +348,32 @@ export default function CadastroPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Dados JSON
-            </label>
+            <div className="flex justify-between items-center mb-1">
+              <label className="block text-sm font-medium text-gray-700">
+                Dados (JSON ou Texto)
+              </label>
+              {inputFormat && (
+                <span
+                  className={`text-xs px-2 py-1 rounded ${
+                    inputFormat === "json"
+                      ? "bg-blue-100 text-blue-800"
+                      : "bg-green-100 text-green-800"
+                  }`}
+                >
+                  Formato: {inputFormat.toUpperCase()}
+                </span>
+              )}
+            </div>
             <textarea
               {...register("jsonData")}
               rows={12}
               className={`w-full px-3 py-2 border rounded-lg font-mono text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                 errors.jsonData ? "border-red-500" : "border-gray-300"
               }`}
-              placeholder={'{\n  "chave": "valor"\n}'}
+              placeholder="Cole seu JSON ou texto de sessão aqui..."
               onChange={(e) => {
                 register("jsonData").onChange(e);
-                updateJsonPreview(e.target.value);
+                updatePreview(e.target.value);
               }}
             />
             {errors.jsonData && (
@@ -242,16 +382,19 @@ export default function CadastroPage() {
               </p>
             )}
             <div className="mt-2 flex justify-between">
-              <button
-                type="button"
-                onClick={formatJSON}
-                className="text-sm text-blue-600 hover:underline"
-              >
-                Formatar JSON
-              </button>
+              <div className="flex gap-2">
+                {inputFormat === "json" && (
+                  <button
+                    type="button"
+                    onClick={formatInput}
+                    className="text-sm text-blue-600 hover:underline"
+                  >
+                    Formatar JSON
+                  </button>
+                )}
+              </div>
               <span className="text-sm text-gray-500">
-                Cole seu JSON de sessão de jogo, relatório financeiro ou
-                qualquer estrutura de dados
+                Aceita JSON ou formato de texto de sessão
               </span>
             </div>
           </div>
@@ -261,7 +404,7 @@ export default function CadastroPage() {
               <h3 className="text-lg font-medium text-gray-900 mb-3">
                 Preview dos Dados
               </h3>
-              {renderJsonPreview()}
+              {renderPreview()}
             </Card>
           )}
 
@@ -298,20 +441,23 @@ export default function CadastroPage() {
         </form>
       </Card>
 
-      <div className="mt-8">
+      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card className="bg-blue-50 border-blue-200">
           <h3 className="text-lg font-semibold text-blue-900 mb-2">
-            Exemplos de JSONs Suportados
+            Exemplo: Formato JSON
           </h3>
-          <div className="text-sm text-blue-800 space-y-2">
-            <p>
-              • Sessões de jogos com estatísticas, monstros eliminados e itens
-              coletados
-            </p>
-            <p>• Relatórios financeiros com transações e balanços</p>
-            <p>• Inventários de itens com quantidades e valores</p>
-            <p>• Qualquer estrutura JSON válida personalizada</p>
-          </div>
+          <pre className="text-xs text-blue-800 overflow-x-auto">
+            {jsonExample}
+          </pre>
+        </Card>
+
+        <Card className="bg-green-50 border-green-200">
+          <h3 className="text-lg font-semibold text-green-900 mb-2">
+            Exemplo: Formato Texto
+          </h3>
+          <pre className="text-xs text-green-800 overflow-x-auto">
+            {textExample}
+          </pre>
         </Card>
       </div>
     </div>

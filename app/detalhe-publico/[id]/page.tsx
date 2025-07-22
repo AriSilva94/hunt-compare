@@ -3,12 +3,14 @@ import { recordsService } from "@/services/records.service";
 import { Card } from "@/components/ui/Card";
 import { JsonViewer } from "@/components/ui/JsonViewer";
 
-export default async function DetalhePublicoPage({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const record = await recordsService.getPublicRecord(params.id);
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
+
+export default async function DetalhePublicoPage({ params }: PageProps) {
+  // Await params antes de usar
+  const resolvedParams = await params;
+  const record = await recordsService.getPublicRecord(resolvedParams.id);
 
   if (!record) return notFound();
 
