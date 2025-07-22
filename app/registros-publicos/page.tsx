@@ -49,7 +49,7 @@ function getRecordPreview(data: any) {
       description:
         data._metadata?.description || `${data["Session length"]} de jogo`,
       highlights: [
-        { label: "XP Ganho", value: data["XP Gain"], icon: "⭐" },
+        { label: "Raw XP", value: data["Raw XP Gain"], icon: "⭐" },
         {
           label: "Monstros",
           value: totalMonsters.toLocaleString(),
