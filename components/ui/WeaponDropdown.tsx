@@ -63,6 +63,7 @@ export default function WeaponDropdown({
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between bg-white border border-gray-300 rounded-lg px-4 py-2 shadow hover:border-gray-400"
+        disabled={defaultSelectedId !== undefined}
       >
         <div className="flex items-center gap-3">
           {selected ? (
