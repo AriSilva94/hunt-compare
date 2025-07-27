@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,6 +9,10 @@ import { z } from "zod";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import WeaponDropdown from "@/components/ui/WeaponDropdown";
+import ProficiencyTable from "@/components/ui/Proficiencies";
+import { weaponService } from "@/services/weapon.service";
+import { WeaponDetails, WeaponItem } from "@/types/weapon.types";
 
 // Parser para converter texto em JSON
 function parseSessionText(text: string): any {
@@ -104,6 +108,7 @@ const recordSchema = z.object({
   isPublic: z.boolean(),
   title: z.string().optional(),
   description: z.string().optional(),
+  weapon_id: z.string().optional(),
 });
 
 type RecordFormData = z.infer<typeof recordSchema>;
@@ -114,6 +119,12 @@ export default function CadastroPage() {
   const [error, setError] = useState<string | null>(null);
   const [jsonPreview, setJsonPreview] = useState<any>(null);
   const [inputFormat, setInputFormat] = useState<"json" | "text" | null>(null);
+  const [weapons, setWeapons] = useState<WeaponItem[]>([]);
+  const [weaponDetail, setWeaponDetail] = useState<WeaponDetails | null>(null);
+  const [loadingWeapons, setLoadingWeapons] = useState(true);
+  const [selectedPerks, setSelectedPerks] = useState<{
+    [level: number]: number | null;
+  }>({});
 
   const {
     register,
@@ -128,10 +139,41 @@ export default function CadastroPage() {
       isPublic: false,
       title: "",
       description: "",
+      weapon_id: "",
     },
   });
 
+  // Busca as armas quando o componente monta
+  useEffect(() => {
+    async function fetchWeapons() {
+      try {
+        setLoadingWeapons(true);
+        const weaponsList = await weaponService.getWeaponItems();
+        setWeapons(weaponsList);
+      } catch (error) {
+        console.error("Erro ao buscar armas:", error);
+      } finally {
+        setLoadingWeapons(false);
+      }
+    }
+
+    fetchWeapons();
+  }, []);
+
   const watchJsonData = watch("jsonData");
+
+  const handleWeaponSelect = async (item: WeaponItem) => {
+    setLoadingWeapons(true);
+    try {
+      const weapon = await weaponService.getWeaponById(Number(item.id));
+      setWeaponDetail(weapon);
+      setSelectedPerks({});
+    } catch (error) {
+      console.error("Erro ao buscar detalhes da arma:", error);
+    } finally {
+      setLoadingWeapons(false);
+    }
+  };
 
   // Atualiza preview do JSON
   const updatePreview = (input: string) => {
@@ -317,13 +359,50 @@ Looted Items:
 }`;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900">Novo Registro</h1>
         <p className="mt-2 text-lg text-gray-600">
           Crie um novo registro usando JSON ou formato de texto
         </p>
       </div>
+
+      <Card>
+        <div className="flex items-center justify-around gap-4">
+          <WeaponDropdown weapons={weapons} onSelect={handleWeaponSelect} />
+          <div className="flex flex-col">
+            <div className="my-1 text-2xl text-gray-900">
+              {weaponDetail?.name}
+            </div>
+            <div className="my-1 text-sm max-w-md text-green-700 font-bold">
+              {weaponDetail?.description_raw ? (
+                weaponDetail.description_raw
+                  .split(/(?<!\b(?:Max|Mr|Ms|St|Dr))\. (?=[A-Z])/g)
+                  .map((sentence, index, arr) => {
+                    const trimmed = sentence.trim();
+                    const isWeigh = /weighs?/i.test(trimmed);
+                    const needsDot = index !== arr.length - 1 && !isWeigh;
+                    return (
+                      <div key={index}>
+                        {trimmed}
+                        {needsDot ? "." : ""}
+                      </div>
+                    );
+                  })
+              ) : (
+                <></>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="mt-4">
+          <ProficiencyTable
+            proficiencies={weaponDetail?.proficiencies ?? null}
+            selectedPerks={selectedPerks}
+            setSelectedPerks={setSelectedPerks}
+          />
+        </div>
+      </Card>
 
       <Card>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

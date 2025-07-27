@@ -18,7 +18,7 @@ export function Card({
 
   return (
     <div
-      className={`bg-white rounded-lg shadow-md ${paddings[padding]} ${className}`}
+      className={`bg-white rounded-lg shadow-md my-4 ${paddings[padding]} ${className}`}
       {...props}
     >
       {children}

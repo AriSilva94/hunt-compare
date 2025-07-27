@@ -4,15 +4,13 @@ import { recordsService } from "@/services/records.service";
 import { CreateRecordDTO } from "@/types/record.types";
 
 export async function POST(request: Request) {
-  console.log("🔵 Chegou no POST /api/records");
   try {
     const supabase = await createClient();
     const {
       data: { user },
       error: authError,
     } = await supabase.auth.getUser();
-    console.log("USER", user);
-    console.log("AUTH ERROR", authError);
+    console.warn("AUTH ERROR", authError);
 
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
