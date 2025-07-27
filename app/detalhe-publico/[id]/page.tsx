@@ -79,7 +79,7 @@ export default async function DetalhePublicoPage({ params }: PageProps) {
                   weaponDetail?.id ? Number(weaponDetail.id) : undefined
                 }
               />
-              <div className="flex flex-col">
+              <div className="flex flex-col w-80">
                 <div className="my-1 text-2xl text-gray-900">
                   {weaponDetail?.name}
                 </div>
