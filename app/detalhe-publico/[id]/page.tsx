@@ -2,10 +2,19 @@ import { notFound } from "next/navigation";
 import { recordsService } from "@/services/records.service";
 import { Card } from "@/components/ui/Card";
 import { JsonViewer } from "@/components/ui/JsonViewer";
+import WeaponDropdown from "@/components/ui/WeaponDropdown";
+import ProficiencyTable from "@/components/ui/Proficiencies";
+import { useEffect } from "react";
+import { weaponService } from "@/services/weapon.service";
+import { WeaponDetails, WeaponItem } from "@/types/weapon.types";
 
 interface PageProps {
   params: Promise<{ id: string }>;
 }
+
+type WeaponDetailsWithSelection = WeaponDetails & {
+  proficiencies: { [level: number]: number | null };
+};
 
 export default async function DetalhePublicoPage({ params }: PageProps) {
   // Await params antes de usar
@@ -13,6 +22,17 @@ export default async function DetalhePublicoPage({ params }: PageProps) {
   const record = await recordsService.getPublicRecord(resolvedParams.id);
 
   if (!record) return notFound();
+
+  const weapons = await weaponService.getWeaponItems();
+
+  const weaponDetail = await weaponService.getWeaponById(
+    Number(record?.data?.weaponDetail?.id)
+  );
+
+  const { proficiencies } =
+    (record?.data?.weaponDetail as WeaponDetailsWithSelection) || {};
+
+  const selectedPerks: { [level: number]: number | null } = proficiencies;
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -48,6 +68,51 @@ export default async function DetalhePublicoPage({ params }: PageProps) {
             </div>
           </div>
         </Card>
+
+        {/* Arma e Proficiências */}
+        {weaponDetail && (
+          <Card>
+            <div className="flex flex-wrap items-center justify-around gap-4">
+              <WeaponDropdown
+                weapons={weapons}
+                defaultSelectedId={
+                  weaponDetail?.id ? Number(weaponDetail.id) : undefined
+                }
+              />
+              <div className="flex flex-col">
+                <div className="my-1 text-2xl text-gray-900">
+                  {weaponDetail?.name}
+                </div>
+                <div className="my-1 text-sm max-w-md text-green-700 font-bold">
+                  {weaponDetail?.description_raw ? (
+                    weaponDetail.description_raw
+                      .split(/(?<!\b(?:Max|Mr|Ms|St|Dr))\. (?=[A-Z])/g)
+                      .map((sentence, index, arr) => {
+                        const trimmed = sentence.trim();
+                        const isWeigh = /weighs?/i.test(trimmed);
+                        const needsDot = index !== arr.length - 1 && !isWeigh;
+                        return (
+                          <div key={index}>
+                            {trimmed}
+                            {needsDot ? "." : ""}
+                          </div>
+                        );
+                      })
+                  ) : (
+                    <></>
+                  )}
+                </div>
+              </div>
+              <div className="mt-4">
+                <ProficiencyTable
+                  proficiencies={weaponDetail?.proficiencies ?? null}
+                  selectedPerks={selectedPerks}
+                  isDisabled={true}
+                />
+              </div>
+            </div>
+          </Card>
+        )}
 
         <JsonViewer data={record.data} title="Visualização dos Dados" />
       </div>
