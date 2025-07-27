@@ -377,11 +377,21 @@ Looted Items:
             <div className="my-1 text-sm max-w-md text-green-700 font-bold">
               {weaponDetail?.description_raw ? (
                 weaponDetail.description_raw
-                  .split(/(?<!\b(?:Max|Mr|Ms|St|Dr))\. (?=[A-Z])/g)
+                  .replace(
+                    /(Max\. Tier: \d+)\s+(It weighs)/,
+                    "$1.|||BREAK|||$2"
+                  )
+                  .split(
+                    /(?<!\b(?:Max|Mr|Ms|St|Dr))\. (?=[A-Z])|\|\|\|BREAK\|\|\|/g
+                  )
+                  .filter((s) => !!s?.trim())
                   .map((sentence, index, arr) => {
                     const trimmed = sentence.trim();
                     const isWeigh = /weighs?/i.test(trimmed);
-                    const needsDot = index !== arr.length - 1 && !isWeigh;
+                    const needsDot =
+                      index !== arr.length - 1 &&
+                      !isWeigh &&
+                      !trimmed.endsWith(".");
                     return (
                       <div key={index}>
                         {trimmed}
