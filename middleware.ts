@@ -6,7 +6,6 @@ export async function middleware(request: NextRequest) {
 
   // IMPORTANTE: Pula completamente o middleware para rotas de autenticação
   if (pathname.startsWith("/auth/")) {
-    console.log("Pulando middleware para rota de auth:", pathname);
     return NextResponse.next();
   }
 
@@ -28,9 +27,6 @@ export async function middleware(request: NextRequest) {
   if (isPublicRoute) {
     // Exceção: redireciona usuários logados tentando acessar login
     if (pathname === "/login" && user) {
-      console.log(
-        "Usuário logado tentando acessar login, redirecionando para /home"
-      );
       url.pathname = "/home";
       return Response.redirect(url);
     }
@@ -39,7 +35,6 @@ export async function middleware(request: NextRequest) {
 
   // Todas as outras rotas precisam de autenticação
   if (!user) {
-    console.log("Rota protegida sem usuário:", pathname);
     url.pathname = "/login";
     return Response.redirect(url);
   }
