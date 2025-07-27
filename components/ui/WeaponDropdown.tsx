@@ -7,16 +7,29 @@ import { WeaponItem } from "@/types/weapon.types";
 interface WeaponDropdownProps {
   weapons: WeaponItem[];
   onSelect?: (item: WeaponItem) => void;
+  defaultSelectedId?: number;
 }
 
 export default function WeaponDropdown({
   weapons,
   onSelect,
+  defaultSelectedId,
 }: WeaponDropdownProps) {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<WeaponItem | null>(null);
   const [search, setSearch] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (defaultSelectedId && !selected) {
+      const found = weapons.find(
+        (w) => String(w.id) === String(defaultSelectedId)
+      );
+      if (found) {
+        setSelected(found);
+      }
+    }
+  }, [defaultSelectedId, weapons, selected]);
 
   const handleSelect = (item: WeaponItem) => {
     setSelected(item);

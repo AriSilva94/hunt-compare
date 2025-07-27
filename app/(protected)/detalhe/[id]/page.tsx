@@ -7,6 +7,10 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { JsonViewer } from "@/components/ui/JsonViewer";
 import Link from "next/link";
+import { WeaponDetails, WeaponItem } from "@/types/weapon.types";
+import { weaponService } from "@/services/weapon.service";
+import WeaponDropdown from "@/components/ui/WeaponDropdown";
+import ProficiencyTable from "@/components/ui/Proficiencies";
 
 interface Record {
   id: string;
@@ -21,14 +25,40 @@ interface PageProps {
   params: Promise<{ id: string }>;
 }
 
+type WeaponDetailsWithSelection = WeaponDetails & {
+  proficiencies: { [level: number]: number | null };
+};
+
 export default function DetalhePage({ params }: PageProps) {
   // Use a função 'use' do React para resolver a Promise
   const resolvedParams = use(params);
 
   const [record, setRecord] = useState<Record | null>(null);
+  const [weapons, setWeapons] = useState<WeaponItem[]>([]);
+  const [weaponDetail, setWeaponDetail] = useState<WeaponDetails | null>(null);
+  const [loadingWeapons, setLoadingWeapons] = useState(true);
   const [loading, setLoading] = useState(true);
   const [copySuccess, setCopySuccess] = useState(false);
+  const [selectedPerks, setSelectedPerks] = useState<{
+    [level: number]: number | null;
+  }>({});
   const router = useRouter();
+
+  useEffect(() => {
+    async function fetchWeapons() {
+      try {
+        setLoadingWeapons(true);
+        const weaponsList = await weaponService.getWeaponItems();
+        setWeapons(weaponsList);
+      } catch (error) {
+        console.error("Erro ao buscar armas:", error);
+      } finally {
+        setLoadingWeapons(false);
+      }
+    }
+
+    fetchWeapons();
+  }, []);
 
   useEffect(() => {
     async function fetchRecord() {
@@ -39,6 +69,9 @@ export default function DetalhePage({ params }: PageProps) {
         }
         const data = await response.json();
         setRecord(data);
+        if (data.data.weaponDetail) {
+          fetchWeapon(data.data.weaponDetail);
+        }
       } catch (error) {
         console.error("Erro ao buscar registro:", error);
         notFound();
@@ -49,6 +82,32 @@ export default function DetalhePage({ params }: PageProps) {
 
     fetchRecord();
   }, [resolvedParams.id]);
+
+  const fetchWeapon = async (item: WeaponDetailsWithSelection) => {
+    setLoadingWeapons(true);
+    try {
+      const weapon = await weaponService.getWeaponById(Number(item.id));
+      setWeaponDetail(weapon);
+      setSelectedPerks(item.proficiencies || {});
+    } catch (error) {
+      console.error("Erro ao buscar detalhes da arma:", error);
+    } finally {
+      setLoadingWeapons(false);
+    }
+  };
+
+  const handleWeaponSelect = async (item: WeaponItem) => {
+    setLoadingWeapons(true);
+    try {
+      const weapon = await weaponService.getWeaponById(Number(item.id));
+      setWeaponDetail(weapon);
+      setSelectedPerks({});
+    } catch (error) {
+      console.error("Erro ao buscar detalhes da arma:", error);
+    } finally {
+      setLoadingWeapons(false);
+    }
+  };
 
   const copyPublicLink = () => {
     const publicUrl = `${window.location.origin}/detalhe-publico/${record?.id}`;
@@ -189,6 +248,50 @@ export default function DetalhePage({ params }: PageProps) {
               </p>
             </div>
           )}
+        </Card>
+
+        {/* Arma e Proficiências */}
+        <Card>
+          <div className="flex flex-wrap items-center justify-around gap-4">
+            <WeaponDropdown
+              weapons={weapons}
+              onSelect={handleWeaponSelect}
+              defaultSelectedId={
+                weaponDetail?.id ? Number(weaponDetail.id) : undefined
+              }
+            />
+            <div className="flex flex-col">
+              <div className="my-1 text-2xl text-gray-900">
+                {weaponDetail?.name}
+              </div>
+              <div className="my-1 text-sm max-w-md text-green-700 font-bold">
+                {weaponDetail?.description_raw ? (
+                  weaponDetail.description_raw
+                    .split(/(?<!\b(?:Max|Mr|Ms|St|Dr))\. (?=[A-Z])/g)
+                    .map((sentence, index, arr) => {
+                      const trimmed = sentence.trim();
+                      const isWeigh = /weighs?/i.test(trimmed);
+                      const needsDot = index !== arr.length - 1 && !isWeigh;
+                      return (
+                        <div key={index}>
+                          {trimmed}
+                          {needsDot ? "." : ""}
+                        </div>
+                      );
+                    })
+                ) : (
+                  <></>
+                )}
+              </div>
+            </div>
+            <div className="mt-4">
+              <ProficiencyTable
+                proficiencies={weaponDetail?.proficiencies ?? null}
+                selectedPerks={selectedPerks}
+                setSelectedPerks={setSelectedPerks}
+              />
+            </div>
+          </div>
         </Card>
 
         <JsonViewer
