@@ -26,11 +26,11 @@ export default async function DetalhePublicoPage({ params }: PageProps) {
   const weapons = await weaponService.getWeaponItems();
 
   const weaponDetail = await weaponService.getWeaponById(
-    Number(record?.data.weaponDetail.id)
+    Number(record?.data?.weaponDetail?.id)
   );
 
-  const { proficiencies } = record.data
-    .weaponDetail as WeaponDetailsWithSelection;
+  const { proficiencies } =
+    (record?.data?.weaponDetail as WeaponDetailsWithSelection) || {};
 
   const selectedPerks: { [level: number]: number | null } = proficiencies;
 
@@ -70,47 +70,49 @@ export default async function DetalhePublicoPage({ params }: PageProps) {
         </Card>
 
         {/* Arma e Proficiências */}
-        <Card>
-          <div className="flex flex-wrap items-center justify-around gap-4">
-            <WeaponDropdown
-              weapons={weapons}
-              defaultSelectedId={
-                weaponDetail?.id ? Number(weaponDetail.id) : undefined
-              }
-            />
-            <div className="flex flex-col">
-              <div className="my-1 text-2xl text-gray-900">
-                {weaponDetail?.name}
-              </div>
-              <div className="my-1 text-sm max-w-md text-green-700 font-bold">
-                {weaponDetail?.description_raw ? (
-                  weaponDetail.description_raw
-                    .split(/(?<!\b(?:Max|Mr|Ms|St|Dr))\. (?=[A-Z])/g)
-                    .map((sentence, index, arr) => {
-                      const trimmed = sentence.trim();
-                      const isWeigh = /weighs?/i.test(trimmed);
-                      const needsDot = index !== arr.length - 1 && !isWeigh;
-                      return (
-                        <div key={index}>
-                          {trimmed}
-                          {needsDot ? "." : ""}
-                        </div>
-                      );
-                    })
-                ) : (
-                  <></>
-                )}
-              </div>
-            </div>
-            <div className="mt-4">
-              <ProficiencyTable
-                proficiencies={weaponDetail?.proficiencies ?? null}
-                selectedPerks={selectedPerks}
-                isDisabled={true}
+        {weaponDetail && (
+          <Card>
+            <div className="flex flex-wrap items-center justify-around gap-4">
+              <WeaponDropdown
+                weapons={weapons}
+                defaultSelectedId={
+                  weaponDetail?.id ? Number(weaponDetail.id) : undefined
+                }
               />
+              <div className="flex flex-col">
+                <div className="my-1 text-2xl text-gray-900">
+                  {weaponDetail?.name}
+                </div>
+                <div className="my-1 text-sm max-w-md text-green-700 font-bold">
+                  {weaponDetail?.description_raw ? (
+                    weaponDetail.description_raw
+                      .split(/(?<!\b(?:Max|Mr|Ms|St|Dr))\. (?=[A-Z])/g)
+                      .map((sentence, index, arr) => {
+                        const trimmed = sentence.trim();
+                        const isWeigh = /weighs?/i.test(trimmed);
+                        const needsDot = index !== arr.length - 1 && !isWeigh;
+                        return (
+                          <div key={index}>
+                            {trimmed}
+                            {needsDot ? "." : ""}
+                          </div>
+                        );
+                      })
+                  ) : (
+                    <></>
+                  )}
+                </div>
+              </div>
+              <div className="mt-4">
+                <ProficiencyTable
+                  proficiencies={weaponDetail?.proficiencies ?? null}
+                  selectedPerks={selectedPerks}
+                  isDisabled={true}
+                />
+              </div>
             </div>
-          </div>
-        </Card>
+          </Card>
+        )}
 
         <JsonViewer data={record.data} title="Visualização dos Dados" />
       </div>
