@@ -288,7 +288,7 @@ export default function DetalhePage({ params }: PageProps) {
               <ProficiencyTable
                 proficiencies={weaponDetail?.proficiencies ?? null}
                 selectedPerks={selectedPerks}
-                setSelectedPerks={setSelectedPerks}
+                isDisabled={true}
               />
             </div>
           </div>

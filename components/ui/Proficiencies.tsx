@@ -10,9 +10,10 @@ type GroupedProficiencies = {
 interface ProficiencyTableProps {
   proficiencies: WeaponProficiency[] | null;
   selectedPerks: { [level: number]: number | null };
-  setSelectedPerks: React.Dispatch<
+  setSelectedPerks?: React.Dispatch<
     React.SetStateAction<{ [level: number]: number | null }>
   >;
+  isDisabled?: boolean;
 }
 
 const groupByLevel = (data: WeaponProficiency[]): GroupedProficiencies => {
@@ -27,12 +28,14 @@ export default function ProficiencyTable({
   proficiencies,
   selectedPerks,
   setSelectedPerks,
+  isDisabled = false,
 }: ProficiencyTableProps) {
   if (!proficiencies || proficiencies.length === 0) return null;
 
   const grouped = groupByLevel(proficiencies);
 
   const handleSelect = (level: number, index: number) => {
+    if (!setSelectedPerks) return;
     setSelectedPerks((prev) => ({
       ...prev,
       [level]: prev[level] === index ? null : index,
@@ -67,7 +70,9 @@ export default function ProficiencyTable({
                       <div
                         key={index}
                         onClick={() => handleSelect(+level, index)}
-                        className={`cursor-pointer border p-2 rounded-md w-32 transition-all duration-200 ${
+                        className={`${
+                          isDisabled ? "cursor-default" : "cursor-pointer"
+                        } border p-2 rounded-md w-32 transition-all duration-200 ${
                           isSelected
                             ? "bg-blue-100 border-blue-400"
                             : "hover:bg-gray-100 opacity-70"
