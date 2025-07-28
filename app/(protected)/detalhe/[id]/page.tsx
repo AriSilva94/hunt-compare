@@ -50,7 +50,6 @@ export default function DetalhePage({ params }: PageProps) {
         setLoadingWeapons(true);
         const weaponsList = await weaponService.getWeaponItems();
         setWeapons(weaponsList);
-        console.log("Weapons fetched:", weaponsList);
       } catch (error) {
         console.error("Erro ao buscar armas:", error);
       } finally {
@@ -71,7 +70,6 @@ export default function DetalhePage({ params }: PageProps) {
         const data = await response.json();
         setRecord(data);
         if (data.data.weaponDetail) {
-          console.log("data.data.weaponDetail", data.data.weaponDetail);
           fetchWeapon(data.data.weaponDetail);
         }
       } catch (error) {
@@ -86,14 +84,11 @@ export default function DetalhePage({ params }: PageProps) {
   }, [resolvedParams.id]);
 
   const fetchWeapon = async (item: WeaponDetailsWithSelection) => {
-    console.log("Fetching weapon details for:", item);
     setLoadingWeapons(true);
     try {
       const weapon = await weaponService.getWeaponById(Number(item.id));
       setWeaponDetail(weapon);
-      console.log("Weapon details fetched:", weapon);
       setSelectedPerks(item.proficiencies || {});
-      console.log("Selected perks set:", item.proficiencies);
     } catch (error) {
       console.error("Erro ao buscar detalhes da arma:", error);
     } finally {

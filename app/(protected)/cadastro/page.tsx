@@ -213,9 +213,27 @@ export default function CadastroPage() {
         throw new Error("Formato inválido");
       }
 
+      const needsNormalization = Object.values(selectedPerks).some(
+        (value) => value === null
+      );
+
+      const proficiencies = needsNormalization
+        ? Object.fromEntries(
+            Object.entries(selectedPerks).map(([level, value]) => [
+              level,
+              value ?? 0,
+            ])
+          )
+        : selectedPerks;
+
       // Enriqueça com metadados
       const enrichedData = {
         ...parsedData,
+        weaponDetail: {
+          id: weaponDetail?.id || null,
+          slug: weaponDetail?.slug || "",
+          proficiencies,
+        },
         _metadata: {
           title:
             data.title ||
