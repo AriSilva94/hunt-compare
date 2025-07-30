@@ -71,6 +71,7 @@ export function JsonViewer({ data, title }: JsonViewerProps) {
               <p className="text-xl font-bold text-blue-600">
                 {data["XP Gain"]}
               </p>
+              <p className="text-xs text-gray-500">({data["XP/h"]}/h)</p>
             </div>
             <div>
               <p className="text-sm text-gray-600">Suprimentos Gastos</p>
