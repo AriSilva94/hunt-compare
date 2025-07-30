@@ -19,6 +19,14 @@ export default function WeaponDropdown({
   const [selected, setSelected] = useState<WeaponItem | null>(null);
   const [search, setSearch] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (open && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [open]);
 
   useEffect(() => {
     if (defaultSelectedId && !selected) {
@@ -90,12 +98,14 @@ export default function WeaponDropdown({
       {open && (
         <div className="absolute mt-2 w-full bg-white border border-gray-300 rounded-lg shadow z-10">
           <input
+            ref={inputRef}
             type="text"
             placeholder="Selecione uma arma..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full px-4 py-2 text-sm border-b border-gray-200 focus:outline-none"
           />
+
           <ul className="max-h-64 overflow-y-auto">
             {filteredItems.length > 0 ? (
               filteredItems.map((item) => (
