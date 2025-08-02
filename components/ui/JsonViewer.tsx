@@ -60,11 +60,11 @@ export function JsonViewer({ data, title }: JsonViewerProps) {
               <p className="text-xs text-gray-500">({data["Damage/h"]}/h)</p>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Raw XP</p>
+              <p className="text-sm text-gray-600">XP Ganho</p>
               <p className="text-xl font-bold text-purple-600">
-                {data["Raw XP Gain"]}
+                {data["XP Gain"] || data["Raw XP Gain"]}
               </p>
-              <p className="text-xs text-gray-500">({data["Raw XP/h"]}/h)</p>
+              <p className="text-xs text-gray-500">({data["XP/h"] || data["Raw XP/h"]}/h)</p>
             </div>
             <div>
               <p className="text-sm text-gray-600">XP Gain</p>

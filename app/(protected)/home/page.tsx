@@ -21,7 +21,7 @@ export default async function HomePage() {
       return {
         type: "game-session",
         title: data._metadata?.title || `Sessão de ${data["Session start"]}`,
-        subtitle: `Duração: ${data["Session length"]} | Raw XP: ${data["Raw XP Gain"]}`,
+        subtitle: `Duração: ${data["Session length"]} | XP Ganho: ${data["XP Gain"] || data["Raw XP Gain"]}`,
         stats: [
           {
             label: "Monstros",
