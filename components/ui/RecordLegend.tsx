@@ -6,9 +6,11 @@ import { getRecordColor } from "@/utils/recordColors";
 
 interface Record {
   id: string;
+  user_id: string;
   data: any;
-  created_at: string;
   is_public: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 interface RecordLegendProps {

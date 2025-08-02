@@ -363,8 +363,8 @@ export function WeaponComparison({ weapons }: WeaponComparisonProps) {
           </p>
           <div className="flex flex-wrap gap-2">
             {Object.entries(proficiencyDifferences)
-              .filter(([_, hasDiff]) => hasDiff)
-              .map(([level, _]) => (
+              .filter(([, hasDiff]) => hasDiff)
+              .map(([level]) => (
                 <span
                   key={level}
                   className="bg-orange-100 text-orange-800 text-xs font-medium px-2 py-1 rounded"

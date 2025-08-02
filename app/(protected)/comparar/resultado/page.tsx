@@ -11,7 +11,7 @@ import { ComparisonChart } from "@/components/ui/ComparisonChart";
 import { WeaponComparison } from "@/components/ui/WeaponComparison";
 import { MetricInsights } from "@/components/ui/MetricInsights";
 import { RecordLegend } from "@/components/ui/RecordLegend";
-import { getRecordPrimaryColor, getRecordColor } from "@/utils/recordColors";
+import { getRecordPrimaryColor } from "@/utils/recordColors";
 import Link from "next/link";
 
 interface Record {
