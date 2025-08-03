@@ -88,4 +88,62 @@ export class ComparisonHistoryService {
   static formatComparisonUrl(recordIds: string[]): string {
     return `/comparar/resultado?ids=${recordIds.join(',')}`;
   }
+
+  static async validateComparison(recordIds: string[]): Promise<{
+    validIds: string[];
+    invalidIds: string[];
+    hasInvalidRecords: boolean;
+  }> {
+    try {
+      // Buscar informações dos registros para validar permissões
+      const response = await fetch('/api/records/validate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ recordIds }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro na validação');
+      }
+
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.error('Erro ao validar comparação:', error);
+      return {
+        validIds: [],
+        invalidIds: recordIds,
+        hasInvalidRecords: true,
+      };
+    }
+  }
+
+  static async cleanInvalidComparisons(): Promise<void> {
+    const history = this.getHistory();
+    const cleanedComparisons: ComparisonRecord[] = [];
+
+    for (const comparison of history.comparisons) {
+      const validation = await this.validateComparison(comparison.recordIds);
+      
+      if (validation.validIds.length >= 2) {
+        // Se ainda tem pelo menos 2 registros válidos, manter a comparação
+        if (validation.hasInvalidRecords) {
+          // Atualizar com apenas os IDs válidos
+          cleanedComparisons.push({
+            ...comparison,
+            recordIds: validation.validIds,
+            title: `Comparação de ${validation.validIds.length} registros`,
+          });
+        } else {
+          // Manter como está
+          cleanedComparisons.push(comparison);
+        }
+      }
+      // Se tem menos de 2 registros válidos, remove a comparação
+    }
+
+    this.saveHistory({ comparisons: cleanedComparisons });
+  }
 }

@@ -11,6 +11,7 @@ import { WeaponDetails, WeaponItem } from "@/types/weapon.types";
 import { weaponService } from "@/services/weapon.service";
 import WeaponDropdown from "@/components/ui/WeaponDropdown";
 import ProficiencyTable from "@/components/ui/Proficiencies";
+import { RecordEditor } from "@/components/ui/RecordEditor";
 
 interface Record {
   id: string;
@@ -42,6 +43,7 @@ export default function DetalhePage({ params }: PageProps) {
   const [selectedPerks, setSelectedPerks] = useState<{
     [level: number]: number | null;
   }>({});
+  const [isEditing, setIsEditing] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -116,6 +118,35 @@ export default function DetalhePage({ params }: PageProps) {
     setTimeout(() => setCopySuccess(false), 2000);
   };
 
+  const handleSave = async (updateData: { is_public?: boolean; data?: any }) => {
+    try {
+      const response = await fetch(`/api/records/${resolvedParams.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updateData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao atualizar registro");
+      }
+
+      const updatedRecord = await response.json();
+      setRecord(updatedRecord);
+      
+      // Atualizar proficiências se foram alteradas
+      if (updateData.data?.weaponDetail?.proficiencies) {
+        setSelectedPerks(updateData.data.weaponDetail.proficiencies);
+      }
+      
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Erro ao salvar registro:", error);
+      alert("Erro ao salvar alterações");
+    }
+  };
+
   const handleDelete = async () => {
     if (!confirm("Tem certeza que deseja excluir este registro?")) return;
 
@@ -165,6 +196,11 @@ export default function DetalhePage({ params }: PageProps) {
           </div>
         </div>
         <div className="flex gap-2 align-center justify-center md:justify-end my-4 md:my-0">
+          {!isEditing && (
+            <Button onClick={() => setIsEditing(true)} size="sm">
+              Editar
+            </Button>
+          )}
           <Button variant="danger" onClick={handleDelete} size="sm">
             Excluir
           </Button>
@@ -175,6 +211,17 @@ export default function DetalhePage({ params }: PageProps) {
       </div>
 
       <div className="space-y-6">
+        {/* Editor de Registro */}
+        {isEditing && (
+          <RecordEditor
+            record={record}
+            weaponDetail={weaponDetail}
+            selectedPerks={selectedPerks}
+            onSave={handleSave}
+            onCancel={() => setIsEditing(false)}
+          />
+        )}
+
         <Card>
           <div className="mb-4">
             <h2 className="text-xl font-semibold mb-2">

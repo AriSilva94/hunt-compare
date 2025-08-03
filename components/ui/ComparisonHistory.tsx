@@ -23,7 +23,18 @@ export function ComparisonHistory({ onSelectComparison }: ComparisonHistoryProps
 
   useEffect(() => {
     loadHistory();
-  }, []);
+    // Limpar comparações inválidas periodicamente
+    cleanInvalidComparisons();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const cleanInvalidComparisons = async () => {
+    try {
+      await ComparisonHistoryService.cleanInvalidComparisons();
+      loadHistory(); // Recarregar após limpeza
+    } catch (error) {
+      console.error('Erro ao limpar comparações inválidas:', error);
+    }
+  };
 
   const loadHistory = () => {
     const comparisons = ComparisonHistoryService.getComparisons();
