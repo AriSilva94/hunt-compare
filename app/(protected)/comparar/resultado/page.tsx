@@ -12,6 +12,7 @@ import { WeaponComparison } from "@/components/ui/WeaponComparison";
 import { MetricInsights } from "@/components/ui/MetricInsights";
 import { RecordLegend } from "@/components/ui/RecordLegend";
 import { getRecordPrimaryColor } from "@/utils/recordColors";
+import { ComparisonHistoryService } from "@/services/comparison-history.service";
 import Link from "next/link";
 
 interface Record {
@@ -237,6 +238,10 @@ export default function ResultadoComparacaoPage() {
         .filter(Boolean) as Record[];
 
       setRecords(orderedRecords);
+
+      // Salvar no histórico com os nomes dos registros
+      const recordNames = orderedRecords.map(record => getRecordTitle(record));
+      ComparisonHistoryService.addComparison(recordIds, recordNames);
 
       // Carregar informações das armas
       await loadWeaponDetails(orderedRecords);

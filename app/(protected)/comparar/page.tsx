@@ -5,6 +5,8 @@ import { useState, useEffect, useCallback } from "react";
 import { Card } from "@/components/ui/Card";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import { ComparisonHistory } from "@/components/ui/ComparisonHistory";
+import { ComparisonHistoryService } from "@/services/comparison-history.service";
 
 interface Record {
   id: string;
@@ -152,9 +154,26 @@ export default function CompararPage() {
 
   const handleCompare = () => {
     if (selectedRecords.length >= 2) {
+      // Obter nomes dos registros selecionados para salvar no histórico
+      const recordNames = selectedRecords.map(recordId => {
+        const record = records.find(r => r.id === recordId);
+        if (record) {
+          const preview = getRecordPreview(record.data);
+          return preview.title;
+        }
+        return "Registro";
+      });
+
+      // Salvar no histórico
+      ComparisonHistoryService.addComparison(selectedRecords, recordNames);
+
       const compareParams = selectedRecords.join(",");
       router.push(`/comparar/resultado?ids=${compareParams}`);
     }
+  };
+
+  const handleSelectFromHistory = (recordIds: string[]) => {
+    setSelectedRecords(recordIds);
   };
 
   const getFilterStats = () => {
@@ -185,6 +204,9 @@ export default function CompararPage() {
           Selecione registros para comparar e analisar as diferenças
         </p>
       </div>
+
+      {/* Histórico de Comparações */}
+      <ComparisonHistory onSelectComparison={handleSelectFromHistory} />
 
       {/* Filtros */}
       <div className="mb-6">
