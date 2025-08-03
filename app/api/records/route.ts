@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { recordsService } from "@/services/records.service";
 import { CreateRecordDTO } from "@/types/record.types";
@@ -22,6 +22,11 @@ export async function POST(request: Request) {
 
     // Revalidar cache da página home para mostrar o novo registro
     revalidatePath("/home");
+    
+    // Se o registro é público, invalidar cache de registros públicos
+    if (body.is_public) {
+      revalidateTag('public-records');
+    }
 
     return NextResponse.json(record);
   } catch (error) {

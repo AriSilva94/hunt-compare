@@ -75,6 +75,19 @@ export class RecordsService {
     return record;
   }
 
+  async getPublicRecords(): Promise<Record[]> {
+    const supabase = await createClient();
+
+    const { data: records, error } = await supabase
+      .from("records")
+      .select("*")
+      .eq("is_public", true)
+      .order("created_at", { ascending: false });
+
+    if (error) return [];
+    return records || [];
+  }
+
   async updateRecord(
     id: string,
     userId: string,
