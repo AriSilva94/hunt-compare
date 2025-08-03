@@ -1,68 +1,13 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { authService } from "@/services/auth.service";
 import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
 import { Card } from "@/components/ui/Card";
 
-const loginSchema = z.object({
-  email: z.string().email("Email inválido"),
-  password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres"),
-});
-
-const signUpSchema = loginSchema
-  .extend({
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "As senhas não coincidem",
-    path: ["confirmPassword"],
-  });
-
-type LoginFormData = z.infer<typeof loginSchema>;
-type SignUpFormData = z.infer<typeof signUpSchema>;
-
-interface AuthFormProps {
-  mode: "login" | "signup";
-}
-
-export function AuthForm({ mode }: AuthFormProps) {
-  const router = useRouter();
+export function AuthForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginFormData | SignUpFormData>({
-    resolver: zodResolver(mode === "login" ? loginSchema : signUpSchema),
-  });
-
-  const onSubmit = async (data: LoginFormData | SignUpFormData) => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      if (mode === "login") {
-        await authService.signInWithEmail(data as LoginFormData);
-      } else {
-        await authService.signUp(data as SignUpFormData);
-      }
-      router.push("/home");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Ocorreu um erro");
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true);

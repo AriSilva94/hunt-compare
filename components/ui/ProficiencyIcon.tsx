@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 
 interface ProficiencyIconProps {
   icons: string[]; // Array com [border, icon] como vem da API
@@ -25,7 +26,7 @@ export function ProficiencyIcon({
       <div className="relative w-12 h-12 flex-shrink-0">
         {/* Borda (background) */}
         {borderUrl && !borderError && (
-          <img
+          <Image
             src={borderUrl}
             alt="Borda da proficiência"
             width={48}
@@ -34,12 +35,13 @@ export function ProficiencyIcon({
               !isSelected ? 'filter grayscale opacity-50' : ''
             }`}
             onError={() => setBorderError(true)}
+            unoptimized
           />
         )}
 
         {/* Ícone principal (foreground) */}
         {iconUrl && !iconError && (
-          <img
+          <Image
             src={iconUrl}
             alt={description}
             width={48}
@@ -48,6 +50,7 @@ export function ProficiencyIcon({
               !isSelected ? 'filter grayscale opacity-50' : ''
             }`}
             onError={() => setIconError(true)}
+            unoptimized
           />
         )}
 

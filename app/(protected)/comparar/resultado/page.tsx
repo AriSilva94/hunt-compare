@@ -12,6 +12,7 @@ import { WeaponComparison } from "@/components/ui/WeaponComparison";
 import { MetricInsights } from "@/components/ui/MetricInsights";
 import { RecordLegend } from "@/components/ui/RecordLegend";
 import { getRecordPrimaryColor } from "@/utils/recordColors";
+import { ComparisonHistoryService } from "@/services/comparison-history.service";
 import Link from "next/link";
 
 interface Record {
@@ -223,12 +224,32 @@ export default function ResultadoComparacaoPage() {
         (record) => record.is_public || (user && record.user_id === user.id)
       );
 
+      // Verificar se alguns registros ficaram inacessíveis
+      const inaccessibleCount = fetchedRecords.length - allowedRecords.length;
+      if (inaccessibleCount > 0) {
+        console.warn(`${inaccessibleCount} registro(s) tornaram-se inacessíveis`);
+      }
+
       if (allowedRecords.length < 2) {
         setError(
-          "Você não tem permissão para visualizar registros suficientes para comparação"
+          `Você não tem permissão para visualizar registros suficientes para comparação. ${
+            inaccessibleCount > 0 
+              ? `${inaccessibleCount} registro(s) podem ter sido tornados privados.`
+              : ""
+          }`
         );
         setLoading(false);
         return;
+      }
+
+      // Se alguns registros ficaram inacessíveis mas ainda temos o suficiente para comparação
+      if (inaccessibleCount > 0 && allowedRecords.length >= 2) {
+        // Atualizar a URL com apenas os registros válidos
+        const validIds = allowedRecords.map(r => r.id);
+        const newUrl = `/comparar/resultado?ids=${validIds.join(',')}`;
+        if (window.location.pathname + window.location.search !== newUrl) {
+          window.history.replaceState({}, '', newUrl);
+        }
       }
 
       // Ordenar na mesma ordem dos IDs fornecidos
@@ -237,6 +258,10 @@ export default function ResultadoComparacaoPage() {
         .filter(Boolean) as Record[];
 
       setRecords(orderedRecords);
+
+      // Salvar no histórico com os nomes dos registros
+      const recordNames = orderedRecords.map(record => getRecordTitle(record));
+      ComparisonHistoryService.addComparison(recordIds, recordNames);
 
       // Carregar informações das armas
       await loadWeaponDetails(orderedRecords);

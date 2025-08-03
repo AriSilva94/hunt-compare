@@ -4,9 +4,8 @@ import { Card } from "@/components/ui/Card";
 import { JsonViewer } from "@/components/ui/JsonViewer";
 import WeaponDropdown from "@/components/ui/WeaponDropdown";
 import ProficiencyTable from "@/components/ui/Proficiencies";
-import { useEffect } from "react";
 import { weaponService } from "@/services/weapon.service";
-import { WeaponDetails, WeaponItem } from "@/types/weapon.types";
+import { WeaponDetails } from "@/types/weapon.types";
 
 interface PageProps {
   params: Promise<{ id: string }>;

@@ -121,7 +121,7 @@ export default function CadastroPage() {
   const [inputFormat, setInputFormat] = useState<"json" | "text" | null>(null);
   const [weapons, setWeapons] = useState<WeaponItem[]>([]);
   const [weaponDetail, setWeaponDetail] = useState<WeaponDetails | null>(null);
-  const [loadingWeapons, setLoadingWeapons] = useState(true);
+  // const [loadingWeapons] = useState(true);
   const [selectedPerks, setSelectedPerks] = useState<{
     [level: number]: number | null;
   }>({});
@@ -147,13 +147,10 @@ export default function CadastroPage() {
   useEffect(() => {
     async function fetchWeapons() {
       try {
-        setLoadingWeapons(true);
         const weaponsList = await weaponService.getWeaponItems();
         setWeapons(weaponsList);
       } catch (error) {
         console.error("Erro ao buscar armas:", error);
-      } finally {
-        setLoadingWeapons(false);
       }
     }
 
@@ -163,15 +160,12 @@ export default function CadastroPage() {
   const watchJsonData = watch("jsonData");
 
   const handleWeaponSelect = async (item: WeaponItem) => {
-    setLoadingWeapons(true);
     try {
       const weapon = await weaponService.getWeaponById(Number(item.id));
       setWeaponDetail(weapon);
       setSelectedPerks({});
     } catch (error) {
       console.error("Erro ao buscar detalhes da arma:", error);
-    } finally {
-      setLoadingWeapons(false);
     }
   };
 
@@ -262,7 +256,8 @@ export default function CadastroPage() {
         throw new Error("Erro ao criar registro");
       }
 
-      router.push("/home");
+      // Força um refresh da página home para garantir que o novo registro apareça
+      window.location.href = "/home";
     } catch (err) {
       setError(err instanceof Error ? err.message : "Ocorreu um erro");
     } finally {

@@ -4,6 +4,10 @@ import { createClient } from "@/lib/supabase/server";
 import { Card } from "@/components/ui/Card";
 import Link from "next/link";
 
+// Força a página a não cachear os dados para sempre ter registros atualizados
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function HomePage() {
   const supabase = await createClient();
   const {

@@ -13,6 +13,7 @@ interface ProficiencyTableProps {
   setSelectedPerks?: React.Dispatch<
     React.SetStateAction<{ [level: number]: number | null }>
   >;
+  onPerkChange?: (level: number, selectedProficiency: number | null) => void;
   isDisabled?: boolean;
 }
 
@@ -28,6 +29,7 @@ export default function ProficiencyTable({
   proficiencies,
   selectedPerks,
   setSelectedPerks,
+  onPerkChange,
   isDisabled = false,
 }: ProficiencyTableProps) {
   if (!proficiencies || proficiencies.length === 0) return null;
@@ -35,11 +37,17 @@ export default function ProficiencyTable({
   const grouped = groupByLevel(proficiencies);
 
   const handleSelect = (level: number, index: number) => {
-    if (!setSelectedPerks) return;
-    setSelectedPerks((prev) => ({
-      ...prev,
-      [level]: prev[level] === index ? null : index,
-    }));
+    const newValue = selectedPerks[level] === index ? null : index;
+    
+    // Se existe onPerkChange, usar ele, senão usar setSelectedPerks
+    if (onPerkChange) {
+      onPerkChange(level, newValue);
+    } else if (setSelectedPerks) {
+      setSelectedPerks((prev) => ({
+        ...prev,
+        [level]: newValue,
+      }));
+    }
   };
 
   return (
@@ -69,7 +77,7 @@ export default function ProficiencyTable({
                     return (
                       <div
                         key={index}
-                        onClick={() => handleSelect(+level, index)}
+                        onClick={() => !isDisabled && handleSelect(+level, index)}
                         className={`${
                           isDisabled ? "cursor-default" : "cursor-pointer"
                         } border p-2 rounded-md w-32 transition-all duration-200 ${

@@ -2,7 +2,7 @@
 "use client";
 
 import { use, useEffect, useState } from "react";
-import { notFound, useRouter } from "next/navigation";
+import { notFound } from "next/navigation";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { JsonViewer } from "@/components/ui/JsonViewer";
@@ -11,6 +11,7 @@ import { WeaponDetails, WeaponItem } from "@/types/weapon.types";
 import { weaponService } from "@/services/weapon.service";
 import WeaponDropdown from "@/components/ui/WeaponDropdown";
 import ProficiencyTable from "@/components/ui/Proficiencies";
+import { RecordEditor } from "@/components/ui/RecordEditor";
 
 interface Record {
   id: string;
@@ -36,24 +37,21 @@ export default function DetalhePage({ params }: PageProps) {
   const [record, setRecord] = useState<Record | null>(null);
   const [weapons, setWeapons] = useState<WeaponItem[]>([]);
   const [weaponDetail, setWeaponDetail] = useState<WeaponDetails | null>(null);
-  const [loadingWeapons, setLoadingWeapons] = useState(true);
+  // const [loadingWeapons] = useState(true);
   const [loading, setLoading] = useState(true);
   const [copySuccess, setCopySuccess] = useState(false);
   const [selectedPerks, setSelectedPerks] = useState<{
     [level: number]: number | null;
   }>({});
-  const router = useRouter();
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     async function fetchWeapons() {
       try {
-        setLoadingWeapons(true);
         const weaponsList = await weaponService.getWeaponItems();
         setWeapons(weaponsList);
       } catch (error) {
         console.error("Erro ao buscar armas:", error);
-      } finally {
-        setLoadingWeapons(false);
       }
     }
 
@@ -84,28 +82,22 @@ export default function DetalhePage({ params }: PageProps) {
   }, [resolvedParams.id]);
 
   const fetchWeapon = async (item: WeaponDetailsWithSelection) => {
-    setLoadingWeapons(true);
     try {
       const weapon = await weaponService.getWeaponById(Number(item.id));
       setWeaponDetail(weapon);
       setSelectedPerks(item.proficiencies || {});
     } catch (error) {
       console.error("Erro ao buscar detalhes da arma:", error);
-    } finally {
-      setLoadingWeapons(false);
     }
   };
 
   const handleWeaponSelect = async (item: WeaponItem) => {
-    setLoadingWeapons(true);
     try {
       const weapon = await weaponService.getWeaponById(Number(item.id));
       setWeaponDetail(weapon);
       setSelectedPerks({});
     } catch (error) {
       console.error("Erro ao buscar detalhes da arma:", error);
-    } finally {
-      setLoadingWeapons(false);
     }
   };
 
@@ -114,6 +106,35 @@ export default function DetalhePage({ params }: PageProps) {
     navigator.clipboard.writeText(publicUrl);
     setCopySuccess(true);
     setTimeout(() => setCopySuccess(false), 2000);
+  };
+
+  const handleSave = async (updateData: { is_public?: boolean; data?: any }) => {
+    try {
+      const response = await fetch(`/api/records/${resolvedParams.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updateData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao atualizar registro");
+      }
+
+      const updatedRecord = await response.json();
+      setRecord(updatedRecord);
+      
+      // Atualizar proficiências se foram alteradas
+      if (updateData.data?.weaponDetail?.proficiencies) {
+        setSelectedPerks(updateData.data.weaponDetail.proficiencies);
+      }
+      
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Erro ao salvar registro:", error);
+      alert("Erro ao salvar alterações");
+    }
   };
 
   const handleDelete = async () => {
@@ -128,7 +149,8 @@ export default function DetalhePage({ params }: PageProps) {
         throw new Error("Erro ao excluir registro");
       }
 
-      router.push("/home");
+      // Força um refresh da página home para garantir que o registro excluído não apareça
+      window.location.href = "/home";
     } catch (error) {
       console.error("Erro ao excluir registro:", error);
       alert("Erro ao excluir registro");
@@ -165,6 +187,11 @@ export default function DetalhePage({ params }: PageProps) {
           </div>
         </div>
         <div className="flex gap-2 align-center justify-center md:justify-end my-4 md:my-0">
+          {!isEditing && (
+            <Button onClick={() => setIsEditing(true)} size="sm">
+              Editar
+            </Button>
+          )}
           <Button variant="danger" onClick={handleDelete} size="sm">
             Excluir
           </Button>
@@ -175,6 +202,17 @@ export default function DetalhePage({ params }: PageProps) {
       </div>
 
       <div className="space-y-6">
+        {/* Editor de Registro */}
+        {isEditing && (
+          <RecordEditor
+            record={record}
+            weaponDetail={weaponDetail}
+            selectedPerks={selectedPerks}
+            onSave={handleSave}
+            onCancel={() => setIsEditing(false)}
+          />
+        )}
+
         <Card>
           <div className="mb-4">
             <h2 className="text-xl font-semibold mb-2">
