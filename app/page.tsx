@@ -5,7 +5,8 @@ import { createMetadata } from "@/lib/seo";
 
 export const metadata = createMetadata({
   title: "Hunt Compare - Analise suas Sessões de Hunt do Tibia",
-  description: "Analise suas sessões de hunt do Tibia com gráficos detalhados, compare armas e proficiências, calcule XP/h e lucro, e otimize sua performance no jogo.",
+  description:
+    "Analise suas sessões de hunt do Tibia com gráficos detalhados, compare armas e proficiências, calcule XP/h e lucro, e otimize sua performance no jogo.",
 });
 
 export default function LandingPage() {
@@ -17,7 +18,7 @@ export default function LandingPage() {
         <div className="relative max-w-6xl mx-auto text-center">
           <div className="mb-8">
             <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mb-6">
-              🎮 Tibia Hunt Analyzer
+              🎮 Hunt Compare
             </span>
           </div>
 
