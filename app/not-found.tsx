@@ -57,12 +57,13 @@ export default function NotFound() {
                 Registros Públicos
               </Link>
               <span className="text-gray-300">•</span>
-              <button 
+              <Button 
                 onClick={() => window.history.back()} 
-                className="text-blue-600 hover:text-blue-800"
+                variant="secondary"
+                size="sm"
               >
                 Voltar
-              </button>
+              </Button>
             </div>
           </div>
         </Card>

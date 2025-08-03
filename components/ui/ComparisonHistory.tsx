@@ -2,7 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
 import { ComparisonHistoryService } from "@/services/comparison-history.service";
+import { useConfirm } from "@/hooks/useConfirm";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import Link from "next/link";
 
 interface ComparisonRecord {
@@ -20,6 +23,7 @@ interface ComparisonHistoryProps {
 export function ComparisonHistory({ onSelectComparison }: ComparisonHistoryProps) {
   const [history, setHistory] = useState<ComparisonRecord[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
+  const { confirm, confirmProps } = useConfirm();
 
   useEffect(() => {
     loadHistory();
@@ -46,8 +50,15 @@ export function ComparisonHistory({ onSelectComparison }: ComparisonHistoryProps
     loadHistory();
   };
 
-  const handleClearHistory = () => {
-    if (confirm("Tem certeza que deseja limpar todo o histórico?")) {
+  const handleClearHistory = async () => {
+    const confirmed = await confirm({
+      title: "Limpar histórico",
+      message: "Tem certeza que deseja limpar todo o histórico? Esta ação não pode ser desfeita.",
+      confirmText: "Limpar",
+      cancelText: "Cancelar"
+    });
+    
+    if (confirmed) {
       ComparisonHistoryService.clearHistory();
       loadHistory();
     }
@@ -82,12 +93,13 @@ export function ComparisonHistory({ onSelectComparison }: ComparisonHistoryProps
           </p>
         </div>
         {history.length > 0 && (
-          <button
+          <Button
             onClick={handleClearHistory}
-            className="text-sm text-red-600 hover:text-red-800 px-2 py-1 rounded hover:bg-red-50"
+            variant="danger"
+            size="sm"
           >
             Limpar Histórico
-          </button>
+          </Button>
         )}
       </div>
 
@@ -115,12 +127,13 @@ export function ComparisonHistory({ onSelectComparison }: ComparisonHistoryProps
 
             <div className="flex items-center gap-2 ml-4">
               {onSelectComparison && (
-                <button
+                <Button
                   onClick={() => onSelectComparison(comparison.recordIds)}
-                  className="text-xs text-blue-600 hover:text-blue-800 px-2 py-1 rounded hover:bg-blue-50"
+                  variant="primary"
+                  size="sm"
                 >
                   Recarregar
-                </button>
+                </Button>
               )}
               <Link
                 href={ComparisonHistoryService.formatComparisonUrl(comparison.recordIds)}
@@ -128,12 +141,13 @@ export function ComparisonHistory({ onSelectComparison }: ComparisonHistoryProps
               >
                 Ver Resultado
               </Link>
-              <button
+              <Button
                 onClick={() => handleRemoveComparison(comparison.id)}
-                className="text-xs text-red-600 hover:text-red-800 px-2 py-1 rounded hover:bg-red-50"
+                variant="danger"
+                size="sm"
               >
                 ×
-              </button>
+              </Button>
             </div>
           </div>
         ))}
@@ -141,14 +155,16 @@ export function ComparisonHistory({ onSelectComparison }: ComparisonHistoryProps
 
       {history.length > 3 && (
         <div className="mt-3 text-center">
-          <button
+          <Button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="text-sm text-blue-600 hover:text-blue-800 px-3 py-1 rounded hover:bg-blue-50"
+            variant="secondary"
+            size="sm"
           >
             {isExpanded ? "Ver menos" : `Ver mais (${history.length - 3})`}
-          </button>
+          </Button>
         </div>
       )}
+    <ConfirmDialog {...confirmProps} />
     </Card>
   );
 }

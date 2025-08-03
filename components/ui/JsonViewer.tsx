@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import { Card } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
 import Image from "next/image";
 
 interface JsonViewerProps {
@@ -189,26 +190,20 @@ export function JsonViewer({ data, title }: JsonViewerProps) {
       <div className="flex flex-wrap justify-center md:justify-between items-center mb-4 gap-4 md:gap-0">
         <h2 className="text-xl font-semibold">{title || "Dados JSON"}</h2>
         <div className="flex gap-2">
-          <button
+          <Button
             onClick={() => setViewMode("formatted")}
-            className={`px-3 py-1 text-sm rounded ${
-              viewMode === "formatted"
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 text-gray-700"
-            }`}
+            variant={viewMode === "formatted" ? "primary" : "secondary"}
+            size="sm"
           >
             Formatado
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => setViewMode("raw")}
-            className={`px-3 py-1 text-sm rounded ${
-              viewMode === "raw"
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 text-gray-700"
-            }`}
+            variant={viewMode === "raw" ? "primary" : "secondary"}
+            size="sm"
           >
             JSON Raw
-          </button>
+          </Button>
         </div>
       </div>
 

@@ -3,6 +3,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { Card } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { ComparisonHistory } from "@/components/ui/ComparisonHistory";
@@ -211,37 +212,25 @@ export default function CompararPage() {
       {/* Filtros */}
       <div className="mb-6">
         <div className="flex flex-wrap gap-3">
-          <button
+          <Button
             onClick={() => setFilter("todas")}
-            className={`px-4 py-2 rounded-lg transition-colors ${
-              filter === "todas"
-                ? "bg-blue-600 text-white"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-            }`}
+            variant={filter === "todas" ? "primary" : "secondary"}
           >
             Todas ({stats.totalCount})
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => setFilter("publicas")}
-            className={`px-4 py-2 rounded-lg transition-colors ${
-              filter === "publicas"
-                ? "bg-blue-600 text-white"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-            }`}
+            variant={filter === "publicas" ? "primary" : "secondary"}
           >
             Públicas ({stats.publicCount})
-          </button>
+          </Button>
           {user && (
-            <button
+            <Button
               onClick={() => setFilter("minhas")}
-              className={`px-4 py-2 rounded-lg transition-colors ${
-                filter === "minhas"
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
+              variant={filter === "minhas" ? "primary" : "secondary"}
             >
               Minhas ({stats.myCount})
-            </button>
+            </Button>
           )}
         </div>
       </div>
@@ -262,23 +251,20 @@ export default function CompararPage() {
               </p>
             </div>
             <div className="flex gap-2">
-              <button
+              <Button
                 onClick={() => setSelectedRecords([])}
-                className="px-3 py-1 text-sm text-blue-600 hover:text-blue-800"
+                variant="secondary"
+                size="sm"
               >
                 Limpar
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={handleCompare}
                 disabled={selectedRecords.length < 2}
-                className={`px-4 py-2 rounded-lg text-sm font-medium ${
-                  selectedRecords.length >= 2
-                    ? "bg-blue-600 text-white hover:bg-blue-700"
-                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                }`}
+                variant="primary"
               >
                 Prosseguir
-              </button>
+              </Button>
             </div>
           </div>
         </div>

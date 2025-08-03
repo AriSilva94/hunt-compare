@@ -72,12 +72,13 @@ export default function ProtectedNotFound() {
         <div className="mt-8 pt-8 border-t border-gray-200">
           <p className="text-sm text-gray-500">
             💡 <strong>Dica:</strong> Verifique se você está logado com a conta correta ou 
-            <button 
+            <Button 
               onClick={() => window.history.back()} 
-              className="text-blue-600 hover:text-blue-800 ml-1"
+              variant="secondary"
+              size="sm"
             >
               volte à página anterior
-            </button>
+            </Button>
           </p>
         </div>
       </Card>

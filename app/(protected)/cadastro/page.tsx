@@ -13,6 +13,7 @@ import WeaponDropdown from "@/components/ui/WeaponDropdown";
 import ProficiencyTable from "@/components/ui/Proficiencies";
 import { weaponService } from "@/services/weapon.service";
 import { WeaponDetails, WeaponItem } from "@/types/weapon.types";
+import { isValidSessionData, isValidSessionText } from "@/types/session.types";
 
 // Parser para converter texto em JSON
 function parseSessionText(text: string): any {
@@ -74,26 +75,39 @@ function parseSessionText(text: string): any {
 function detectFormat(input: string): "json" | "text" | "invalid" {
   const trimmed = input.trim();
 
-  // Tenta detectar JSON
+  if (!trimmed) {
+    return "invalid";
+  }
+
+  // Tenta detectar JSON e valida estrutura
   if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
     try {
-      JSON.parse(trimmed);
-      return "json";
+      const parsed = JSON.parse(trimmed);
+      // Valida se é uma sessão válida
+      if (isValidSessionData(parsed)) {
+        return "json";
+      } else {
+        return "invalid";
+      }
     } catch (error) {
       console.error("Erro ao parsear JSON:", error);
       return "invalid";
     }
   }
 
-  // Verifica se parece com o formato de texto
-  if (trimmed.includes("Session data:") || trimmed.includes("Session:")) {
+  // Verifica se parece com o formato de texto E se tem a estrutura correta
+  if (isValidSessionText(trimmed)) {
     return "text";
   }
 
-  // Tenta parse como JSON mesmo assim
+  // Tenta parse como JSON mesmo assim e valida
   try {
-    JSON.parse(trimmed);
-    return "json";
+    const parsed = JSON.parse(trimmed);
+    if (isValidSessionData(parsed)) {
+      return "json";
+    } else {
+      return "invalid";
+    }
   } catch (error) {
     console.error("Erro ao parsear JSON:", error);
     return "invalid";
@@ -104,7 +118,9 @@ const recordSchema = z.object({
   jsonData: z.string().refine((val) => {
     const format = detectFormat(val);
     return format !== "invalid";
-  }, "Formato inválido. Use JSON ou o formato de texto de sessão."),
+  }, {
+    message: "Dados inválidos para sessão de hunt. Certifique-se de que os dados contenham:\n• Informações de sessão (Session start, Session end ou Session length)\n• Lista de monstros mortos (Killed Monsters)\n• Formato JSON válido ou texto de sessão do Tibia"
+  }),
   isPublic: z.boolean(),
   title: z.string().optional(),
   description: z.string().optional(),
@@ -486,13 +502,14 @@ Looted Items:
             <div className="mt-2 flex justify-between">
               <div className="flex gap-2">
                 {inputFormat === "json" && (
-                  <button
+                  <Button
                     type="button"
                     onClick={formatInput}
-                    className="text-sm text-blue-600 hover:underline"
+                    variant="secondary"
+                    size="sm"
                   >
                     Formatar JSON
-                  </button>
+                  </Button>
                 )}
               </div>
               <span className="text-sm text-gray-500">

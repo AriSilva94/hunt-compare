@@ -3,6 +3,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { Card } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
 import { createClient } from "@/lib/supabase/client";
 import { useSearchParams, useRouter } from "next/navigation";
 import { weaponService } from "@/services/weapon.service";
@@ -404,36 +405,30 @@ export default function ResultadoComparacaoPage() {
 
           <div className="flex flex-wrap gap-2 mb-4">
             {activeMetrics.map((metric) => (
-              <button
+              <Button
                 key={metric.id}
                 onClick={() => toggleMetric(metric.id)}
-                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  metric.active
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
+                variant={metric.active ? "primary" : "secondary"}
+                size="sm"
               >
                 <span className="mr-1">{metric.icon}</span>
                 {metric.label}
-              </button>
+              </Button>
             ))}
           </div>
 
           <div className="flex gap-2">
             <span className="text-sm text-gray-600 mr-2">Tipo de gráfico:</span>
             {(["bar", "line", "pie"] as ChartType[]).map((type) => (
-              <button
+              <Button
                 key={type}
                 onClick={() => setChartType(type)}
-                className={`px-2 py-1 rounded text-sm ${
-                  chartType === type
-                    ? "bg-blue-100 text-blue-700"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                }`}
+                variant={chartType === type ? "primary" : "secondary"}
+                size="sm"
               >
                 {type === "bar" ? "📊" : type === "line" ? "📈" : "🥧"}
                 {type.charAt(0).toUpperCase() + type.slice(1)}
-              </button>
+              </Button>
             ))}
           </div>
         </Card>
@@ -471,12 +466,12 @@ export default function ResultadoComparacaoPage() {
 
       {/* Ações */}
       <div className="mt-8 flex gap-4">
-        <button
+        <Button
           onClick={() => router.back()}
-          className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+          variant="secondary"
         >
           Voltar
-        </button>
+        </Button>
         <Link
           href="/comparar"
           className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
