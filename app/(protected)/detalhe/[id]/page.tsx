@@ -37,7 +37,7 @@ export default function DetalhePage({ params }: PageProps) {
   const [record, setRecord] = useState<Record | null>(null);
   const [weapons, setWeapons] = useState<WeaponItem[]>([]);
   const [weaponDetail, setWeaponDetail] = useState<WeaponDetails | null>(null);
-  const [loadingWeapons, setLoadingWeapons] = useState(true);
+  // const [loadingWeapons] = useState(true);
   const [loading, setLoading] = useState(true);
   const [copySuccess, setCopySuccess] = useState(false);
   const [selectedPerks, setSelectedPerks] = useState<{
@@ -48,13 +48,10 @@ export default function DetalhePage({ params }: PageProps) {
   useEffect(() => {
     async function fetchWeapons() {
       try {
-        setLoadingWeapons(true);
         const weaponsList = await weaponService.getWeaponItems();
         setWeapons(weaponsList);
       } catch (error) {
         console.error("Erro ao buscar armas:", error);
-      } finally {
-        setLoadingWeapons(false);
       }
     }
 
@@ -85,28 +82,22 @@ export default function DetalhePage({ params }: PageProps) {
   }, [resolvedParams.id]);
 
   const fetchWeapon = async (item: WeaponDetailsWithSelection) => {
-    setLoadingWeapons(true);
     try {
       const weapon = await weaponService.getWeaponById(Number(item.id));
       setWeaponDetail(weapon);
       setSelectedPerks(item.proficiencies || {});
     } catch (error) {
       console.error("Erro ao buscar detalhes da arma:", error);
-    } finally {
-      setLoadingWeapons(false);
     }
   };
 
   const handleWeaponSelect = async (item: WeaponItem) => {
-    setLoadingWeapons(true);
     try {
       const weapon = await weaponService.getWeaponById(Number(item.id));
       setWeaponDetail(weapon);
       setSelectedPerks({});
     } catch (error) {
       console.error("Erro ao buscar detalhes da arma:", error);
-    } finally {
-      setLoadingWeapons(false);
     }
   };
 

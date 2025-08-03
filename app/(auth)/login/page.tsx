@@ -20,7 +20,7 @@ export default function LoginPage() {
           </div>
 
           {/* Auth Form */}
-          <AuthForm mode="login" />
+          <AuthForm />
 
           {/* Footer Links */}
           <div className="mt-8 text-center space-y-4">
