@@ -1,6 +1,12 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { createMetadata } from "@/lib/seo";
+
+export const metadata = createMetadata({
+  title: "Hunt Compare - Analise suas Sessões de Hunt do Tibia",
+  description: "Analise suas sessões de hunt do Tibia com gráficos detalhados, compare armas e proficiências, calcule XP/h e lucro, e otimize sua performance no jogo.",
+});
 
 export default function LandingPage() {
   return (

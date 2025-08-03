@@ -1,12 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { recordsService } from "@/services/records.service";
 import { createClient } from "@/lib/supabase/server";
+import { createMetadata } from "@/lib/seo";
 import { Card } from "@/components/ui/Card";
 import Link from "next/link";
 
 // Força a página a não cachear os dados para sempre ter registros atualizados
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
+
+export const metadata = createMetadata({
+  title: "Dashboard",
+  description: "Gerencie seus registros de hunt do Tibia. Visualize estatísticas, crie novos registros e acompanhe seu progresso no jogo.",
+  path: "/home"
+});
 
 export default async function HomePage() {
   const supabase = await createClient();

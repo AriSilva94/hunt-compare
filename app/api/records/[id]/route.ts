@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { recordsService } from "@/services/records.service";
 
@@ -73,6 +73,12 @@ export async function PUT(request: Request, { params }: RouteParams) {
     revalidatePath("/home");
     revalidatePath("/comparar");
     revalidatePath("/registros-publicos");
+    
+    // Invalidar cache de registros públicos se o status mudou
+    if (updateData.is_public !== undefined) {
+      revalidateTag('public-records');
+      revalidateTag(`public-record-${resolvedParams.id}`);
+    }
 
     return NextResponse.json(record);
   } catch (error) {
@@ -104,6 +110,10 @@ export async function DELETE(request: Request, { params }: RouteParams) {
     revalidatePath("/home");
     revalidatePath("/comparar");
     revalidatePath("/registros-publicos");
+    
+    // Invalidar cache de registros públicos
+    revalidateTag('public-records');
+    revalidateTag(`public-record-${resolvedParams.id}`);
 
     return NextResponse.json({ success: true });
   } catch (error) {

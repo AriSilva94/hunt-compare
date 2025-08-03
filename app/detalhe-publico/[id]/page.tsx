@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { recordsService } from "@/services/records.service";
+import { createMetadata } from "@/lib/seo";
 import { Card } from "@/components/ui/Card";
 import { JsonViewer } from "@/components/ui/JsonViewer";
 import WeaponDropdown from "@/components/ui/WeaponDropdown";
@@ -14,6 +15,32 @@ interface PageProps {
 type WeaponDetailsWithSelection = WeaponDetails & {
   proficiencies: { [level: number]: number | null };
 };
+
+// Enable ISR for public record pages
+export const revalidate = 300; // 5 minutes
+
+export async function generateMetadata({ params }: PageProps) {
+  const resolvedParams = await params;
+  const record = await recordsService.getPublicRecord(resolvedParams.id);
+  
+  if (!record) {
+    return createMetadata({
+      title: "Registro não encontrado",
+      description: "O registro solicitado não foi encontrado ou não é público.",
+      noIndex: true
+    });
+  }
+
+  const title = record.data._metadata?.title || `Registro de Hunt #${record.id.slice(0, 8)}`;
+  const description = record.data._metadata?.description || 
+    `Visualize dados detalhados desta sessão de hunt do Tibia. XP, lucro, monstros eliminados e muito mais.`;
+
+  return createMetadata({
+    title,
+    description,
+    path: `/detalhe-publico/${record.id}`
+  });
+}
 
 export default async function DetalhePublicoPage({ params }: PageProps) {
   // Await params antes de usar

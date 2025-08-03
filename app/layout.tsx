@@ -1,56 +1,19 @@
-import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { Header } from "@/components/shared/Header";
+import { createMetadata } from "@/lib/seo";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ 
+  subsets: ["latin"],
+  display: 'swap',
+  variable: '--font-inter',
+});
 
-export const metadata: Metadata = {
-  title: "Hunt Compare",
-  description:
-    "Gerencie seus dados JSON de forma simples, segura e organizada. Crie registros privados ou públicos e compartilhe com facilidade.",
-  keywords: [
-    "hunt compare",
-    "tibia",
-    "json session tracker",
-    "xp analysis",
-    "loot parser",
-    "análise de hunt",
-  ],
-  authors: [{ name: "Ari Silva" }],
-  creator: "Ari Silva",
-  metadataBase: new URL("https://www.hunt-compare.com"),
-  openGraph: {
-    title: "Hunt Compare",
-    description:
-      "Gerencie seus dados JSON de forma simples, segura e organizada. Crie registros privados ou públicos e compartilhe com facilidade.",
-    url: "https://www.hunt-compare.com",
-    siteName: "Hunt Compare",
-    images: [
-      {
-        url: "https://www.hunt-compare.com/social.png",
-        width: 1200,
-        height: 630,
-        alt: "Hunt Compare - Sistema de Gerenciamento de Sessões",
-        type: "image/png",
-      },
-    ],
-    locale: "pt_BR",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Hunt Compare",
-    description:
-      "Gerencie seus dados JSON de forma simples, segura e organizada.",
-    images: ["https://www.hunt-compare.com/social.png"],
-    creator: "@seu_twitter",
-  },
-  other: {
-    "og:image:secure_url": "https://www.hunt-compare.com/social.png",
-  },
-};
+export const metadata = createMetadata({
+  title: "Hunt Compare - Analise suas Sessões de Hunt do Tibia",
+  description: "Analise suas sessões de hunt do Tibia com gráficos detalhados, compare armas e proficiências, calcule XP/h e lucro, e otimize sua performance no jogo.",
+});
 
 export default function RootLayout({
   children,

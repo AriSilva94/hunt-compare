@@ -1,5 +1,12 @@
 import { AuthForm } from "@/components/auth/AuthForm";
+import { createMetadata } from "@/lib/seo";
 import Link from "next/link";
+
+export const metadata = createMetadata({
+  title: "Login",
+  description: "Entre na sua conta Hunt Compare para gerenciar seus registros de hunt do Tibia e acompanhar suas estatísticas de jogo.",
+  path: "/login"
+});
 
 export default function LoginPage() {
   return (

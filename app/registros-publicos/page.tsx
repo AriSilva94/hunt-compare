@@ -1,33 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createClient } from "@/lib/supabase/server";
+import { recordsService } from "@/services/records.service";
+import { createMetadata } from "@/lib/seo";
 import { Card } from "@/components/ui/Card";
 import Link from "next/link";
 
-interface PublicRecord {
-  id: string;
-  user_id: string;
-  data: any;
-  is_public: boolean;
-  created_at: string;
-  updated_at: string;
-}
 
-async function getPublicRecords(): Promise<PublicRecord[]> {
-  const supabase = await createClient();
+// Enable ISR for better performance on public pages
+export const revalidate = 180; // 3 minutes
 
-  const { data: records, error } = await supabase
-    .from("records")
-    .select("*")
-    .eq("is_public", true)
-    .order("created_at", { ascending: false });
-
-  if (error) {
-    console.error("Error fetching public records:", error);
-    return [];
-  }
-
-  return records || [];
-}
+export const metadata = createMetadata({
+  title: "Registros Públicos",
+  description: "Explore registros de hunt do Tibia compartilhados pela comunidade. Analise sessões, compare performances e aprenda com outros jogadores.",
+  path: "/registros-publicos"
+});
 
 function getRecordPreview(data: any) {
   // Para sessões de jogo
@@ -72,7 +57,7 @@ function getRecordPreview(data: any) {
 }
 
 export default async function RegistrosPublicosPage() {
-  const publicRecords = await getPublicRecords();
+  const publicRecords = await recordsService.getPublicRecords();
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
