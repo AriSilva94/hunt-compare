@@ -1,23 +1,22 @@
-// Performance monitoring utilities
+// Performance monitoring utilities - simplified for build compatibility
 
-export function measurePerformance(name: string, fn: () => Promise<any>) {
-  return async (...args: any[]) => {
-    const startTime = performance.now();
+export function measurePerformance<T>(name: string, fn: (...args: unknown[]) => Promise<T>) {
+  return async (...args: unknown[]): Promise<T> => {
+    const startTime = Date.now();
     try {
       const result = await fn(...args);
-      const endTime = performance.now();
+      const endTime = Date.now();
       
-      // Only log in development
       if (process.env.NODE_ENV === 'development') {
-        console.log(`⚡ ${name}: ${(endTime - startTime).toFixed(2)}ms`);
+        console.log(`⚡ ${name}: ${endTime - startTime}ms`);
       }
       
       return result;
     } catch (error) {
-      const endTime = performance.now();
+      const endTime = Date.now();
       
       if (process.env.NODE_ENV === 'development') {
-        console.error(`❌ ${name} failed in ${(endTime - startTime).toFixed(2)}ms:`, error);
+        console.error(`❌ ${name} failed in ${endTime - startTime}ms:`, error);
       }
       
       throw error;
@@ -25,27 +24,15 @@ export function measurePerformance(name: string, fn: () => Promise<any>) {
   };
 }
 
-export function logPageLoad(pageName: string) {
-  if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
-    window.addEventListener('load', () => {
-      const perfData = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
-      console.log(`📊 Page Load Performance - ${pageName}:`, {
-        'DNS Lookup': `${(perfData.domainLookupEnd - perfData.domainLookupStart).toFixed(2)}ms`,
-        'Connect': `${(perfData.connectEnd - perfData.connectStart).toFixed(2)}ms`,
-        'Request': `${(perfData.responseStart - perfData.requestStart).toFixed(2)}ms`,
-        'Response': `${(perfData.responseEnd - perfData.responseStart).toFixed(2)}ms`,
-        'DOM Content Loaded': `${(perfData.domContentLoadedEventEnd - perfData.navigationStart).toFixed(2)}ms`,
-        'Load Complete': `${(perfData.loadEventEnd - perfData.navigationStart).toFixed(2)}ms`,
-      });
-    });
-  }
+interface WebVitalMetric {
+  name: string;
+  value: number;
+  id: string;
+  label?: string;
 }
 
-// Web Vitals tracking (for production monitoring)
-export function reportWebVitals(metric: any) {
+export function reportWebVitals(metric: WebVitalMetric) {
   if (process.env.NODE_ENV === 'production') {
-    // Send to analytics service
-    // Example: gtag('event', metric.name, { value: metric.value });
     console.log('Web Vital:', metric);
   }
 }
