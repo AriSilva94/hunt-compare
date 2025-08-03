@@ -262,7 +262,8 @@ export default function CadastroPage() {
         throw new Error("Erro ao criar registro");
       }
 
-      router.push("/home");
+      // Força um refresh da página home para garantir que o novo registro apareça
+      window.location.href = "/home";
     } catch (err) {
       setError(err instanceof Error ? err.message : "Ocorreu um erro");
     } finally {

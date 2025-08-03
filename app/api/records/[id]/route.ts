@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { recordsService } from "@/services/records.service";
 
@@ -68,6 +69,11 @@ export async function PUT(request: Request, { params }: RouteParams) {
 
     const record = await recordsService.updateRecord(resolvedParams.id, user.id, updateData);
 
+    // Revalidar cache das páginas que podem mostrar este registro
+    revalidatePath("/home");
+    revalidatePath("/comparar");
+    revalidatePath("/registros-publicos");
+
     return NextResponse.json(record);
   } catch (error) {
     console.error("Error updating record:", error);
@@ -93,6 +99,11 @@ export async function DELETE(request: Request, { params }: RouteParams) {
     }
 
     await recordsService.deleteRecord(resolvedParams.id, user.id);
+
+    // Revalidar cache das páginas que podem mostrar este registro
+    revalidatePath("/home");
+    revalidatePath("/comparar");
+    revalidatePath("/registros-publicos");
 
     return NextResponse.json({ success: true });
   } catch (error) {

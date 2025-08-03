@@ -2,7 +2,7 @@
 "use client";
 
 import { use, useEffect, useState } from "react";
-import { notFound, useRouter } from "next/navigation";
+import { notFound } from "next/navigation";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { JsonViewer } from "@/components/ui/JsonViewer";
@@ -44,7 +44,6 @@ export default function DetalhePage({ params }: PageProps) {
     [level: number]: number | null;
   }>({});
   const [isEditing, setIsEditing] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
     async function fetchWeapons() {
@@ -159,7 +158,8 @@ export default function DetalhePage({ params }: PageProps) {
         throw new Error("Erro ao excluir registro");
       }
 
-      router.push("/home");
+      // Força um refresh da página home para garantir que o registro excluído não apareça
+      window.location.href = "/home";
     } catch (error) {
       console.error("Erro ao excluir registro:", error);
       alert("Erro ao excluir registro");

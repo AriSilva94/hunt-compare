@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { recordsService } from "@/services/records.service";
 import { CreateRecordDTO } from "@/types/record.types";
@@ -18,6 +19,9 @@ export async function POST(request: Request) {
 
     const body: CreateRecordDTO = await request.json();
     const record = await recordsService.createRecord(body, user.id);
+
+    // Revalidar cache da página home para mostrar o novo registro
+    revalidatePath("/home");
 
     return NextResponse.json(record);
   } catch (error) {
