@@ -4,6 +4,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { PageSkeleton } from "@/components/ui/Skeleton";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { ComparisonHistory } from "@/components/ui/ComparisonHistory";
@@ -187,14 +188,7 @@ export default function CompararPage() {
   const stats = getFilterStats();
 
   if (loading) {
-    return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Carregando registros...</p>
-        </div>
-      </div>
-    );
+    return <PageSkeleton showStats={false} recordCount={9} />;
   }
 
   return (
