@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { Button } from "@/components/ui/Button";
 
 interface GlobalErrorProps {
   error: Error & { digest?: string };
@@ -57,26 +58,29 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
 
               {/* Botões de ação */}
               <div className="space-y-3">
-                <button 
+                <Button 
                   onClick={reset}
-                  className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
+                  variant="primary"
+                  fullWidth
                 >
                   🔄 Tentar Novamente
-                </button>
+                </Button>
                 
-                <button 
+                <Button 
                   onClick={() => window.location.href = '/'}
-                  className="w-full bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors"
+                  variant="secondary"
+                  fullWidth
                 >
                   🏠 Ir para Página Inicial
-                </button>
+                </Button>
                 
-                <button 
+                <Button 
                   onClick={() => window.location.reload()}
-                  className="w-full bg-gray-100 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-200 transition-colors"
+                  variant="secondary"
+                  fullWidth
                 >
                   ↻ Recarregar Página
-                </button>
+                </Button>
               </div>
 
               {/* Informações de suporte */}

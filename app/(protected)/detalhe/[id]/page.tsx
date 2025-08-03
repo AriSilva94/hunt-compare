@@ -12,6 +12,9 @@ import { weaponService } from "@/services/weapon.service";
 import WeaponDropdown from "@/components/ui/WeaponDropdown";
 import ProficiencyTable from "@/components/ui/Proficiencies";
 import { RecordEditor } from "@/components/ui/RecordEditor";
+import { useToastContext } from "@/components/providers/ToastProvider";
+import { useConfirm } from "@/hooks/useConfirm";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 
 interface Record {
   id: string;
@@ -44,6 +47,8 @@ export default function DetalhePage({ params }: PageProps) {
     [level: number]: number | null;
   }>({});
   const [isEditing, setIsEditing] = useState(false);
+  const { error: showError } = useToastContext();
+  const { confirm, confirmProps } = useConfirm();
 
   useEffect(() => {
     async function fetchWeapons() {
@@ -133,12 +138,19 @@ export default function DetalhePage({ params }: PageProps) {
       setIsEditing(false);
     } catch (error) {
       console.error("Erro ao salvar registro:", error);
-      alert("Erro ao salvar alterações");
+      showError("Erro ao salvar", "Não foi possível salvar as alterações no registro.");
     }
   };
 
   const handleDelete = async () => {
-    if (!confirm("Tem certeza que deseja excluir este registro?")) return;
+    const confirmed = await confirm({
+      title: "Excluir registro",
+      message: "Tem certeza que deseja excluir este registro? Esta ação não pode ser desfeita.",
+      confirmText: "Excluir",
+      cancelText: "Cancelar"
+    });
+    
+    if (!confirmed) return;
 
     try {
       const response = await fetch(`/api/records/${resolvedParams.id}`, {
@@ -153,7 +165,7 @@ export default function DetalhePage({ params }: PageProps) {
       window.location.href = "/home";
     } catch (error) {
       console.error("Erro ao excluir registro:", error);
-      alert("Erro ao excluir registro");
+      showError("Erro ao excluir", "Não foi possível excluir o registro.");
     }
   };
 
@@ -379,6 +391,7 @@ export default function DetalhePage({ params }: PageProps) {
           </div>
         </Card>
       </div>
+      <ConfirmDialog {...confirmProps} />
     </div>
   );
 }

@@ -83,12 +83,13 @@ export default function Error({ error, reset }: ErrorProps) {
                 Registros Públicos
               </Link>
               <span className="text-gray-300">•</span>
-              <button 
+              <Button 
                 onClick={() => window.location.reload()} 
-                className="text-blue-600 hover:text-blue-800"
+                variant="secondary"
+                size="sm"
               >
                 Recarregar Página
-              </button>
+              </Button>
             </div>
           </div>
         </Card>

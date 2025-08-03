@@ -69,7 +69,12 @@ export function Header() {
             {user ? (
               <div className="flex items-center space-x-4">
                 <span className="text-sm text-gray-700">{user.email}</span>
-                <Button size="sm" variant="secondary" onClick={handleSignOut}>
+                <Button 
+                  size="sm" 
+                  variant="secondary" 
+                  onClick={handleSignOut}
+                  className="cursor-pointer"
+                >
                   Sair
                 </Button>
               </div>
