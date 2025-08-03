@@ -44,3 +44,46 @@ next-env.d.ts
 /public/imagensTibia/*
 !/public/imagensTibia/.gitkeep
 
+# Claude Code generated files (documentation, examples, and assistance files)
+# All uppercase markdown files (documentation)
+*_EXAMPLE*.md
+*_EXAMPLES*.md
+*_FIXES*.md
+*_COMPONENTIZATION*.md
+*_STANDARDIZATION*.md
+*_GUIDE*.md
+*_DOCS*.md
+*_README*.md
+*_NOTES*.md
+*_TODO*.md
+*_CHANGELOG*.md
+*_MIGRATION*.md
+
+# Pattern for any file starting with uppercase words
+EXAMPLE_*.md
+EXAMPLES_*.md
+FIXES_*.md
+GUIDE_*.md
+DOCS_*.md
+README_*.md
+NOTES_*.md
+TODO_*.md
+CHANGELOG_*.md
+MIGRATION_*.md
+
+# Temporary/helper files
+*.tmp
+*.temp
+*.backup
+*.bak
+temp_*
+tmp_*
+helper_*
+test_*
+
+# Claude generated config/example files
+example.*
+sample.*
+demo.*
+template.*
+
