@@ -79,6 +79,7 @@ export default function WeaponDropdown({
           {selected ? (
             <>
               <Image
+                unoptimized
                 src={`https://pdscifxfuisrczpvofat.supabase.co/storage/v1/object/public/weapon-proficiency/${selected.slug}.gif`}
                 alt={selected.name}
                 width={32}
@@ -115,6 +116,7 @@ export default function WeaponDropdown({
                   className="flex items-start gap-3 px-4 py-2 cursor-pointer hover:bg-gray-100"
                 >
                   <Image
+                    unoptimized
                     src={`https://pdscifxfuisrczpvofat.supabase.co/storage/v1/object/public/weapon-proficiency/${item.slug}.gif`}
                     alt={item.name}
                     width={28}

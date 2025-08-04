@@ -108,6 +108,7 @@ export function WeaponComparison({ weapons }: WeaponComparisonProps) {
                     {/* Imagem da arma */}
                     <div className="flex justify-center">
                       <Image
+                        unoptimized
                         src={`https://pdscifxfuisrczpvofat.supabase.co/storage/v1/object/public/weapon-proficiency/${weapon.weaponDetail.slug}.gif`}
                         alt={weapon.weaponDetail.name}
                         width={32}

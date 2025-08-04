@@ -9,10 +9,10 @@ interface ProficiencyIconProps {
   description: string;
 }
 
-export function ProficiencyIcon({ 
-  icons, 
-  isSelected, 
-  description 
+export function ProficiencyIcon({
+  icons,
+  isSelected,
+  description,
 }: ProficiencyIconProps) {
   const [borderError, setBorderError] = useState(false);
   const [iconError, setIconError] = useState(false);
@@ -27,30 +27,30 @@ export function ProficiencyIcon({
         {/* Borda (background) */}
         {borderUrl && !borderError && (
           <Image
+            unoptimized
             src={borderUrl}
             alt="Borda da proficiência"
             width={48}
             height={48}
             className={`pixelated w-12 h-12 object-contain ${
-              !isSelected ? 'filter grayscale opacity-50' : ''
+              !isSelected ? "filter grayscale opacity-50" : ""
             }`}
             onError={() => setBorderError(true)}
-            unoptimized
           />
         )}
 
         {/* Ícone principal (foreground) */}
         {iconUrl && !iconError && (
           <Image
+            unoptimized
             src={iconUrl}
             alt={description}
             width={48}
             height={48}
             className={`absolute top-0 left-0 pixelated w-12 h-12 object-contain ${
-              !isSelected ? 'filter grayscale opacity-50' : ''
+              !isSelected ? "filter grayscale opacity-50" : ""
             }`}
             onError={() => setIconError(true)}
-            unoptimized
           />
         )}
 
