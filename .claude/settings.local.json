@@ -9,7 +9,8 @@
       "mcp__ide__getDiagnostics",
       "Bash(npx next lint:*)",
       "Bash(npx tsc:*)",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "Bash(find:*)"
     ],
     "deny": []
   }

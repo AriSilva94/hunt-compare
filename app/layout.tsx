@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { ToastProvider } from "@/components/providers/ToastProvider";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { Header } from "@/components/shared/Header";
 import { createMetadata } from "@/lib/seo";
 import "./globals.css";
@@ -37,12 +38,14 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        <AuthProvider>
-          <ToastProvider>
-            <Header />
-            <main className="min-h-screen bg-gray-50">{children}</main>
-          </ToastProvider>
-        </AuthProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <ToastProvider>
+              <Header />
+              <main className="min-h-screen bg-gray-50 dark:bg-gray-900 theme-transition pt-20">{children}</main>
+            </ToastProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

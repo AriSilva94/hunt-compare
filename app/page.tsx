@@ -11,27 +11,27 @@ export const metadata = createMetadata({
 
 export default function LandingPage() {
   return (
-    <div className="min-h-[calc(100vh-64px)]">
+    <div className="min-h-screen">
       {/* Hero Section */}
-      <div className="relative bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 px-4 py-20">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 via-indigo-600/5 to-purple-600/5"></div>
+      <div className="relative bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-4 py-20 theme-transition">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 via-indigo-600/5 to-purple-600/5 dark:from-blue-400/10 dark:via-indigo-400/10 dark:to-purple-400/10"></div>
         <div className="relative max-w-6xl mx-auto text-center">
           <div className="mb-8">
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mb-6">
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200 mb-6">
               🎮 Hunt Compare
             </span>
           </div>
 
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
             Analise suas{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400">
               hunts
             </span>
             <br />
             do Tibia como nunca
           </h1>
 
-          <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
             Compare sessões de hunt, analise performance de armas e otimize sua
             gameplay com dados detalhados e visualizações interativas.
           </p>
@@ -56,99 +56,99 @@ export default function LandingPage() {
           {/* Quick Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
             <div className="text-center">
-              <div className="text-3xl font-bold text-blue-600 mb-2">📊</div>
-              <div className="text-sm text-gray-600">Análise Detalhada</div>
+              <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">📊</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Análise Detalhada</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-green-600 mb-2">⚔️</div>
-              <div className="text-sm text-gray-600">Comparação de Armas</div>
+              <div className="text-3xl font-bold text-green-600 dark:text-green-400 mb-2">⚔️</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Comparação de Armas</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-purple-600 mb-2">📈</div>
-              <div className="text-sm text-gray-600">Gráficos Interativos</div>
+              <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-2">📈</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Gráficos Interativos</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-orange-600 mb-2">🔄</div>
-              <div className="text-sm text-gray-600">Comparações Múltiplas</div>
+              <div className="text-3xl font-bold text-orange-600 dark:text-orange-400 mb-2">🔄</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Comparações Múltiplas</div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Features Section */}
-      <div className="py-20 px-4 bg-white">
+      <div className="py-20 px-4 bg-white dark:bg-gray-900 theme-transition">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
               Recursos Principais
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-gray-600 dark:text-gray-300">
               Tudo que você precisa para analisar suas hunts do Tibia
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="p-6 hover:shadow-lg transition-shadow">
+            <Card className="p-6 hover:shadow-lg dark:hover:shadow-gray-700/50 transition-shadow">
               <div className="text-4xl mb-4">📊</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
                 Análise de Performance
               </h3>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-300">
                 Visualize XP/hora, lucro, eficiência e outros indicadores
                 importantes das suas sessões de hunt.
               </p>
             </Card>
 
-            <Card className="p-6 hover:shadow-lg transition-shadow">
+            <Card className="p-6 hover:shadow-lg dark:hover:shadow-gray-700/50 transition-shadow">
               <div className="text-4xl mb-4">⚔️</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
                 Comparação de Armas
               </h3>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-300">
                 Compare diferentes armas e suas proficiências para otimizar seu
                 setup de hunt.
               </p>
             </Card>
 
-            <Card className="p-6 hover:shadow-lg transition-shadow">
+            <Card className="p-6 hover:shadow-lg dark:hover:shadow-gray-700/50 transition-shadow">
               <div className="text-4xl mb-4">📈</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
                 Gráficos Dinâmicos
               </h3>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-300">
                 Visualizações interativas em barras, linhas e pizza para melhor
                 compreensão dos dados.
               </p>
             </Card>
 
-            <Card className="p-6 hover:shadow-lg transition-shadow">
+            <Card className="p-6 hover:shadow-lg dark:hover:shadow-gray-700/50 transition-shadow">
               <div className="text-4xl mb-4">🔄</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
                 Comparações Múltiplas
               </h3>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-300">
                 Compare até múltiplas sessões simultaneamente para identificar
                 padrões e melhorias.
               </p>
             </Card>
 
-            <Card className="p-6 hover:shadow-lg transition-shadow">
+            <Card className="p-6 hover:shadow-lg dark:hover:shadow-gray-700/50 transition-shadow">
               <div className="text-4xl mb-4">🌐</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
                 Compartilhamento
               </h3>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-300">
                 Torne seus registros públicos e compartilhe suas melhores hunts
                 com a comunidade.
               </p>
             </Card>
 
-            <Card className="p-6 hover:shadow-lg transition-shadow">
+            <Card className="p-6 hover:shadow-lg dark:hover:shadow-gray-700/50 transition-shadow">
               <div className="text-4xl mb-4">💡</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
                 Insights Automáticos
               </h3>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-300">
                 Receba sugestões e insights automáticos baseados nos seus dados
                 de hunt.
               </p>
@@ -170,7 +170,7 @@ export default function LandingPage() {
           <Link href="/login">
             <Button
               size="lg"
-              className="bg-blue-500 text-blue-600 hover:bg-blue-50 text-lg px-8 py-4"
+              className="bg-white text-blue-600 hover:bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:hover:bg-gray-700 text-lg px-8 py-4"
             >
               Começar Agora - É Grátis! 🎮
             </Button>
