@@ -38,7 +38,7 @@ export default function ProficiencyTable({
 
   const handleSelect = (level: number, index: number) => {
     const newValue = selectedPerks[level] === index ? null : index;
-    
+
     // Se existe onPerkChange, usar ele, senão usar setSelectedPerks
     if (onPerkChange) {
       onPerkChange(level, newValue);
@@ -77,7 +77,9 @@ export default function ProficiencyTable({
                     return (
                       <div
                         key={index}
-                        onClick={() => !isDisabled && handleSelect(+level, index)}
+                        onClick={() =>
+                          !isDisabled && handleSelect(+level, index)
+                        }
                         className={`${
                           isDisabled ? "cursor-default" : "cursor-pointer"
                         } border p-2 rounded-md w-32 transition-all duration-200 ${
@@ -91,6 +93,7 @@ export default function ProficiencyTable({
                             Array.isArray(perk.icons) &&
                             perk.icons[0] && (
                               <Image
+                                unoptimized
                                 src={perk.icons[0]}
                                 alt="border"
                                 fill
@@ -101,6 +104,7 @@ export default function ProficiencyTable({
                             Array.isArray(perk.icons) &&
                             perk.icons[1] && (
                               <Image
+                                unoptimized
                                 src={perk.icons[1]}
                                 alt="icon"
                                 fill

@@ -23,6 +23,7 @@ export function Header() {
           <div className="flex items-center">
             <Link href="/" className="text-xl font-bold text-gray-900">
               <Image
+                unoptimized
                 src={"/logo.png"}
                 alt="Hunt Compare Logo"
                 width={40}
@@ -69,9 +70,9 @@ export function Header() {
             {user ? (
               <div className="flex items-center space-x-4">
                 <span className="text-sm text-gray-700">{user.email}</span>
-                <Button 
-                  size="sm" 
-                  variant="secondary" 
+                <Button
+                  size="sm"
+                  variant="secondary"
                   onClick={handleSignOut}
                   className="cursor-pointer"
                 >
