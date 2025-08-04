@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { Typography } from "@/components/ui/Typography";
 import { createMetadata } from "@/lib/seo";
 
 export const metadata = createMetadata({
@@ -22,19 +23,19 @@ export default function LandingPage() {
             </span>
           </div>
 
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
+          <Typography variant="h1" className="text-5xl md:text-6xl mb-6 leading-tight">
             Analise suas{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400">
               hunts
             </span>
             <br />
             do Tibia como nunca
-          </h1>
+          </Typography>
 
-          <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
+          <Typography variant="lead" className="text-xl md:text-2xl mb-12 max-w-3xl mx-auto leading-relaxed">
             Compare sessões de hunt, analise performance de armas e otimize sua
             gameplay com dados detalhados e visualizações interativas.
-          </p>
+          </Typography>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
             <Link href="/login">
@@ -79,79 +80,79 @@ export default function LandingPage() {
       <div className="py-20 px-4 bg-white dark:bg-gray-900 theme-transition">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+            <Typography variant="h2" className="text-3xl md:text-4xl mb-4">
               Recursos Principais
-            </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300">
+            </Typography>
+            <Typography variant="lead" className="text-xl">
               Tudo que você precisa para analisar suas hunts do Tibia
-            </p>
+            </Typography>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <Card className="p-6 hover:shadow-lg dark:hover:shadow-gray-700/50 transition-shadow">
               <div className="text-4xl mb-4">📊</div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+              <Typography variant="h4" className="mb-3">
                 Análise de Performance
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300">
+              </Typography>
+              <Typography variant="p">
                 Visualize XP/hora, lucro, eficiência e outros indicadores
                 importantes das suas sessões de hunt.
-              </p>
+              </Typography>
             </Card>
 
             <Card className="p-6 hover:shadow-lg dark:hover:shadow-gray-700/50 transition-shadow">
               <div className="text-4xl mb-4">⚔️</div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+              <Typography variant="h4" className="mb-3">
                 Comparação de Armas
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300">
+              </Typography>
+              <Typography variant="p">
                 Compare diferentes armas e suas proficiências para otimizar seu
                 setup de hunt.
-              </p>
+              </Typography>
             </Card>
 
             <Card className="p-6 hover:shadow-lg dark:hover:shadow-gray-700/50 transition-shadow">
               <div className="text-4xl mb-4">📈</div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+              <Typography variant="h4" className="mb-3">
                 Gráficos Dinâmicos
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300">
+              </Typography>
+              <Typography variant="p">
                 Visualizações interativas em barras, linhas e pizza para melhor
                 compreensão dos dados.
-              </p>
+              </Typography>
             </Card>
 
             <Card className="p-6 hover:shadow-lg dark:hover:shadow-gray-700/50 transition-shadow">
               <div className="text-4xl mb-4">🔄</div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+              <Typography variant="h4" className="mb-3">
                 Comparações Múltiplas
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300">
+              </Typography>
+              <Typography variant="p">
                 Compare até múltiplas sessões simultaneamente para identificar
                 padrões e melhorias.
-              </p>
+              </Typography>
             </Card>
 
             <Card className="p-6 hover:shadow-lg dark:hover:shadow-gray-700/50 transition-shadow">
               <div className="text-4xl mb-4">🌐</div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+              <Typography variant="h4" className="mb-3">
                 Compartilhamento
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300">
+              </Typography>
+              <Typography variant="p">
                 Torne seus registros públicos e compartilhe suas melhores hunts
                 com a comunidade.
-              </p>
+              </Typography>
             </Card>
 
             <Card className="p-6 hover:shadow-lg dark:hover:shadow-gray-700/50 transition-shadow">
               <div className="text-4xl mb-4">💡</div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+              <Typography variant="h4" className="mb-3">
                 Insights Automáticos
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300">
+              </Typography>
+              <Typography variant="p">
                 Receba sugestões e insights automáticos baseados nos seus dados
                 de hunt.
-              </p>
+              </Typography>
             </Card>
           </div>
         </div>
@@ -160,17 +161,18 @@ export default function LandingPage() {
       {/* CTA Section */}
       <div className="bg-gradient-to-r from-blue-600 to-purple-600 py-16 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+          <Typography variant="h2" className="text-3xl md:text-4xl text-white mb-6">
             Pronto para otimizar suas hunts?
-          </h2>
-          <p className="text-xl text-blue-100 mb-8">
+          </Typography>
+          <Typography variant="lead" className="text-xl text-blue-100 mb-8">
             Comece agora mesmo a analisar seus dados e descubra novos insights
             sobre sua gameplay.
-          </p>
+          </Typography>
           <Link href="/login">
             <Button
               size="lg"
-              className="bg-white text-blue-600 hover:bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:hover:bg-gray-700 text-lg px-8 py-4"
+              variant="secondary"
+              className="!bg-white !text-blue-600 hover:!bg-blue-50 dark:!bg-gray-800 dark:!text-blue-400 dark:hover:!bg-gray-700 border-0 shadow-lg px-8 py-4 font-semibold"
             >
               Começar Agora - É Grátis! 🎮
             </Button>

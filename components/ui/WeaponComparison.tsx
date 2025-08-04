@@ -3,6 +3,7 @@
 import { WeaponDetails } from "@/types/weapon.types";
 import { getRecordColor } from "@/utils/recordColors";
 import { ProficiencyIcon } from "@/components/ui/ProficiencyIcon";
+import { Typography } from "@/components/ui/Typography";
 import Image from "next/image";
 
 interface WeaponInfo {
@@ -62,9 +63,9 @@ export function WeaponComparison({ weapons }: WeaponComparisonProps) {
 
   return (
     <div className="bg-white p-6 rounded-lg border border-gray-200">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+      <Typography variant="h4" className="mb-4 flex items-center gap-2">
         ⚔️ Comparação de Armas
-      </h3>
+      </Typography>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         {weapons.map((weapon, index) => {
@@ -98,9 +99,9 @@ export function WeaponComparison({ weapons }: WeaponComparisonProps) {
                       {index + 1}
                     </span>
                   </div>
-                  <h4 className="font-medium text-gray-900 truncate">
+                  <Typography variant="h4" className="truncate">
                     {weapon.recordName}
-                  </h4>
+                  </Typography>
                 </div>
 
                 {weapon.hasWeapon && weapon.weaponDetail ? (
@@ -119,12 +120,12 @@ export function WeaponComparison({ weapons }: WeaponComparisonProps) {
 
                     {/* Nome da arma */}
                     <div className="text-center">
-                      <p className="font-semibold text-gray-900">
+                      <Typography variant="p" className="font-semibold">
                         {weapon.weaponDetail.name}
-                      </p>
-                      <p className="text-xs text-gray-600">
+                      </Typography>
+                      <Typography variant="caption">
                         {weapon.weaponDetail.vocation || "Todas as vocações"}
-                      </p>
+                      </Typography>
                     </div>
 
                     {/* Proficiências */}
@@ -132,9 +133,9 @@ export function WeaponComparison({ weapons }: WeaponComparisonProps) {
                       weapon.weaponDetail.proficiencies.length > 0 && (
                         <div className="mt-2">
                           <div className="flex items-center justify-between mb-2">
-                            <p className="text-xs font-medium text-gray-700">
+                            <Typography variant="caption" className="font-medium">
                               Árvore de Habilidades:
-                            </p>
+                            </Typography>
                             {/* Indicador de diferenças não visíveis */}
                             {(() => {
                               const levels = Object.keys(
@@ -162,9 +163,9 @@ export function WeaponComparison({ weapons }: WeaponComparisonProps) {
                                     <span className="text-orange-500 text-xs">
                                       ⚠️
                                     </span>
-                                    <span className="text-xs text-orange-600 font-medium">
+                                    <Typography variant="caption" className="text-orange-600 font-medium">
                                       Diferenças abaixo
-                                    </span>
+                                    </Typography>
                                   </div>
                                 )
                               );
@@ -217,9 +218,9 @@ export function WeaponComparison({ weapons }: WeaponComparisonProps) {
                                       )}
                                       Nível {level}
                                       {hasConflict && (
-                                        <span className="text-xs text-orange-600 ml-1">
+                                        <Typography variant="caption" className="text-orange-600 ml-1">
                                           (Diferente)
-                                        </span>
+                                        </Typography>
                                       )}
                                     </span>
                                   </div>
@@ -250,9 +251,9 @@ export function WeaponComparison({ weapons }: WeaponComparisonProps) {
                                               />
                                             ) : (
                                               <div className="w-12 h-12 bg-gray-100 border border-gray-300 rounded flex items-center justify-center">
-                                                <span className="text-xs text-gray-500">
+                                                <Typography variant="caption">
                                                   📝
-                                                </span>
+                                                </Typography>
                                               </div>
                                             )}
                                           </div>
@@ -263,8 +264,8 @@ export function WeaponComparison({ weapons }: WeaponComparisonProps) {
 
                                   {/* Se não há proficiências com ícones, mostrar apenas a descrição */}
                                   {proficienciesForLevel.length === 0 && (
-                                    <div className="text-center p-4 text-gray-500 text-sm">
-                                      <span>📝 Nenhuma opção disponível</span>
+                                    <div className="text-center p-4">
+                                      <Typography variant="small">📝 Nenhuma opção disponível</Typography>
                                     </div>
                                   )}
                                 </div>
@@ -330,13 +331,13 @@ export function WeaponComparison({ weapons }: WeaponComparisonProps) {
                     </div>
 
                     <div className="space-y-2">
-                      <p className="text-sm font-medium text-gray-600">
+                      <Typography variant="small" className="font-medium">
                         Sem arma configurada
-                      </p>
-                      <p className="text-xs text-gray-500 max-w-48 mx-auto leading-relaxed">
+                      </Typography>
+                      <Typography variant="caption" className="max-w-48 mx-auto leading-relaxed">
                         Este registro não possui informações de arma e
                         proficiências
-                      </p>
+                      </Typography>
                     </div>
 
                     {/* Decoração sutil */}
@@ -356,12 +357,12 @@ export function WeaponComparison({ weapons }: WeaponComparisonProps) {
       {/* Análise de diferenças nas proficiências */}
       {Object.values(proficiencyDifferences).some(Boolean) && (
         <div className="mt-6 p-4 bg-orange-50 border border-orange-200 rounded-lg">
-          <h4 className="font-medium text-orange-900 mb-2 flex items-center gap-2">
+          <Typography variant="h4" className="text-orange-900 mb-2 flex items-center gap-2">
             ⚠️ Diferenças nas Habilidades Detectadas
-          </h4>
-          <p className="text-sm text-orange-800 mb-3">
+          </Typography>
+          <Typography variant="small" className="text-orange-800 mb-3">
             Os jogadores fizeram escolhas diferentes nos seguintes níveis:
-          </p>
+          </Typography>
           <div className="flex flex-wrap gap-2">
             {Object.entries(proficiencyDifferences)
               .filter(([, hasDiff]) => hasDiff)
@@ -374,29 +375,29 @@ export function WeaponComparison({ weapons }: WeaponComparisonProps) {
                 </span>
               ))}
           </div>
-          <p className="text-xs text-orange-700 mt-2">
+          <Typography variant="caption" className="text-orange-700 mt-2">
             💡 Níveis destacados em laranja mostram onde há divergências entre
             as builds dos jogadores
-          </p>
+          </Typography>
         </div>
       )}
 
       {/* Resumo comparativo */}
       <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-        <h4 className="font-medium text-blue-900 mb-2">
+        <Typography variant="h4" className="text-blue-900 mb-2">
           📊 Resumo Comparativo
-        </h4>
+        </Typography>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
           <div>
-            <p className="text-blue-700 font-medium">Com Arma:</p>
-            <p className="text-blue-900">
+            <Typography variant="p" className="text-blue-700 font-medium">Com Arma:</Typography>
+            <Typography variant="p" className="text-blue-900">
               {weapons.filter((w) => w.hasWeapon).length} de {weapons.length}
-            </p>
+            </Typography>
           </div>
 
           <div>
-            <p className="text-blue-700 font-medium">Tipos Únicos:</p>
-            <p className="text-blue-900">
+            <Typography variant="p" className="text-blue-700 font-medium">Tipos Únicos:</Typography>
+            <Typography variant="p" className="text-blue-900">
               {
                 new Set(
                   weapons
@@ -406,12 +407,12 @@ export function WeaponComparison({ weapons }: WeaponComparisonProps) {
                     .map((w) => w.weaponDetail!.classification)
                 ).size
               }
-            </p>
+            </Typography>
           </div>
 
           <div>
-            <p className="text-blue-700 font-medium">Vocações:</p>
-            <p className="text-blue-900">
+            <Typography variant="p" className="text-blue-700 font-medium">Vocações:</Typography>
+            <Typography variant="p" className="text-blue-900">
               {
                 new Set(
                   weapons
@@ -419,12 +420,12 @@ export function WeaponComparison({ weapons }: WeaponComparisonProps) {
                     .map((w) => w.weaponDetail!.vocation)
                 ).size
               }
-            </p>
+            </Typography>
           </div>
 
           <div>
-            <p className="text-blue-700 font-medium">Armas Diferentes:</p>
-            <p className="text-blue-900">
+            <Typography variant="p" className="text-blue-700 font-medium">Armas Diferentes:</Typography>
+            <Typography variant="p" className="text-blue-900">
               {
                 new Set(
                   weapons
@@ -432,7 +433,7 @@ export function WeaponComparison({ weapons }: WeaponComparisonProps) {
                     .map((w) => w.weaponDetail!.name)
                 ).size
               }
-            </p>
+            </Typography>
           </div>
         </div>
       </div>

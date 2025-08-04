@@ -3,16 +3,18 @@ import { recordsService } from "@/services/records.service";
 import { createClient } from "@/lib/supabase/server";
 import { createMetadata } from "@/lib/seo";
 import { Card } from "@/components/ui/Card";
+import { Typography } from "@/components/ui/Typography";
 import Link from "next/link";
 
 // Força a página a não cachear os dados para sempre ter registros atualizados
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export const metadata = createMetadata({
   title: "Dashboard",
-  description: "Gerencie seus registros de hunt do Tibia. Visualize estatísticas, crie novos registros e acompanhe seu progresso no jogo.",
-  path: "/home"
+  description:
+    "Gerencie seus registros de hunt do Tibia. Visualize estatísticas, crie novos registros e acompanhe seu progresso no jogo.",
+  path: "/home",
 });
 
 export default async function HomePage() {
@@ -32,7 +34,9 @@ export default async function HomePage() {
       return {
         type: "game-session",
         title: data._metadata?.title || `Sessão de ${data["Session start"]}`,
-        subtitle: `Duração: ${data["Session length"]} | XP Ganho: ${data["XP Gain"] || data["Raw XP Gain"]}`,
+        subtitle: `Duração: ${data["Session length"]} | XP Ganho: ${
+          data["XP Gain"] || data["Raw XP Gain"]
+        }`,
         stats: [
           {
             label: "Monstros",
@@ -62,10 +66,10 @@ export default async function HomePage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p className="mt-2 text-lg text-gray-600">
+        <Typography variant="h1">Dashboard</Typography>
+        <Typography variant="lead" className="mt-2">
           Gerencie seus registros de dados
-        </p>
+        </Typography>
       </div>
 
       {/* Cards de Estatísticas Gerais */}
@@ -73,10 +77,10 @@ export default async function HomePage() {
         <Card className="bg-blue-50">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Total de Registros</p>
-              <p className="text-2xl font-bold text-blue-600">
+              <Typography variant="small">Total de Registros</Typography>
+              <Typography variant="h3" className="text-blue-600">
                 {records.length}
-              </p>
+              </Typography>
             </div>
             <span className="text-3xl">📊</span>
           </div>
@@ -85,10 +89,10 @@ export default async function HomePage() {
         <Card className="bg-green-50">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Registros Públicos</p>
-              <p className="text-2xl font-bold text-green-600">
+              <Typography variant="small">Registros Públicos</Typography>
+              <Typography variant="h3" className="text-green-600">
                 {records.filter((r) => r.is_public).length}
-              </p>
+              </Typography>
             </div>
             <span className="text-3xl">🌐</span>
           </div>
@@ -97,10 +101,10 @@ export default async function HomePage() {
         <Card className="bg-purple-50">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Registros Privados</p>
-              <p className="text-2xl font-bold text-purple-600">
+              <Typography variant="small">Registros Privados</Typography>
+              <Typography variant="h3" className="text-purple-600">
                 {records.filter((r) => !r.is_public).length}
-              </p>
+              </Typography>
             </div>
             <span className="text-3xl">🔒</span>
           </div>
@@ -109,12 +113,15 @@ export default async function HomePage() {
         <Card className="bg-amber-50">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Último Registro</p>
-              <p className="text-sm font-medium text-amber-600">
+              <Typography variant="small">Último Registro</Typography>
+              <Typography
+                variant="small"
+                className="font-medium text-amber-600"
+              >
                 {records.length > 0
                   ? new Date(records[0].created_at).toLocaleDateString("pt-BR")
                   : "Nenhum"}
-              </p>
+              </Typography>
             </div>
             <span className="text-3xl">📅</span>
           </div>
@@ -123,48 +130,58 @@ export default async function HomePage() {
 
       <div className="mb-8">
         <Card>
-          <h2 className="text-xl font-semibold mb-4">Como funciona?</h2>
-          <div className="space-y-4 text-gray-600">
-            <p>
+          <Typography variant="h2" className="mb-4">
+            Como funciona?
+          </Typography>
+          <div className="space-y-4">
+            <Typography variant="p">
               Este sistema permite que você gerencie registros JSON de forma
               simples e segura.
-            </p>
+            </Typography>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex items-start">
                 <span className="text-2xl mr-3">📝</span>
                 <div>
-                  <p className="font-medium">Crie registros</p>
-                  <p className="text-sm">
+                  <Typography variant="p" className="font-medium">
+                    Crie registros
+                  </Typography>
+                  <Typography variant="small">
                     Adicione dados JSON como sessões de jogos, relatórios ou
                     qualquer estrutura
-                  </p>
+                  </Typography>
                 </div>
               </div>
               <div className="flex items-start">
                 <span className="text-2xl mr-3">🔐</span>
                 <div>
-                  <p className="font-medium">Controle a privacidade</p>
-                  <p className="text-sm">
+                  <Typography variant="p" className="font-medium">
+                    Controle a privacidade
+                  </Typography>
+                  <Typography variant="small">
                     Defina se o registro será público ou privado
-                  </p>
+                  </Typography>
                 </div>
               </div>
               <div className="flex items-start">
                 <span className="text-2xl mr-3">📊</span>
                 <div>
-                  <p className="font-medium">Visualize seus dados</p>
-                  <p className="text-sm">
+                  <Typography variant="p" className="font-medium">
+                    Visualize seus dados
+                  </Typography>
+                  <Typography variant="small">
                     Veja estatísticas detalhadas e informações formatadas
-                  </p>
+                  </Typography>
                 </div>
               </div>
               <div className="flex items-start">
                 <span className="text-2xl mr-3">🔗</span>
                 <div>
-                  <p className="font-medium">Compartilhe facilmente</p>
-                  <p className="text-sm">
+                  <Typography variant="p" className="font-medium">
+                    Compartilhe facilmente
+                  </Typography>
+                  <Typography variant="small">
                     Gere links públicos para compartilhar seus registros
-                  </p>
+                  </Typography>
                 </div>
               </div>
             </div>
@@ -174,9 +191,7 @@ export default async function HomePage() {
 
       <div>
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold text-gray-900">
-            Seus Registros
-          </h2>
+          <Typography variant="h2">Seus Registros</Typography>
           <Link
             href="/cadastro"
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center"
@@ -190,9 +205,9 @@ export default async function HomePage() {
           <Card>
             <div className="text-center py-12">
               <span className="text-6xl mb-4 block">📝</span>
-              <p className="text-gray-500 mb-4">
+              <Typography variant="p" className="mb-4">
                 Você ainda não possui registros. Que tal criar o primeiro?
-              </p>
+              </Typography>
               <Link
                 href="/cadastro"
                 className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors inline-block"
@@ -212,9 +227,9 @@ export default async function HomePage() {
                   className="hover:shadow-lg transition-shadow"
                 >
                   <div className="flex justify-between items-start mb-2">
-                    <h3 className="text-lg font-medium text-gray-900 line-clamp-1">
+                    <Typography variant="h4" className="line-clamp-1">
                       {summary.title}
-                    </h3>
+                    </Typography>
                     <span
                       className={`px-2 py-1 text-xs rounded ${
                         record.is_public
@@ -226,9 +241,9 @@ export default async function HomePage() {
                     </span>
                   </div>
 
-                  <p className="text-sm text-gray-600 mb-3">
+                  <Typography variant="small" className="mb-3">
                     {summary.subtitle}
-                  </p>
+                  </Typography>
 
                   {/* Estatísticas rápidas para sessões de jogo */}
                   {summary.stats.length > 0 && (
@@ -238,22 +253,24 @@ export default async function HomePage() {
                           key={idx}
                           className="text-center p-2 bg-gray-50 rounded"
                         >
-                          <p className="text-xs text-gray-600">{stat.label}</p>
-                          <p className="text-sm font-bold text-gray-900">
+                          <Typography variant="caption">
+                            {stat.label}
+                          </Typography>
+                          <Typography variant="p" className="font-bold">
                             {typeof stat.value === "number"
                               ? stat.value.toLocaleString()
                               : stat.value}
-                          </p>
+                          </Typography>
                         </div>
                       ))}
                     </div>
                   )}
 
-                  <p className="text-sm text-gray-500 mb-3">
+                  <Typography variant="small" className="text-gray-500 mb-3">
                     Criado em:{" "}
                     {new Date(record.created_at).toLocaleDateString("pt-BR")} às{" "}
                     {new Date(record.created_at).toLocaleTimeString("pt-BR")}
-                  </p>
+                  </Typography>
 
                   <div className="flex gap-2">
                     <Link

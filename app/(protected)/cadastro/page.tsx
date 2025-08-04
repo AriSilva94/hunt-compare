@@ -9,6 +9,7 @@ import { z } from "zod";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { Typography } from "@/components/ui/Typography";
 import WeaponDropdown from "@/components/ui/WeaponDropdown";
 import ProficiencyTable from "@/components/ui/Proficiencies";
 import { weaponService } from "@/services/weapon.service";
@@ -115,12 +116,16 @@ function detectFormat(input: string): "json" | "text" | "invalid" {
 }
 
 const recordSchema = z.object({
-  jsonData: z.string().refine((val) => {
-    const format = detectFormat(val);
-    return format !== "invalid";
-  }, {
-    message: "Dados inválidos para sessão de hunt. Certifique-se de que os dados contenham:\n• Informações de sessão (Session start, Session end ou Session length)\n• Lista de monstros mortos (Killed Monsters)\n• Formato JSON válido ou texto de sessão do Tibia"
-  }),
+  jsonData: z.string().refine(
+    (val) => {
+      const format = detectFormat(val);
+      return format !== "invalid";
+    },
+    {
+      message:
+        "Dados inválidos para sessão de hunt. Certifique-se de que os dados contenham:\n• Informações de sessão (Session start, Session end ou Session length)\n• Lista de monstros mortos (Killed Monsters)\n• Formato JSON válido ou texto de sessão do Tibia",
+    }
+  ),
   isPublic: z.boolean(),
   title: z.string().optional(),
   description: z.string().optional(),
@@ -310,49 +315,49 @@ export default function CadastroPage() {
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <h4 className="font-medium text-gray-700">Sessão</h4>
-              <p className="text-sm text-gray-600">
+              <Typography variant="h4">Sessão</Typography>
+              <Typography variant="small">
                 {jsonPreview["Session start"]} - {jsonPreview["Session end"]}
-              </p>
-              <p className="text-sm text-gray-600">
+              </Typography>
+              <Typography variant="small">
                 Duração: {jsonPreview["Session length"]}
-              </p>
+              </Typography>
             </div>
             <div>
-              <h4 className="font-medium text-gray-700">Estatísticas</h4>
-              <p className="text-sm text-gray-600">
+              <Typography variant="h4">Estatísticas</Typography>
+              <Typography variant="small">
                 XP Ganho: {jsonPreview["XP Gain"] || jsonPreview["Raw XP Gain"]}
-              </p>
-              <p className="text-sm text-gray-600">
+              </Typography>
+              <Typography variant="small">
                 Dano Total: {jsonPreview["Damage"]}
-              </p>
+              </Typography>
             </div>
           </div>
 
           {jsonPreview["Killed Monsters"] && (
             <div>
-              <h4 className="font-medium text-gray-700">
+              <Typography variant="h4">
                 Monstros Eliminados ({jsonPreview["Killed Monsters"].length}{" "}
                 tipos)
-              </h4>
-              <div className="text-sm text-gray-600">
+              </Typography>
+              <Typography variant="small">
                 Total:{" "}
                 {jsonPreview["Killed Monsters"].reduce(
                   (sum: number, m: any) => sum + m.Count,
                   0
                 )}
-              </div>
+              </Typography>
             </div>
           )}
 
           {jsonPreview["Looted Items"] && (
             <div>
-              <h4 className="font-medium text-gray-700">
+              <Typography variant="h4">
                 Itens Coletados ({jsonPreview["Looted Items"].length} tipos)
-              </h4>
-              <div className="text-sm text-gray-600">
+              </Typography>
+              <Typography variant="small">
                 Valor Total: {jsonPreview["Loot"]}
-              </div>
+              </Typography>
             </div>
           )}
         </div>
@@ -361,9 +366,9 @@ export default function CadastroPage() {
 
     // Renderização padrão
     return (
-      <div className="text-sm text-gray-600">
-        <p>Chaves encontradas: {Object.keys(jsonPreview).length}</p>
-      </div>
+      <Typography variant="small">
+        Chaves encontradas: {Object.keys(jsonPreview).length}
+      </Typography>
     );
   };
 
@@ -390,20 +395,20 @@ Looted Items:
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Novo Registro</h1>
-        <p className="mt-2 text-lg text-gray-600">
+        <Typography variant="h1">Novo Registro</Typography>
+        <Typography variant="lead" className="mt-2">
           Crie um novo registro usando JSON ou formato de texto
-        </p>
+        </Typography>
       </div>
 
       <Card>
         <div className="flex items-center justify-around gap-4">
           <WeaponDropdown weapons={weapons} onSelect={handleWeaponSelect} />
           <div className="flex flex-col w-80">
-            <div className="my-1 text-2xl text-gray-900">
+            <Typography variant="h3" className="my-1">
               {weaponDetail?.name}
-            </div>
-            <div className="my-1 text-sm max-w-md text-green-700 font-bold">
+            </Typography>
+            <div className="my-1 max-w-md text-green-700 dark:text-green-400 font-bold text-xs">
               {weaponDetail?.description_raw ? (
                 weaponDetail.description_raw
                   .replace(
@@ -485,8 +490,8 @@ Looted Items:
             <textarea
               {...register("jsonData")}
               rows={12}
-              className={`w-full px-3 py-2 border rounded-lg font-mono text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                errors.jsonData ? "border-red-500" : "border-gray-300"
+              className={`w-full px-3 py-2 border rounded-lg font-mono text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 ${
+                errors.jsonData ? "border-red-500 dark:border-red-400" : "border-gray-300 dark:border-gray-600"
               }`}
               placeholder="Cole seu JSON ou texto de sessão aqui..."
               onChange={(e) => {
@@ -520,9 +525,9 @@ Looted Items:
 
           {jsonPreview && (
             <Card className="bg-gray-50">
-              <h3 className="text-lg font-medium text-gray-900 mb-3">
+              <Typography variant="h3" className="mb-3">
                 Preview dos Dados
-              </h3>
+              </Typography>
               {renderPreview()}
             </Card>
           )}
@@ -534,15 +539,14 @@ Looted Items:
               id="isPublic"
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             />
-            <label
-              htmlFor="isPublic"
-              className="ml-2 block text-sm text-gray-900"
-            >
-              Tornar este registro público
+            <label htmlFor="isPublic" className="ml-2 block">
+              <Typography variant="small">
+                Tornar este registro público
+              </Typography>
             </label>
-            <span className="ml-2 text-xs text-gray-500 text-end">
+            <Typography variant="caption" className="ml-2 text-end">
               (Qualquer pessoa poderá visualizar este registro)
-            </span>
+            </Typography>
           </div>
 
           <div className="flex justify-end space-x-4">
@@ -562,18 +566,18 @@ Looted Items:
 
       <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card className="bg-blue-50 border-blue-200">
-          <h3 className="text-lg font-semibold text-blue-900 mb-2">
+          <Typography variant="h3" className="text-blue-900 mb-2">
             Exemplo: Formato JSON
-          </h3>
+          </Typography>
           <pre className="text-xs text-blue-800 overflow-x-auto">
             {jsonExample}
           </pre>
         </Card>
 
         <Card className="bg-green-50 border-green-200">
-          <h3 className="text-lg font-semibold text-green-900 mb-2">
+          <Typography variant="h3" className="text-green-900 mb-2">
             Exemplo: Formato Texto
-          </h3>
+          </Typography>
           <pre className="text-xs text-green-800 overflow-x-auto">
             {textExample}
           </pre>

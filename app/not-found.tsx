@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { Typography } from "@/components/ui/Typography";
 
 export default function NotFound() {
   return (
@@ -15,16 +16,16 @@ export default function NotFound() {
           </div>
 
           {/* Título */}
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">404</h1>
-          <h2 className="text-xl font-semibold text-gray-700 mb-4">
+          <Typography variant="h1" className="mb-2">404</Typography>
+          <Typography variant="lead" className="mb-4">
             Página não encontrada
-          </h2>
+          </Typography>
 
           {/* Descrição */}
-          <p className="text-gray-600 mb-8 leading-relaxed">
+          <Typography variant="p" className="mb-8 leading-relaxed">
             Ops! A página que você está procurando não existe ou foi movida. 
             Verifique se o endereço está correto ou use os links abaixo para navegar.
-          </p>
+          </Typography>
 
           {/* Botões de navegação */}
           <div className="space-y-3">
@@ -49,9 +50,9 @@ export default function NotFound() {
 
           {/* Link adicional */}
           <div className="mt-6 pt-6 border-t border-gray-200">
-            <p className="text-sm text-gray-500 mb-3">
+            <Typography variant="small" className="mb-3">
               Precisa de ajuda? Veja nossas páginas principais:
-            </p>
+            </Typography>
             <div className="flex flex-wrap justify-center gap-4 text-sm">
               <Link href="/registros-publicos" className="text-blue-600 hover:text-blue-800">
                 Registros Públicos
@@ -70,9 +71,9 @@ export default function NotFound() {
 
         {/* Rodapé */}
         <div className="text-center">
-          <p className="text-xs text-gray-400">
+          <Typography variant="caption">
             Hunt Compare - Análise de sessões de hunt do Tibia
-          </p>
+          </Typography>
         </div>
       </div>
     </div>

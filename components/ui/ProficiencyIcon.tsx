@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { Typography } from "@/components/ui/Typography";
 
 interface ProficiencyIconProps {
   icons: string[]; // Array com [border, icon] como vem da API
@@ -64,9 +65,9 @@ export function ProficiencyIcon({
 
       {/* Descrição completa sem truncate */}
       <div className="text-center max-w-24">
-        <p className="text-xs text-gray-700 leading-tight break-words">
+        <Typography variant="caption" className="leading-tight break-words">
           {description}
-        </p>
+        </Typography>
       </div>
     </div>
   );

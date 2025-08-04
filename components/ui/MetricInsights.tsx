@@ -2,6 +2,7 @@
 "use client";
 
 import { Card } from "@/components/ui/Card";
+import { Typography } from "@/components/ui/Typography";
 
 interface Record {
   id: string;
@@ -207,28 +208,28 @@ export function MetricInsights({ records }: MetricInsightsProps) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
-        <h3 className="text-lg font-semibold text-blue-900 mb-4">
+        <Typography variant="lead" className="font-semibold text-blue-900 mb-4">
           🧠 Insights Automáticos
-        </h3>
+        </Typography>
         <div className="space-y-2">
           {insights.map((insight, index) => (
             <div key={index} className="flex items-start gap-2">
               <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-              <p className="text-blue-800 text-sm">{insight}</p>
+              <Typography variant="small" className="text-blue-800">{insight}</Typography>
             </div>
           ))}
         </div>
       </Card>
       
       <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
-        <h3 className="text-lg font-semibold text-green-900 mb-4">
+        <Typography variant="lead" className="font-semibold text-green-900 mb-4">
           💡 Recomendações
-        </h3>
+        </Typography>
         <div className="space-y-2">
           {recommendations.map((recommendation, index) => (
             <div key={index} className="flex items-start gap-2">
               <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-              <p className="text-green-800 text-sm">{recommendation}</p>
+              <Typography variant="small" className="text-green-800">{recommendation}</Typography>
             </div>
           ))}
         </div>

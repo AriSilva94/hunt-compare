@@ -16,6 +16,7 @@ import {
   LineChart,
   Line
 } from "recharts";
+import { Typography } from "@/components/ui/Typography";
 
 interface ChartDataPoint {
   name: string;
@@ -56,10 +57,10 @@ const CustomTooltip = ({ active, payload, label, valueFormatter }: {
     const value = payload[0].value;
     return (
       <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
-        <p className="font-medium text-gray-900">{label}</p>
-        <p className="text-blue-600">
+        <Typography variant="p" className="font-medium">{label}</Typography>
+        <Typography variant="p" className="text-blue-600">
           {valueFormatter ? valueFormatter(value) : value.toLocaleString()}
-        </p>
+        </Typography>
       </div>
     );
   }
@@ -84,11 +85,11 @@ export function ComparisonChart({
   if (!data || data.length === 0) {
     return (
       <div className="bg-white p-6 rounded-lg border border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">{title}</h3>
+        <Typography variant="h4" className="mb-4">{title}</Typography>
         <div className="flex items-center justify-center h-64 text-gray-500">
           <div className="text-center">
             <span className="text-4xl mb-2 block">📊</span>
-            <p>Nenhum registro encontrado</p>
+            <Typography variant="p">Nenhum registro encontrado</Typography>
           </div>
         </div>
       </div>
@@ -100,12 +101,12 @@ export function ComparisonChart({
   if (allZero) {
     return (
       <div className="bg-white p-6 rounded-lg border border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">{title}</h3>
+        <Typography variant="h4" className="mb-4">{title}</Typography>
         <div className="flex items-center justify-center h-64 text-gray-500">
           <div className="text-center">
             <span className="text-4xl mb-2 block">📊</span>
-            <p>Todos os valores são zero para esta métrica</p>
-            <p className="text-sm mt-1">Verifique se os dados dos registros estão corretos</p>
+            <Typography variant="p">Todos os valores são zero para esta métrica</Typography>
+            <Typography variant="small" className="mt-1">Verifique se os dados dos registros estão corretos</Typography>
           </div>
         </div>
       </div>
@@ -200,7 +201,7 @@ export function ComparisonChart({
 
   return (
     <div className="bg-white p-6 rounded-lg border border-gray-200">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">{title}</h3>
+      <Typography variant="h4" className="mb-4">{title}</Typography>
       {renderChart()}
     </div>
   );

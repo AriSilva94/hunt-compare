@@ -3,6 +3,7 @@ import { recordsService } from "@/services/records.service";
 import { createMetadata } from "@/lib/seo";
 import { Card } from "@/components/ui/Card";
 import { JsonViewer } from "@/components/ui/JsonViewer";
+import { Typography } from "@/components/ui/Typography";
 import WeaponDropdown from "@/components/ui/WeaponDropdown";
 import ProficiencyTable from "@/components/ui/Proficiencies";
 import { weaponService } from "@/services/weapon.service";
@@ -22,23 +23,26 @@ export const revalidate = 300; // 5 minutes
 export async function generateMetadata({ params }: PageProps) {
   const resolvedParams = await params;
   const record = await recordsService.getPublicRecord(resolvedParams.id);
-  
+
   if (!record) {
     return createMetadata({
       title: "Registro não encontrado",
       description: "O registro solicitado não foi encontrado ou não é público.",
-      noIndex: true
+      noIndex: true,
     });
   }
 
-  const title = record.data._metadata?.title || `Registro de Hunt #${record.id.slice(0, 8)}`;
-  const description = record.data._metadata?.description || 
+  const title =
+    record.data._metadata?.title ||
+    `Registro de Hunt #${record.id.slice(0, 8)}`;
+  const description =
+    record.data._metadata?.description ||
     `Visualize dados detalhados desta sessão de hunt do Tibia. XP, lucro, monstros eliminados e muito mais.`;
 
   return createMetadata({
     title,
     description,
-    path: `/detalhe-publico/${record.id}`
+    path: `/detalhe-publico/${record.id}`,
   });
 }
 
@@ -63,33 +67,39 @@ export default async function DetalhePublicoPage({ params }: PageProps) {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Registro Público</h1>
-        <p className="mt-2 text-lg text-gray-600">
+        <Typography variant="h1">Registro Público</Typography>
+        <Typography variant="lead" className="mt-2">
           {record.data._metadata?.title || `Registro #${record.id.slice(0, 8)}`}
-        </p>
+        </Typography>
         {record.data._metadata?.description && (
-          <p className="mt-1 text-gray-600">
+          <Typography variant="p" className="mt-1">
             {record.data._metadata.description}
-          </p>
+          </Typography>
         )}
       </div>
 
       <div className="space-y-6">
         <Card>
           <div className="mb-4">
-            <h2 className="text-xl font-semibold mb-2">Informações</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+            <Typography variant="h2" className="mb-2">
+              Informações
+            </Typography>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <span className="font-medium text-gray-700">
+                <Typography variant="small" className="font-medium">
                   ID do Registro:
-                </span>
-                <p className="text-gray-900 font-mono text-xs">{record.id}</p>
+                </Typography>
+                <Typography variant="caption" className="font-mono">
+                  {record.id}
+                </Typography>
               </div>
               <div>
-                <span className="font-medium text-gray-700">Criado em:</span>
-                <p className="text-gray-900">
+                <Typography variant="small" className="font-medium">
+                  Criado em:
+                </Typography>
+                <Typography variant="small">
                   {new Date(record.created_at).toLocaleString("pt-BR")}
-                </p>
+                </Typography>
               </div>
             </div>
           </div>
@@ -106,10 +116,10 @@ export default async function DetalhePublicoPage({ params }: PageProps) {
                 }
               />
               <div className="flex flex-col w-80">
-                <div className="my-1 text-2xl text-gray-900">
+                <Typography variant="h3" className="my-1">
                   {weaponDetail?.name}
-                </div>
-                <div className="my-1 text-sm max-w-md text-green-700 font-bold">
+                </Typography>
+                <div className="my-1 max-w-md text-green-700 dark:text-green-400 font-bold text-xs">
                   {weaponDetail?.description_raw ? (
                     weaponDetail.description_raw
                       .replace(
