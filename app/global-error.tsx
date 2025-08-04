@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { Button } from "@/components/ui/Button";
+import { Typography } from "@/components/ui/Typography";
 
 interface GlobalErrorProps {
   error: Error & { digest?: string };
@@ -26,32 +27,32 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
               </div>
 
               {/* Título */}
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              <Typography variant="h2" className="mb-2">
                 Erro Crítico
-              </h1>
-              <h2 className="text-lg font-semibold text-gray-700 mb-4">
+              </Typography>
+              <Typography variant="lead" className="mb-4">
                 A aplicação encontrou um problema grave
-              </h2>
+              </Typography>
 
               {/* Descrição */}
-              <p className="text-gray-600 mb-6 leading-relaxed">
+              <Typography variant="p" className="mb-6 leading-relaxed">
                 Ocorreu um erro inesperado que afetou toda a aplicação. 
                 Por favor, recarregue a página ou tente novamente mais tarde.
-              </p>
+              </Typography>
 
               {/* Detalhes em desenvolvimento */}
               {process.env.NODE_ENV === "development" && (
                 <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-left">
-                  <h3 className="text-sm font-medium text-red-800 mb-2">
+                  <Typography variant="small" className="font-medium text-red-800 mb-2">
                     Detalhes técnicos:
-                  </h3>
+                  </Typography>
                   <code className="text-xs text-red-700 break-all block">
                     {error.message}
                   </code>
                   {error.digest && (
-                    <p className="text-xs text-red-600 mt-1">
+                    <Typography variant="caption" className="text-red-600 mt-1">
                       Error ID: {error.digest}
-                    </p>
+                    </Typography>
                   )}
                 </div>
               )}
@@ -85,10 +86,10 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
 
               {/* Informações de suporte */}
               <div className="mt-6 pt-6 border-t border-gray-200">
-                <p className="text-xs text-gray-500">
+                <Typography variant="caption">
                   Se o problema persistir, tente limpar o cache do navegador 
                   ou entre em contato com o suporte.
-                </p>
+                </Typography>
               </div>
             </div>
           </div>

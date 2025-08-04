@@ -4,6 +4,7 @@ import { useState } from "react";
 import { authService } from "@/services/auth.service";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { Typography } from "@/components/ui/Typography";
 
 export function AuthForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -23,13 +24,13 @@ export function AuthForm() {
   };
 
   return (
-    <Card className="w-full backdrop-blur-sm bg-white/80 border border-white/20 shadow-xl">
+    <Card className="w-full backdrop-blur-sm bg-white/80 dark:bg-gray-800/80 border border-white/20 dark:border-gray-700/20 shadow-xl">
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg flex items-center gap-3">
+        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/50 border border-red-200 dark:border-red-700 text-red-800 dark:text-red-200 rounded-lg flex items-center gap-3">
           <span className="text-xl">⚠️</span>
           <div>
-            <div className="font-medium">Ops! Algo deu errado</div>
-            <div className="text-sm">{error}</div>
+            <Typography variant="p" className="font-medium">Ops! Algo deu errado</Typography>
+            <Typography variant="small" className="text-red-700 dark:text-red-300">{error}</Typography>
           </div>
         </div>
       )}
@@ -38,7 +39,7 @@ export function AuthForm() {
       <div className="space-y-4">
         <Button
           onClick={handleGoogleSignIn}
-          className="w-full bg-blue-500 text-blue-600 hover:bg-blue-50 text-lg px-8 transition-all duration-200 flex items-center justify-center gap-3 py-3"
+          className="w-full bg-white text-blue-600 hover:bg-blue-50 dark:bg-gray-700 dark:text-blue-400 dark:hover:bg-gray-600 text-lg px-8 transition-all duration-200 flex items-center justify-center gap-3 py-3"
           disabled={isLoading}
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -75,9 +76,9 @@ export function AuthForm() {
             <div className="w-full border-t border-gray-200"></div>
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-4 bg-white text-gray-500">
+            <Typography variant="small" className="px-4 bg-white">
               Login rápido e seguro
-            </span>
+            </Typography>
           </div>
         </div>
 
@@ -85,13 +86,13 @@ export function AuthForm() {
         <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4 border border-blue-100">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">🔒</span>
-            <span className="font-medium text-gray-900">Login Seguro</span>
+            <Typography variant="p" className="font-medium">Login Seguro</Typography>
           </div>
-          <p className="text-sm text-gray-600 leading-relaxed">
+          <Typography variant="small" className="leading-relaxed">
             Utilizamos o Google OAuth para garantir a segurança dos seus dados.
             Seus registros de hunt ficam protegidos e acessíveis apenas para
             você.
-          </p>
+          </Typography>
         </div>
       </div>
     </Card>

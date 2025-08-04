@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { X, CheckCircle, AlertCircle, Info, AlertTriangle } from 'lucide-react'
+import { Typography } from './Typography'
 
 export type ToastType = 'success' | 'error' | 'warning' | 'info'
 
@@ -64,8 +65,8 @@ export function Toast({ id, type, title, message, duration = 5000, onRemove }: T
       <Icon className="w-5 h-5 mr-3 mt-0.5 flex-shrink-0" />
       
       <div className="flex-grow">
-        <h4 className="font-semibold text-sm">{title}</h4>
-        {message && <p className="text-sm mt-1 opacity-90">{message}</p>}
+        <Typography variant="small" className="font-semibold">{title}</Typography>
+        {message && <Typography variant="small" className="mt-1 opacity-90">{message}</Typography>}
       </div>
 
       <button

@@ -18,7 +18,7 @@ export function Card({
 
   return (
     <div
-      className={`bg-white rounded-lg shadow-md my-4 ${paddings[padding]} ${className}`}
+      className={`bg-white dark:bg-gray-800 rounded-lg shadow-md dark:shadow-gray-700/50 my-4 theme-transition ${paddings[padding]} ${className}`}
       {...props}
     >
       {children}

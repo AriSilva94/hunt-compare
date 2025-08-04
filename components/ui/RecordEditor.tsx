@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { Typography } from "@/components/ui/Typography";
 import ProficiencyTable from "@/components/ui/Proficiencies";
 import { WeaponDetails } from "@/types/weapon.types";
 
@@ -81,9 +82,9 @@ export function RecordEditor({
   return (
     <Card className="border-blue-200 bg-blue-50">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-blue-900">
+        <Typography variant="h4" className="text-blue-900">
           ✏️ Editando Registro
-        </h3>
+        </Typography>
         <div className="flex gap-2">
           <Button
             variant="secondary"
@@ -106,7 +107,7 @@ export function RecordEditor({
       <div className="space-y-4">
         {/* Toggle de Visibilidade */}
         <div className="p-4 bg-white rounded-lg border">
-          <h4 className="font-medium text-gray-900 mb-3">🔒 Visibilidade</h4>
+          <Typography variant="h4" className="mb-3">🔒 Visibilidade</Typography>
           <div className="flex items-center gap-4">
             <label className="flex items-center gap-2 cursor-pointer">
               <input
@@ -116,10 +117,10 @@ export function RecordEditor({
                 onChange={() => setIsPublic(false)}
                 className="w-4 h-4 text-blue-600"
               />
-              <span className="text-sm">
+              <Typography variant="small">
                 <span className="font-medium">Privado</span>
                 <span className="text-gray-600 ml-1">- Apenas você pode ver</span>
-              </span>
+              </Typography>
             </label>
             <label className="flex items-center gap-2 cursor-pointer">
               <input
@@ -129,15 +130,15 @@ export function RecordEditor({
                 onChange={() => setIsPublic(true)}
                 className="w-4 h-4 text-blue-600"
               />
-              <span className="text-sm">
+              <Typography variant="small">
                 <span className="font-medium">Público</span>
                 <span className="text-gray-600 ml-1">- Qualquer pessoa pode ver</span>
-              </span>
+              </Typography>
             </label>
           </div>
           
           {isPublic !== record.is_public && (
-            <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded text-sm">
+            <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded">
               <strong className="text-yellow-800">⚠️ Atenção:</strong>
               <span className="text-yellow-700 ml-1">
                 {isPublic 
@@ -152,11 +153,11 @@ export function RecordEditor({
         {/* Proficiências da Arma */}
         {weaponDetail && (
           <div className="p-4 bg-white rounded-lg border">
-            <h4 className="font-medium text-gray-900 mb-3">⚔️ Proficiências da Arma</h4>
+            <Typography variant="h4" className="mb-3">⚔️ Proficiências da Arma</Typography>
             <div className="flex flex-col items-center gap-4">
               <div className="text-center">
-                <h5 className="text-lg font-medium text-gray-900">{weaponDetail.name}</h5>
-                <p className="text-sm text-gray-600">Ajuste as proficiências selecionadas</p>
+                <Typography variant="h4">{weaponDetail.name}</Typography>
+                <Typography variant="small">Ajuste as proficiências selecionadas</Typography>
               </div>
               <ProficiencyTable
                 proficiencies={weaponDetail.proficiencies}
@@ -167,7 +168,7 @@ export function RecordEditor({
             </div>
             
             {JSON.stringify(selectedPerks) !== JSON.stringify(initialSelectedPerks) && (
-              <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded text-sm">
+              <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded">
                 <strong className="text-blue-800">ℹ️ Info:</strong>
                 <span className="text-blue-700 ml-1">
                   As proficiências selecionadas foram alteradas e afetarão os cálculos nas comparações.
@@ -179,9 +180,9 @@ export function RecordEditor({
 
         {!weaponDetail && record.data.weaponDetail && (
           <div className="p-4 bg-gray-50 rounded-lg border">
-            <p className="text-sm text-gray-600">
+            <Typography variant="small">
               ⚠️ Não foi possível carregar os detalhes da arma para edição das proficiências.
-            </p>
+            </Typography>
           </div>
         )}
       </div>

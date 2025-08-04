@@ -52,11 +52,11 @@ export default function ProficiencyTable({
 
   return (
     <div className="overflow-x-auto">
-      <table className="table-auto border border-gray-300 w-full text-center">
+      <table className="table-auto border border-gray-300 dark:border-gray-600 w-full text-center">
         <thead>
-          <tr className="bg-gray-200">
+          <tr className="bg-gray-200 dark:bg-gray-700">
             {Object.keys(grouped).map((level) => (
-              <th key={level} className="p-2">
+              <th key={level} className="p-2 text-gray-900 dark:text-gray-100">
                 Nível {level}
               </th>
             ))}
@@ -65,7 +65,7 @@ export default function ProficiencyTable({
         <tbody>
           <tr>
             {Object.entries(grouped).map(([level, perks]) => (
-              <td key={level} className="p-2 align-middle">
+              <td key={level} className="p-2 align-middle bg-white dark:bg-gray-800">
                 <div
                   className={`flex flex-col ${
                     perks.length > 1 ? "justify-around gap-3" : "items-center"
@@ -82,10 +82,10 @@ export default function ProficiencyTable({
                         }
                         className={`${
                           isDisabled ? "cursor-default" : "cursor-pointer"
-                        } border p-2 rounded-md w-32 transition-all duration-200 ${
+                        } border border-gray-300 dark:border-gray-600 p-2 rounded-md w-32 transition-all duration-200 ${
                           isSelected
-                            ? "bg-blue-100 border-blue-400"
-                            : "hover:bg-gray-100 opacity-70"
+                            ? "bg-blue-100 dark:bg-blue-900 border-blue-400 dark:border-blue-500"
+                            : "hover:bg-gray-100 dark:hover:bg-gray-700 opacity-70 bg-gray-50 dark:bg-gray-800"
                         }`}
                       >
                         <div className="relative w-8 h-8 mx-auto mb-1">
@@ -112,7 +112,7 @@ export default function ProficiencyTable({
                               />
                             )}
                         </div>
-                        <p className="text-xs">{perk.description}</p>
+                        <p className="text-xs text-gray-900 dark:text-gray-100">{perk.description}</p>
                       </div>
                     );
                   })}

@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { JsonViewer } from "@/components/ui/JsonViewer";
+import { Typography } from "@/components/ui/Typography";
 import Link from "next/link";
 import { WeaponDetails, WeaponItem } from "@/types/weapon.types";
 import { weaponService } from "@/services/weapon.service";
@@ -187,14 +188,14 @@ export default function DetalhePage({ params }: PageProps) {
       <div className="mb-8">
         <div className="flex justify-between items-start">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <Typography variant="h1" className="text-3xl">
               {record.data._metadata?.title || "Detalhes do Registro"}
-            </h1>
-            <p className="mt-2 text-lg text-gray-600">ID: {record.id}</p>
+            </Typography>
+            <Typography variant="lead" className="mt-2">ID: {record.id}</Typography>
             {record.data._metadata?.description && (
-              <p className="mt-1 text-gray-600">
+              <Typography variant="p" className="mt-1">
                 {record.data._metadata.description}
-              </p>
+              </Typography>
             )}
           </div>
         </div>
@@ -227,27 +228,27 @@ export default function DetalhePage({ params }: PageProps) {
 
         <Card>
           <div className="mb-4">
-            <h2 className="text-xl font-semibold mb-2">
+            <Typography variant="h3" className="mb-2">
               Informações do Registro
-            </h2>
+            </Typography>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
               <div>
                 <span className="font-medium text-gray-700">Criado em:</span>
-                <p className="text-gray-900">
+                <Typography variant="p">
                   {new Date(record.created_at).toLocaleString("pt-BR")}
-                </p>
+                </Typography>
               </div>
               <div>
                 <span className="font-medium text-gray-700">
                   Atualizado em:
                 </span>
-                <p className="text-gray-900">
+                <Typography variant="p">
                   {new Date(record.updated_at).toLocaleString("pt-BR")}
-                </p>
+                </Typography>
               </div>
               <div>
                 <span className="font-medium text-gray-700">Visibilidade:</span>
-                <p className="text-gray-900">
+                <Typography variant="p">
                   <span
                     className={`inline-flex px-2 py-1 text-xs rounded ${
                       record.is_public
@@ -257,22 +258,22 @@ export default function DetalhePage({ params }: PageProps) {
                   >
                     {record.is_public ? "Público" : "Privado"}
                   </span>
-                </p>
+                </Typography>
               </div>
             </div>
           </div>
 
           {record.is_public && (
-            <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-              <h3 className="font-medium text-gray-700 mb-2">
+            <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+              <Typography variant="h4" className="mb-2">
                 🔗 Link Público
-              </h3>
+              </Typography>
               <div className="flex flex-wrap items-center justify-center gap-2">
                 <input
                   type="text"
                   readOnly
                   value={`${window.location.origin}/detalhe-publico/${record.id}`}
-                  className="flex-1 px-3 py-2 bg-white border border-gray-300 rounded text-sm"
+                  className="flex-1 px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded text-sm text-gray-900 dark:text-gray-100"
                   onClick={(e) => e.currentTarget.select()}
                 />
                 <Button
@@ -292,10 +293,10 @@ export default function DetalhePage({ params }: PageProps) {
                   </Button>
                 </Link>
               </div>
-              <p className="text-xs text-gray-600 mt-2">
+              <Typography variant="caption" className="mt-2">
                 Compartilhe este link com qualquer pessoa para visualizar este
                 registro
-              </p>
+              </Typography>
             </div>
           )}
         </Card>
@@ -363,10 +364,10 @@ export default function DetalhePage({ params }: PageProps) {
         <Card className="bg-gray-50">
           <div className="flex justify-between items-center">
             <div>
-              <h3 className="font-medium text-gray-700">Exportar Dados</h3>
-              <p className="text-sm text-gray-600">
+              <Typography variant="h4">Exportar Dados</Typography>
+              <Typography variant="small">
                 Baixe os dados em formato JSON
-              </p>
+              </Typography>
             </div>
             <Button
               size="sm"

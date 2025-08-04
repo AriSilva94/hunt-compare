@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { ComparisonHistoryService } from "@/services/comparison-history.service";
 import { useConfirm } from "@/hooks/useConfirm";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { Typography } from "@/components/ui/Typography";
 import Link from "next/link";
 
 interface ComparisonRecord {
@@ -85,12 +86,12 @@ export function ComparisonHistory({ onSelectComparison }: ComparisonHistoryProps
     <Card className="mb-6">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+          <Typography variant="lead" className="font-semibold flex items-center gap-2">
             🕒 Histórico de Comparações
-          </h2>
-          <p className="text-sm text-gray-600">
+          </Typography>
+          <Typography variant="small">
             Acesse rapidamente suas comparações anteriores
-          </p>
+          </Typography>
         </div>
         {history.length > 0 && (
           <Button
@@ -113,14 +114,14 @@ export function ComparisonHistory({ onSelectComparison }: ComparisonHistoryProps
               <div className="flex items-center gap-3">
                 <span className="text-lg">📊</span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate">
+                  <Typography variant="small" className="font-medium truncate">
                     {comparison.recordNames.length > 0
                       ? comparison.recordNames.join(" vs ")
                       : comparison.title}
-                  </p>
-                  <p className="text-xs text-gray-500">
+                  </Typography>
+                  <Typography variant="caption">
                     {comparison.recordIds.length} registros • {formatDate(comparison.createdAt)}
-                  </p>
+                  </Typography>
                 </div>
               </div>
             </div>
@@ -137,9 +138,9 @@ export function ComparisonHistory({ onSelectComparison }: ComparisonHistoryProps
               )}
               <Link
                 href={ComparisonHistoryService.formatComparisonUrl(comparison.recordIds)}
-                className="text-xs text-green-600 hover:text-green-800 px-2 py-1 rounded hover:bg-green-50"
+                className="text-green-600 hover:text-green-800 px-2 py-1 rounded hover:bg-green-50"
               >
-                Ver Resultado
+                <Typography variant="caption">Ver Resultado</Typography>
               </Link>
               <Button
                 onClick={() => handleRemoveComparison(comparison.id)}

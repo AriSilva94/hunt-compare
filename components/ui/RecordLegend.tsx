@@ -2,6 +2,7 @@
 "use client";
 
 import { Card } from "@/components/ui/Card";
+import { Typography } from "@/components/ui/Typography";
 import { getRecordColor } from "@/utils/recordColors";
 
 interface Record {
@@ -21,9 +22,9 @@ interface RecordLegendProps {
 export function RecordLegend({ records, getRecordTitle }: RecordLegendProps) {
   return (
     <Card className="mb-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+      <Typography variant="h4" className="mb-4 flex items-center gap-2">
         🎨 Legenda de Cores
-      </h3>
+      </Typography>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
         {records.map((record, index) => {
@@ -54,14 +55,14 @@ export function RecordLegend({ records, getRecordTitle }: RecordLegendProps) {
                       {index + 1}
                     </span>
                   </div>
-                  <h3 className="font-medium text-gray-900 truncate">
+                  <Typography variant="h4" className="truncate">
                     {getRecordTitle(record)}
-                  </h3>
+                  </Typography>
                 </div>
 
-                <p className="text-sm text-gray-600 mb-2">
+                <Typography variant="small" className="mb-2">
                   {new Date(record.created_at).toLocaleDateString("pt-BR")}
-                </p>
+                </Typography>
 
                 <div className="flex items-center justify-between">
                   <div className="flex gap-1">
@@ -90,10 +91,10 @@ export function RecordLegend({ records, getRecordTitle }: RecordLegendProps) {
       </div>
 
       <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-        <p className="text-sm text-blue-800">
+        <Typography variant="small" className="text-blue-800">
           💡 <strong>Dica:</strong> Cada registro tem uma cor única que é
           mantida consistente em todos os gráficos e visualizações.
-        </p>
+        </Typography>
       </div>
     </Card>
   );

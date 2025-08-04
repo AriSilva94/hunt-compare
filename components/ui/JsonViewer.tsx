@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { Typography } from "@/components/ui/Typography";
 import Image from "next/image";
 
 interface JsonViewerProps {
@@ -28,63 +29,63 @@ export function JsonViewer({ data, title }: JsonViewerProps) {
       <div className="space-y-6">
         {/* Informações da Sessão */}
         <Card className="bg-gray-50">
-          <h3 className="text-lg font-semibold mb-3">
+          <Typography variant="h4" className="mb-3">
             📊 Informações da Sessão
-          </h3>
+          </Typography>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <p className="text-sm text-gray-600">Início</p>
-              <p className="font-medium">{data["Session start"]}</p>
+              <Typography variant="small">Início</Typography>
+              <Typography variant="p" className="font-medium">{data["Session start"]}</Typography>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Fim</p>
-              <p className="font-medium">{data["Session end"]}</p>
+              <Typography variant="small">Fim</Typography>
+              <Typography variant="p" className="font-medium">{data["Session end"]}</Typography>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Duração</p>
-              <p className="font-medium">{data["Session length"]}</p>
+              <Typography variant="small">Duração</Typography>
+              <Typography variant="p" className="font-medium">{data["Session length"]}</Typography>
             </div>
           </div>
         </Card>
 
         {/* Estatísticas de Combate */}
         <Card className="bg-blue-50">
-          <h3 className="text-lg font-semibold mb-3">
+          <Typography variant="h4" className="mb-3">
             ⚔️ Estatísticas de Combate
-          </h3>
+          </Typography>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             <div>
-              <p className="text-sm text-gray-600">Dano Total</p>
-              <p className="text-xl font-bold text-orange-600">
+              <Typography variant="small">Dano Total</Typography>
+              <Typography variant="p" className="text-xl font-bold text-orange-600">
                 {data["Damage"]}
-              </p>
-              <p className="text-xs text-gray-500">({data["Damage/h"]}/h)</p>
+              </Typography>
+              <Typography variant="caption">({data["Damage/h"]}/h)</Typography>
             </div>
             <div>
-              <p className="text-sm text-gray-600">XP Ganho</p>
-              <p className="text-xl font-bold text-purple-600">
+              <Typography variant="small">XP Ganho</Typography>
+              <Typography variant="p" className="text-xl font-bold text-purple-600">
                 {data["XP Gain"] || data["Raw XP Gain"]}
-              </p>
-              <p className="text-xs text-gray-500">({data["XP/h"] || data["Raw XP/h"]}/h)</p>
+              </Typography>
+              <Typography variant="caption">({data["XP/h"] || data["Raw XP/h"]}/h)</Typography>
             </div>
             <div>
-              <p className="text-sm text-gray-600">XP Gain</p>
-              <p className="text-xl font-bold text-blue-600">
+              <Typography variant="small">XP Gain</Typography>
+              <Typography variant="p" className="text-xl font-bold text-blue-600">
                 {data["XP Gain"]}
-              </p>
-              <p className="text-xs text-gray-500">({data["XP/h"]}/h)</p>
+              </Typography>
+              <Typography variant="caption">({data["XP/h"]}/h)</Typography>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Suprimentos Gastos</p>
-              <p className="text-xl font-bold text-red-600">
+              <Typography variant="small">Suprimentos Gastos</Typography>
+              <Typography variant="p" className="text-xl font-bold text-red-600">
                 {data["Supplies"]}
-              </p>
+              </Typography>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Balance</p>
-              <p className="text-xl font-bold text-green-600">
+              <Typography variant="small">Balance</Typography>
+              <Typography variant="p" className="text-xl font-bold text-green-600">
                 {data["Balance"]}
-              </p>
+              </Typography>
             </div>
           </div>
         </Card>
@@ -92,9 +93,9 @@ export function JsonViewer({ data, title }: JsonViewerProps) {
         {/* Monstros Eliminados */}
         {data["Killed Monsters"] && data["Killed Monsters"].length > 0 && (
           <Card className="bg-red-50">
-            <h3 className="text-lg font-semibold mb-3">
+            <Typography variant="h4" className="mb-3">
               👾 Monstros Eliminados
-            </h3>
+            </Typography>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {data["Killed Monsters"].map((monster: any, index: number) => (
                 <div
@@ -114,22 +115,22 @@ export function JsonViewer({ data, title }: JsonViewerProps) {
                         width={16}
                         height={16}
                       />
-                      <p className="font-medium text-gray-900">
+                      <Typography variant="p" className="font-medium">
                         {monster.Name.charAt(0).toUpperCase() +
                           monster.Name.slice(1)}
-                      </p>
+                      </Typography>
                     </div>
                     <div className="flex justify-end">
-                      <p className="text-2xl font-bold text-red-600">
+                      <Typography variant="p" className="text-2xl font-bold text-red-600">
                         {monster.Count}
-                      </p>
+                      </Typography>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
             <div className="mt-3 text-right">
-              <p className="text-sm text-gray-600">
+              <Typography variant="small">
                 Total de monstros eliminados:
                 <span className="font-bold text-lg ml-2">
                   {data["Killed Monsters"].reduce(
@@ -137,7 +138,7 @@ export function JsonViewer({ data, title }: JsonViewerProps) {
                     0
                   )}
                 </span>
-              </p>
+              </Typography>
             </div>
           </Card>
         )}
@@ -145,7 +146,7 @@ export function JsonViewer({ data, title }: JsonViewerProps) {
         {/* Itens Coletados */}
         {data["Looted Items"] && data["Looted Items"].length > 0 && (
           <Card className="bg-green-50">
-            <h3 className="text-lg font-semibold mb-3">💎 Itens Coletados</h3>
+            <Typography variant="h4" className="mb-3">💎 Itens Coletados</Typography>
             <div className="max-h-96 overflow-y-auto">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 {data["Looted Items"]
@@ -164,12 +165,12 @@ export function JsonViewer({ data, title }: JsonViewerProps) {
               </div>
             </div>
             <div className="mt-3 pt-3 border-t border-green-200">
-              <p className="text-sm text-gray-600">
+              <Typography variant="small">
                 Valor total do loot:
                 <span className="font-bold text-lg ml-2 text-green-600">
                   {data["Loot"]}
                 </span>
-              </p>
+              </Typography>
             </div>
           </Card>
         )}
@@ -188,7 +189,7 @@ export function JsonViewer({ data, title }: JsonViewerProps) {
   return (
     <div>
       <div className="flex flex-wrap justify-center md:justify-between items-center mb-4 gap-4 md:gap-0">
-        <h2 className="text-xl font-semibold">{title || "Dados JSON"}</h2>
+        <Typography variant="h3">{title || "Dados JSON"}</Typography>
         <div className="flex gap-2">
           <Button
             onClick={() => setViewMode("formatted")}
