@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { PageSkeleton } from "@/components/ui/Skeleton";
+import { Typography } from "@/components/ui/Typography";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { ComparisonHistory } from "@/components/ui/ComparisonHistory";
@@ -41,7 +42,11 @@ function getRecordPreview(data: any) {
       description:
         data._metadata?.description || `${data["Session length"]} de jogo`,
       highlights: [
-        { label: "XP Ganho", value: data["XP Gain"] || data["Raw XP Gain"], icon: "⭐" },
+        {
+          label: "XP Ganho",
+          value: data["XP Gain"] || data["Raw XP Gain"],
+          icon: "⭐",
+        },
         {
           label: "Monstros",
           value: totalMonsters.toLocaleString(),
@@ -80,7 +85,7 @@ export default function CompararPage() {
         filtered = records.filter((record) => record.is_public);
         break;
       case "minhas":
-        filtered = user 
+        filtered = user
           ? records.filter((record) => record.user_id === user.id)
           : [];
         break;
@@ -95,9 +100,11 @@ export default function CompararPage() {
 
   const loadRecords = async () => {
     const supabase = createClient();
-    
+
     // Obter usuário atual
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     setUser(user);
 
     try {
@@ -121,7 +128,8 @@ export default function CompararPage() {
         if (userRecords) {
           // Evitar duplicatas (registros públicos do próprio usuário)
           const uniqueUserRecords = userRecords.filter(
-            (userRecord) => !allRecords.some((record) => record.id === userRecord.id)
+            (userRecord) =>
+              !allRecords.some((record) => record.id === userRecord.id)
           );
           allRecords = [...allRecords, ...uniqueUserRecords];
         }
@@ -147,7 +155,8 @@ export default function CompararPage() {
     setSelectedRecords((prev) => {
       if (prev.includes(recordId)) {
         return prev.filter((id) => id !== recordId);
-      } else if (prev.length < 4) { // Máximo 4 registros para comparação
+      } else if (prev.length < 4) {
+        // Máximo 4 registros para comparação
         return [...prev, recordId];
       }
       return prev;
@@ -157,8 +166,8 @@ export default function CompararPage() {
   const handleCompare = () => {
     if (selectedRecords.length >= 2) {
       // Obter nomes dos registros selecionados para salvar no histórico
-      const recordNames = selectedRecords.map(recordId => {
-        const record = records.find(r => r.id === recordId);
+      const recordNames = selectedRecords.map((recordId) => {
+        const record = records.find((r) => r.id === recordId);
         if (record) {
           const preview = getRecordPreview(record.data);
           return preview.title;
@@ -179,9 +188,11 @@ export default function CompararPage() {
   };
 
   const getFilterStats = () => {
-    const publicCount = records.filter(r => r.is_public).length;
-    const myCount = user ? records.filter(r => r.user_id === user.id).length : 0;
-    
+    const publicCount = records.filter((r) => r.is_public).length;
+    const myCount = user
+      ? records.filter((r) => r.user_id === user.id).length
+      : 0;
+
     return { publicCount, myCount, totalCount: records.length };
   };
 
@@ -194,10 +205,10 @@ export default function CompararPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Comparar Registros</h1>
-        <p className="mt-2 text-lg text-gray-600">
+        <Typography variant="h1">Comparar Registros</Typography>
+        <Typography variant="lead" className="mt-2">
           Selecione registros para comparar e analisar as diferenças
-        </p>
+        </Typography>
       </div>
 
       {/* Histórico de Comparações */}
@@ -234,15 +245,16 @@ export default function CompararPage() {
         <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-blue-900 font-medium">
+              <Typography variant="p" className="text-blue-900 font-medium">
                 {selectedRecords.length} registro(s) selecionado(s)
-              </p>
-              <p className="text-blue-700 text-sm">
-                {selectedRecords.length >= 2 
+              </Typography>
+              <Typography variant="small" className="text-blue-700">
+                {selectedRecords.length >= 2
                   ? "Clique em prosseguir para comparar"
-                  : `Selecione mais ${2 - selectedRecords.length} registro(s) para comparar`
-                }
-              </p>
+                  : `Selecione mais ${
+                      2 - selectedRecords.length
+                    } registro(s) para comparar`}
+              </Typography>
             </div>
             <div className="flex gap-2">
               <Button
@@ -269,9 +281,9 @@ export default function CompararPage() {
         <Card>
           <div className="text-center py-12">
             <span className="text-6xl mb-4 block">🔍</span>
-            <p className="text-gray-500">
+            <Typography variant="p">
               Nenhum registro encontrado para o filtro selecionado.
-            </p>
+            </Typography>
           </div>
         </Card>
       ) : (
@@ -283,10 +295,10 @@ export default function CompararPage() {
 
             return (
               <div key={record.id} className="relative">
-                <Card 
+                <Card
                   className={`hover:shadow-lg transition-all cursor-pointer h-full ${
-                    isSelected 
-                      ? "ring-2 ring-blue-500 bg-blue-50" 
+                    isSelected
+                      ? "ring-2 ring-blue-500 bg-blue-50"
                       : "hover:-translate-y-1"
                   } ${
                     selectedRecords.length >= 4 && !isSelected
@@ -324,16 +336,16 @@ export default function CompararPage() {
 
                   <div className="mb-3">
                     <div className="flex justify-between items-start mb-2">
-                      <h3 className="text-lg font-medium text-gray-900 line-clamp-1 flex-1">
+                      <Typography variant="h4" className="line-clamp-1 flex-1">
                         {preview.title}
-                      </h3>
+                      </Typography>
                       {preview.type === "game-session" && (
                         <span className="ml-2 text-2xl">🎮</span>
                       )}
                     </div>
-                    <p className="text-sm text-gray-600 line-clamp-2">
+                    <Typography variant="small" className="line-clamp-2">
                       {preview.description}
-                    </p>
+                    </Typography>
                   </div>
 
                   {preview.highlights.length > 0 && (
@@ -344,24 +356,26 @@ export default function CompararPage() {
                           className="bg-gray-50 p-2 rounded text-center"
                         >
                           <span className="text-lg mr-1">{highlight.icon}</span>
-                          <p className="text-xs text-gray-600">
+                          <Typography variant="caption">
                             {highlight.label}
-                          </p>
-                          <p className="text-sm font-bold text-gray-900">
+                          </Typography>
+                          <Typography variant="caption" className="font-bold">
                             {highlight.value}
-                          </p>
+                          </Typography>
                         </div>
                       ))}
                     </div>
                   )}
 
                   <div className="flex justify-between items-center text-sm">
-                    <p className="text-gray-500">
+                    <Typography variant="small" className="text-gray-500">
                       {new Date(record.created_at).toLocaleDateString("pt-BR")}
-                    </p>
-                    <span className={`font-medium ${
-                      isSelected ? "text-blue-600" : "text-gray-600"
-                    }`}>
+                    </Typography>
+                    <span
+                      className={`font-medium ${
+                        isSelected ? "text-blue-600" : "text-gray-600"
+                      }`}
+                    >
                       {isSelected ? "Selecionado" : "Clique para selecionar"}
                     </span>
                   </div>
@@ -375,25 +389,26 @@ export default function CompararPage() {
       {/* Informações sobre comparação */}
       <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card className="bg-blue-50 border-blue-200">
-          <h2 className="text-lg font-semibold text-blue-900 mb-2">
+          <Typography variant="h3" className="text-blue-900 mb-2">
             📊 Como Comparar
-          </h2>
-          <p className="text-blue-800 text-sm">
-            Selecione de 2 a 4 registros clicando nos cards. Os registros 
-            selecionados aparecerão destacados e numerados. Clique em 
+          </Typography>
+          <Typography variant="small" className="text-blue-800">
+            Selecione de 2 a 4 registros clicando nos cards. Os registros
+            selecionados aparecerão destacados e numerados. Clique em
             &quot;Prosseguir&quot; para ver a comparação detalhada.
-          </p>
+          </Typography>
         </Card>
 
         <Card className="bg-green-50 border-green-200">
-          <h2 className="text-lg font-semibold text-green-900 mb-2">
+          <Typography variant="h3" className="text-green-900 mb-2">
             🔍 Filtros Disponíveis
-          </h2>
-          <p className="text-green-800 text-sm">
-            Use os filtros para encontrar registros específicos: &quot;Públicas&quot; 
-            mostra registros compartilhados, &quot;Minhas&quot; mostra seus registros 
-            privados, e &quot;Todas&quot; mostra ambos.
-          </p>
+          </Typography>
+          <Typography variant="small" className="text-green-800">
+            Use os filtros para encontrar registros específicos:
+            &quot;Públicas&quot; mostra registros compartilhados,
+            &quot;Minhas&quot; mostra seus registros privados, e
+            &quot;Todas&quot; mostra ambos.
+          </Typography>
         </Card>
       </div>
     </div>

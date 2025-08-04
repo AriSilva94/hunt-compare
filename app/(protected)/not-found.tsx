@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { Typography } from "@/components/ui/Typography";
 
 export default function ProtectedNotFound() {
   return (
@@ -14,19 +15,19 @@ export default function ProtectedNotFound() {
         </div>
 
         {/* Título */}
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
+        <Typography variant="h1" className="mb-4">
           Registro não encontrado
-        </h1>
+        </Typography>
         
-        <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+        <Typography variant="lead" className="mb-8 max-w-2xl mx-auto">
           O registro que você está procurando não existe, foi removido ou você não tem permissão para visualizá-lo.
-        </p>
+        </Typography>
 
         {/* Possíveis causas */}
         <div className="mb-8 text-left max-w-md mx-auto">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">
+          <Typography variant="lead" className="mb-4 text-center">
             Possíveis causas:
-          </h3>
+          </Typography>
           <ul className="space-y-2 text-gray-600">
             <li className="flex items-start gap-2">
               <span className="text-blue-500 mt-1">•</span>
@@ -70,7 +71,7 @@ export default function ProtectedNotFound() {
 
         {/* Dica adicional */}
         <div className="mt-8 pt-8 border-t border-gray-200">
-          <p className="text-sm text-gray-500">
+          <Typography variant="small">
             💡 <strong>Dica:</strong> Verifique se você está logado com a conta correta ou 
             <Button 
               onClick={() => window.history.back()} 
@@ -79,7 +80,7 @@ export default function ProtectedNotFound() {
             >
               volte à página anterior
             </Button>
-          </p>
+          </Typography>
         </div>
       </Card>
     </div>

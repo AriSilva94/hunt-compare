@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { X, AlertTriangle } from 'lucide-react'
 import { Button } from './Button'
+import { Typography } from './Typography'
 
 export interface ConfirmDialogProps {
   isOpen: boolean
@@ -59,7 +60,7 @@ export function ConfirmDialog({
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center">
               <AlertTriangle className="w-6 h-6 text-yellow-500 mr-3" />
-              <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+              <Typography variant="lead" className="font-semibold">{title}</Typography>
             </div>
             <button
               onClick={onCancel}
@@ -70,7 +71,7 @@ export function ConfirmDialog({
           </div>
 
           {/* Message */}
-          <p className="text-gray-600 mb-6">{message}</p>
+          <Typography variant="p" className="mb-6">{message}</Typography>
 
           {/* Actions */}
           <div className="flex gap-3 justify-end">

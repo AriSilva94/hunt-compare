@@ -72,7 +72,7 @@ export default function WeaponDropdown({
         onClick={() => setOpen(!open)}
         className={`${
           defaultSelectedId !== undefined ? "cursor-default" : "cursor-pointer"
-        } w-full flex items-center justify-between bg-white border border-gray-300 rounded-lg px-4 py-2 shadow hover:border-gray-400`}
+        } w-full flex items-center justify-between bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 shadow hover:border-gray-400 dark:hover:border-gray-500`}
         disabled={defaultSelectedId !== undefined}
       >
         <div className="flex items-center gap-3">
@@ -86,25 +86,25 @@ export default function WeaponDropdown({
                 height={32}
                 className="rounded"
               />
-              <span className="text-sm font-medium">{selected.name}</span>
+              <span className="text-sm font-medium text-gray-900 dark:text-gray-100">{selected.name}</span>
             </>
           ) : (
-            <span className="text-sm text-gray-500">Selecione uma arma...</span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">Selecione uma arma...</span>
           )}
         </div>
-        <span className="text-gray-500">▼</span>
+        <span className="text-gray-500 dark:text-gray-400">▼</span>
       </button>
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute mt-2 w-full bg-white border border-gray-300 rounded-lg shadow z-10">
+        <div className="absolute mt-2 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow z-10">
           <input
             ref={inputRef}
             type="text"
             placeholder="Selecione uma arma..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full px-4 py-2 text-sm border-b border-gray-200 focus:outline-none"
+            className="w-full px-4 py-2 text-sm border-b border-gray-200 dark:border-gray-600 focus:outline-none bg-transparent text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
           />
 
           <ul className="max-h-64 overflow-y-auto">
@@ -113,7 +113,7 @@ export default function WeaponDropdown({
                 <li
                   key={item.id}
                   onClick={() => handleSelect(item)}
-                  className="flex items-start gap-3 px-4 py-2 cursor-pointer hover:bg-gray-100"
+                  className="flex items-start gap-3 px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
                 >
                   <Image
                     unoptimized
@@ -124,13 +124,13 @@ export default function WeaponDropdown({
                     className="mt-1"
                   />
                   <div>
-                    <div className="font-medium text-sm">{item.name}</div>
-                    <div className="text-xs text-gray-400">ID: {item.id}</div>
+                    <div className="font-medium text-sm text-gray-900 dark:text-gray-100">{item.name}</div>
+                    <div className="text-xs text-gray-400 dark:text-gray-500">ID: {item.id}</div>
                   </div>
                 </li>
               ))
             ) : (
-              <li className="px-4 py-2 text-sm text-gray-400">
+              <li className="px-4 py-2 text-sm text-gray-400 dark:text-gray-500">
                 Nenhum resultado encontrado.
               </li>
             )}

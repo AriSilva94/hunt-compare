@@ -4,6 +4,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { Typography } from "@/components/ui/Typography";
 import { createClient } from "@/lib/supabase/client";
 import { useSearchParams, useRouter } from "next/navigation";
 import { weaponService } from "@/services/weapon.service";
@@ -336,7 +337,7 @@ export default function ResultadoComparacaoPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Carregando comparação...</p>
+          <Typography variant="p" className="mt-4">Carregando comparação...</Typography>
         </div>
       </div>
     );
@@ -347,7 +348,7 @@ export default function ResultadoComparacaoPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Card className="text-center py-12">
           <span className="text-6xl mb-4 block">⚠️</span>
-          <p className="text-red-600 font-medium mb-4">{error}</p>
+          <Typography variant="p" className="text-red-600 font-medium mb-4">{error}</Typography>
           <Link
             href="/comparar"
             className="text-blue-600 hover:text-blue-800 font-medium"
@@ -379,13 +380,13 @@ export default function ResultadoComparacaoPage() {
           >
             ← Voltar
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">
+          <Typography variant="h1">
             Comparação Detalhada
-          </h1>
+          </Typography>
         </div>
-        <p className="text-lg text-gray-600">
+        <Typography variant="lead">
           Análise comparativa de {records.length} registros selecionados
-        </p>
+        </Typography>
       </div>
 
       {/* Legenda de cores */}
@@ -395,12 +396,12 @@ export default function ResultadoComparacaoPage() {
       <div className="mb-8">
         <Card>
           <div className="mb-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            <Typography variant="h3" className="mb-2">
               🎛️ Filtros de Análise
-            </h3>
-            <p className="text-gray-600 text-sm">
+            </Typography>
+            <Typography variant="small">
               Selecione as métricas que deseja visualizar nos gráficos
-            </p>
+            </Typography>
           </div>
 
           <div className="flex flex-wrap gap-2 mb-4">
@@ -418,7 +419,7 @@ export default function ResultadoComparacaoPage() {
           </div>
 
           <div className="flex gap-2">
-            <span className="text-sm text-gray-600 mr-2">Tipo de gráfico:</span>
+            <Typography variant="small" className="mr-2">Tipo de gráfico:</Typography>
             {(["bar", "line", "pie"] as ChartType[]).map((type) => (
               <Button
                 key={type}

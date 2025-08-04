@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { Typography } from "@/components/ui/Typography";
 
 interface ErrorProps {
   error: Error & { digest?: string };
@@ -26,32 +27,32 @@ export default function Error({ error, reset }: ErrorProps) {
           </div>
 
           {/* Título */}
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <Typography variant="h1" className="mb-2">
             Algo deu errado
-          </h1>
-          <h2 className="text-lg font-semibold text-gray-700 mb-4">
+          </Typography>
+          <Typography variant="h3" className="mb-4">
             Ocorreu um erro inesperado
-          </h2>
+          </Typography>
 
           {/* Descrição */}
-          <p className="text-gray-600 mb-6 leading-relaxed">
+          <Typography variant="p" className="mb-6 leading-relaxed">
             Desculpe, encontramos um problema técnico. Você pode tentar recarregar 
             a página ou voltar para a página inicial.
-          </p>
+          </Typography>
 
           {/* Detalhes do erro em desenvolvimento */}
           {process.env.NODE_ENV === "development" && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-left">
-              <h3 className="text-sm font-medium text-red-800 mb-2">
+              <Typography variant="small" className="font-medium text-red-800 mb-2">
                 Detalhes do erro (desenvolvimento):
-              </h3>
+              </Typography>
               <code className="text-xs text-red-700 break-all">
                 {error.message}
               </code>
               {error.digest && (
-                <p className="text-xs text-red-600 mt-1">
+                <Typography variant="caption" className="text-red-600 mt-1">
                   ID: {error.digest}
-                </p>
+                </Typography>
               )}
             </div>
           )}
@@ -71,9 +72,9 @@ export default function Error({ error, reset }: ErrorProps) {
 
           {/* Links adicionais */}
           <div className="mt-6 pt-6 border-t border-gray-200">
-            <p className="text-sm text-gray-500 mb-3">
+            <Typography variant="small" className="mb-3">
               Outras opções:
-            </p>
+            </Typography>
             <div className="flex flex-wrap justify-center gap-4 text-sm">
               <Link href="/comparar" className="text-blue-600 hover:text-blue-800">
                 Comparar Registros
@@ -96,12 +97,12 @@ export default function Error({ error, reset }: ErrorProps) {
 
         {/* Informações adicionais */}
         <div className="text-center">
-          <p className="text-xs text-gray-400 mb-2">
+          <Typography variant="caption" className="text-gray-400 mb-2">
             Se o problema persistir, tente limpar o cache do navegador
-          </p>
-          <p className="text-xs text-gray-400">
+          </Typography>
+          <Typography variant="caption" className="text-gray-400">
             Hunt Compare - Análise de sessões de hunt do Tibia
-          </p>
+          </Typography>
         </div>
       </div>
     </div>

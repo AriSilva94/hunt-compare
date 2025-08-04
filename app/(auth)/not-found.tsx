@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { Typography } from "@/components/ui/Typography";
 
 export default function AuthNotFound() {
   return (
@@ -15,14 +16,14 @@ export default function AuthNotFound() {
           </div>
 
           {/* Título */}
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+          <Typography variant="h2" className="mb-4">
             Página de autenticação não encontrada
-          </h1>
+          </Typography>
           
-          <p className="text-gray-600 mb-8">
+          <Typography variant="p" className="mb-8">
             A página de autenticação que você está procurando não existe. 
             Escolha uma das opções abaixo para continuar.
-          </p>
+          </Typography>
 
           {/* Botões de navegação */}
           <div className="space-y-3">
@@ -41,12 +42,12 @@ export default function AuthNotFound() {
 
           {/* Link adicional */}
           <div className="mt-6 pt-6 border-t border-gray-200">
-            <p className="text-sm text-gray-500">
+            <Typography variant="small">
               Novo no Hunt Compare?{" "}
               <Link href="/login" className="text-blue-600 hover:text-blue-800">
                 Criar conta
               </Link>
-            </p>
+            </Typography>
           </div>
         </Card>
       </div>
