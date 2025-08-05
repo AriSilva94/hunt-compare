@@ -11,7 +11,9 @@
       "Bash(npx tsc:*)",
       "Bash(npm run dev:*)",
       "Bash(find:*)",
-      "Bash(timeout 10 npm run dev)"
+      "Bash(timeout 10 npm run dev)",
+      "Bash(npm run check-missing-images:*)",
+      "Bash(npm run:*)"
     ],
     "deny": []
   }
