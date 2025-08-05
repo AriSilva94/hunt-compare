@@ -1,31 +1,105 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { recordsService } from "@/services/records.service";
-import { createClient } from "@/lib/supabase/server";
-import { createMetadata } from "@/lib/seo";
+"use client";
+
+import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 import { Card } from "@/components/ui/Card";
 import { Typography } from "@/components/ui/Typography";
+import { RecordFilter, FilterState } from "@/components/ui/RecordFilter";
+import { formatDateOnly, formatDateTime, isDateBetween } from "@/utils/date";
 import Link from "next/link";
+import type { Database } from "@/types/database.types";
 
-// Força a página a não cachear os dados para sempre ter registros atualizados
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+type Record = Database["public"]["Tables"]["records"]["Row"];
 
-export const metadata = createMetadata({
-  title: "Dashboard",
-  description:
-    "Gerencie seus registros de hunt do Tibia. Visualize estatísticas, crie novos registros e acompanhe seu progresso no jogo.",
-  path: "/home",
-});
+export default function HomePage() {
+  const [records, setRecords] = useState<Record[]>([]);
+  const [filteredRecords, setFilteredRecords] = useState<Record[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<any>(null);
 
-export default async function HomePage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  useEffect(() => {
+    async function fetchData() {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) return;
+      
+      setUser(user);
+      
+      const { data } = await supabase
+        .from("records")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
+
+      if (data) {
+        setRecords(data);
+        setFilteredRecords(data);
+      }
+      setLoading(false);
+    }
+
+    fetchData();
+  }, []);
+
+  const handleFilterChange = (filters: FilterState) => {
+    let filtered = [...records];
+
+    // Filtro por data
+    if (filters.dateFrom && filters.dateTo) {
+      filtered = filtered.filter(record => 
+        isDateBetween(record.created_at, filters.dateFrom, filters.dateTo)
+      );
+    } else if (filters.dateFrom) {
+      filtered = filtered.filter(record => 
+        new Date(record.created_at) >= new Date(filters.dateFrom)
+      );
+    } else if (filters.dateTo) {
+      filtered = filtered.filter(record => 
+        new Date(record.created_at) <= new Date(filters.dateTo + "T23:59:59")
+      );
+    }
+
+    // Ordenação
+    filtered.sort((a, b) => {
+      const aData = a.data as any;
+      const bData = b.data as any;
+
+      switch (filters.sortBy) {
+        case "date-desc":
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        case "date-asc":
+          return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+        case "profit-desc": {
+          const aBalance = parseFloat(String(aData.Balance || 0).replace(/[^\d.-]/g, '')) || 0;
+          const bBalance = parseFloat(String(bData.Balance || 0).replace(/[^\d.-]/g, '')) || 0;
+          return bBalance - aBalance;
+        }
+        case "profit-asc": {
+          const aBalance = parseFloat(String(aData.Balance || 0).replace(/[^\d.-]/g, '')) || 0;
+          const bBalance = parseFloat(String(bData.Balance || 0).replace(/[^\d.-]/g, '')) || 0;
+          return aBalance - bBalance;
+        }
+        case "xp-desc": {
+          const aXp = parseFloat(String(aData["XP Gain"] || aData["Raw XP Gain"] || 0).replace(/[^\d.-]/g, '')) || 0;
+          const bXp = parseFloat(String(bData["XP Gain"] || bData["Raw XP Gain"] || 0).replace(/[^\d.-]/g, '')) || 0;
+          return bXp - aXp;
+        }
+        case "xp-asc": {
+          const aXp = parseFloat(String(aData["XP Gain"] || aData["Raw XP Gain"] || 0).replace(/[^\d.-]/g, '')) || 0;
+          const bXp = parseFloat(String(bData["XP Gain"] || bData["Raw XP Gain"] || 0).replace(/[^\d.-]/g, '')) || 0;
+          return aXp - bXp;
+        }
+        default:
+          return 0;
+      }
+    });
+
+    setFilteredRecords(filtered);
+  };
 
   if (!user) return null;
-
-  const records = await recordsService.getUserRecords(user.id);
 
   // Função para extrair informações relevantes do registro
   const getRecordSummary = (data: any) => {
@@ -79,7 +153,7 @@ export default async function HomePage() {
             <div>
               <Typography variant="small">Total de Registros</Typography>
               <Typography variant="h3" className="text-blue-600">
-                {records.length}
+                {loading ? "..." : records.length}
               </Typography>
             </div>
             <span className="text-3xl">📊</span>
@@ -91,7 +165,7 @@ export default async function HomePage() {
             <div>
               <Typography variant="small">Registros Públicos</Typography>
               <Typography variant="h3" className="text-green-600">
-                {records.filter((r) => r.is_public).length}
+                {loading ? "..." : records.filter((r) => r.is_public).length}
               </Typography>
             </div>
             <span className="text-3xl">🌐</span>
@@ -103,7 +177,7 @@ export default async function HomePage() {
             <div>
               <Typography variant="small">Registros Privados</Typography>
               <Typography variant="h3" className="text-purple-600">
-                {records.filter((r) => !r.is_public).length}
+                {loading ? "..." : records.filter((r) => !r.is_public).length}
               </Typography>
             </div>
             <span className="text-3xl">🔒</span>
@@ -118,8 +192,10 @@ export default async function HomePage() {
                 variant="small"
                 className="font-medium text-amber-600"
               >
-                {records.length > 0
-                  ? new Date(records[0].created_at).toLocaleDateString("pt-BR")
+                {loading 
+                  ? "..." 
+                  : records.length > 0
+                  ? formatDateOnly(records[0].created_at)
                   : "Nenhum"}
               </Typography>
             </div>
@@ -201,7 +277,16 @@ export default async function HomePage() {
           </Link>
         </div>
 
-        {records.length === 0 ? (
+        {/* Componente de Filtro */}
+        <RecordFilter onFilterChange={handleFilterChange} loading={loading} />
+
+        {loading ? (
+          <Card>
+            <div className="text-center py-12">
+              <Typography variant="p">Carregando registros...</Typography>
+            </div>
+          </Card>
+        ) : records.length === 0 ? (
           <Card>
             <div className="text-center py-12">
               <span className="text-6xl mb-4 block">📝</span>
@@ -216,9 +301,21 @@ export default async function HomePage() {
               </Link>
             </div>
           </Card>
+        ) : filteredRecords.length === 0 ? (
+          <Card>
+            <div className="text-center py-12">
+              <span className="text-6xl mb-4 block">🔍</span>
+              <Typography variant="p" className="mb-4">
+                Nenhum registro encontrado com os filtros aplicados.
+              </Typography>
+              <Typography variant="small" className="text-gray-500">
+                Tente ajustar os filtros para ver mais resultados.
+              </Typography>
+            </div>
+          </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {records.map((record) => {
+            {filteredRecords.map((record) => {
               const summary = getRecordSummary(record.data);
 
               return (
@@ -267,9 +364,7 @@ export default async function HomePage() {
                   )}
 
                   <Typography variant="small" className="text-gray-500 mb-3">
-                    Criado em:{" "}
-                    {new Date(record.created_at).toLocaleDateString("pt-BR")} às{" "}
-                    {new Date(record.created_at).toLocaleTimeString("pt-BR")}
+                    Criado em: {formatDateTime(record.created_at)}
                   </Typography>
 
                   <div className="flex gap-2">

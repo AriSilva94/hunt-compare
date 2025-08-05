@@ -3,6 +3,7 @@ import { recordsService } from "@/services/records.service";
 import { createMetadata } from "@/lib/seo";
 import { Card } from "@/components/ui/Card";
 import { Typography } from "@/components/ui/Typography";
+import { formatDateOnly } from "@/utils/date";
 import Link from "next/link";
 
 // Enable ISR for better performance on public pages
@@ -171,7 +172,7 @@ export default async function RegistrosPublicosPage() {
 
                   <div className="flex justify-between items-center text-sm">
                     <Typography variant="small" className="text-gray-500">
-                      {new Date(record.created_at).toLocaleDateString("pt-BR")}
+                      {formatDateOnly(record.created_at)}
                     </Typography>
                     <Typography
                       variant="small"

@@ -10,6 +10,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { ComparisonHistory } from "@/components/ui/ComparisonHistory";
 import { ComparisonHistoryService } from "@/services/comparison-history.service";
+import { formatDateOnly } from "@/utils/date";
 
 interface Record {
   id: string;
@@ -369,7 +370,7 @@ export default function CompararPage() {
 
                   <div className="flex justify-between items-center text-sm">
                     <Typography variant="small" className="text-gray-500">
-                      {new Date(record.created_at).toLocaleDateString("pt-BR")}
+                      {formatDateOnly(record.created_at)}
                     </Typography>
                     <span
                       className={`font-medium ${
