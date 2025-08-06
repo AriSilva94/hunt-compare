@@ -5,7 +5,8 @@
   font-family: inherit;
   border: none !important;
   border-radius: 8px !important;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
   background-color: white;
   overflow: hidden;
   font-size: 14px !important;
@@ -148,9 +149,14 @@
   transform: none !important;
 }
 
-/* Popper customizado */
+.react-datepicker-wrapper {
+  width: 100% !important;
+}
+
+/* Popper customizado - z-index alto para não ser cortado */
 .react-datepicker-popper {
   z-index: 9999 !important;
+  position: absolute !important;
 }
 
 .react-datepicker-popper[data-placement^="bottom"] {

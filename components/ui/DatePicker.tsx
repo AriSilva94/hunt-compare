@@ -55,7 +55,6 @@ export const DatePicker = forwardRef<ReactDatePicker, DatePickerProps>(
             popperPlacement="bottom-start"
             showPopperArrow={false}
             calendarClassName="shadow-xl border-0 rounded-xl"
-            withPortal
           />
         </div>
 
