@@ -25,6 +25,7 @@ interface RecordFilterProps {
   loading?: boolean;
   totalBalance?: number;
   recordCount?: number;
+  isPublic?: boolean;
 }
 
 export function RecordFilter({
@@ -32,6 +33,7 @@ export function RecordFilter({
   loading = false,
   totalBalance = 0,
   recordCount = 0,
+  isPublic = false,
 }: RecordFilterProps) {
   const [filters, setFilters] = useState<FilterState>({
     dateFrom: null,
@@ -73,7 +75,7 @@ export function RecordFilter({
     <Card className="mb-6">
       {/* Header compacto sempre visível */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col md:flex-row items-start md:items-center gap-3">
           <div className="flex items-center gap-2">
             <span className="text-xl">🔍</span>
             <Typography variant="h4" className="font-semibold">
@@ -114,31 +116,59 @@ export function RecordFilter({
           </Button>
         </div>
       </div>
-
-      {/* Preview dos filtros ativos quando recolhido */}
       {!isExpanded && hasActiveFilters && (
         <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
-          <div className="flex flex-wrap gap-2">
-            {filters.dateFrom && (
-              <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full">
-                📅 A partir de {filters.dateFrom.toLocaleDateString("pt-BR")}
-              </span>
-            )}
-            {filters.dateTo && (
-              <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full">
-                📅 Até {filters.dateTo.toLocaleDateString("pt-BR")}
-              </span>
-            )}
-            {filters.sortBy !== "date-desc" && (
-              <span className="inline-flex items-center gap-1 px-2 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 text-xs rounded-full">
-                {sortOptions.find((opt) => opt.value === filters.sortBy)?.label}
-              </span>
+          <div className="flex flex-row items-center justify-between gap-4 flex-wrap">
+            <div className="flex flex-wrap gap-2">
+              {filters.dateFrom && (
+                <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full">
+                  📅 A partir de {filters.dateFrom.toLocaleDateString("pt-BR")}
+                </span>
+              )}
+              {filters.dateTo && (
+                <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full">
+                  📅 Até {filters.dateTo.toLocaleDateString("pt-BR")}
+                </span>
+              )}
+              {filters.sortBy !== "date-desc" && (
+                <span className="inline-flex items-center gap-1 px-2 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 text-xs rounded-full">
+                  {
+                    sortOptions.find((opt) => opt.value === filters.sortBy)
+                      ?.label
+                  }
+                </span>
+              )}
+            </div>
+            {!isPublic && recordCount > 0 && (
+              <div className="flex items-center justify-evenly gap-2 w-100">
+                <span className="text-lg">💰</span>
+                <Typography variant="h4" className="font-semibold">
+                  Total Balance
+                </Typography>
+                <div className="text-right">
+                  <Typography
+                    variant="h3"
+                    className={`font-bold ${
+                      totalBalance >= 0
+                        ? "text-green-600 dark:text-green-400"
+                        : "text-red-600 dark:text-red-400"
+                    }`}
+                  >
+                    {totalBalance.toLocaleString("pt-BR")}
+                  </Typography>
+                  <Typography
+                    variant="small"
+                    className="text-gray-500 dark:text-gray-400"
+                  >
+                    {recordCount} registro{recordCount !== 1 ? "s" : ""}{" "}
+                    filtrado{recordCount !== 1 ? "s" : ""}
+                  </Typography>
+                </div>
+              </div>
             )}
           </div>
         </div>
       )}
-
-      {/* Conteúdo expandido */}
       {isExpanded && (
         <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700 space-y-6">
           {/* Seção de Filtros por Data */}
@@ -209,7 +239,7 @@ export function RecordFilter({
           </div>
 
           {/* Somatória do Balance */}
-          {recordCount > 0 && (
+          {!isPublic && recordCount > 0 && (
             <div className="pt-4 border-t border-gray-100 dark:border-gray-700">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
