@@ -7,6 +7,7 @@ import { ComparisonHistoryService } from "@/services/comparison-history.service"
 import { useConfirm } from "@/hooks/useConfirm";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { Typography } from "@/components/ui/Typography";
+import { formatDateTime } from "@/utils/date";
 import Link from "next/link";
 
 interface ComparisonRecord {
@@ -65,16 +66,6 @@ export function ComparisonHistory({ onSelectComparison }: ComparisonHistoryProps
     }
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("pt-BR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
 
   if (history.length === 0) {
     return null;
@@ -120,7 +111,7 @@ export function ComparisonHistory({ onSelectComparison }: ComparisonHistoryProps
                       : comparison.title}
                   </Typography>
                   <Typography variant="caption">
-                    {comparison.recordIds.length} registros • {formatDate(comparison.createdAt)}
+                    {comparison.recordIds.length} registros • {formatDateTime(comparison.createdAt)}
                   </Typography>
                 </div>
               </div>

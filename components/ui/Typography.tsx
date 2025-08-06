@@ -1,9 +1,9 @@
 import { ReactNode } from "react";
 import { cn } from "@/utils/cn";
 
-type TypographyVariant = 
+type TypographyVariant =
   | "h1"
-  | "h2" 
+  | "h2"
   | "h3"
   | "h4"
   | "p"
@@ -12,7 +12,7 @@ type TypographyVariant =
   | "lead"
   | "muted";
 
-type TypographyElement = 
+type TypographyElement =
   | "h1"
   | "h2"
   | "h3"
@@ -45,7 +45,7 @@ const typographyVariants = {
 
 const defaultElements: Record<TypographyVariant, TypographyElement> = {
   h1: "h1",
-  h2: "h2", 
+  h2: "h2",
   h3: "h3",
   h4: "h4",
   p: "p",
@@ -55,17 +55,17 @@ const defaultElements: Record<TypographyVariant, TypographyElement> = {
   muted: "p",
 };
 
-export function Typography({ 
-  variant = "p", 
+export function Typography({
+  variant = "p",
   as,
-  className, 
+  className,
   children,
   ...props
 }: TypographyProps) {
   const Component = as || defaultElements[variant];
-  
+
   return (
-    <Component 
+    <Component
       className={cn(typographyVariants[variant], className)}
       {...props}
     >
