@@ -25,6 +25,7 @@ interface RecordFilterProps {
   loading?: boolean;
   totalBalance?: number;
   recordCount?: number;
+  isPublic?: boolean;
 }
 
 export function RecordFilter({
@@ -32,6 +33,7 @@ export function RecordFilter({
   loading = false,
   totalBalance = 0,
   recordCount = 0,
+  isPublic = false,
 }: RecordFilterProps) {
   const [filters, setFilters] = useState<FilterState>({
     dateFrom: null,
@@ -137,7 +139,7 @@ export function RecordFilter({
                 </span>
               )}
             </div>
-            {recordCount > 0 && (
+            {!isPublic && recordCount > 0 && (
               <div className="flex items-center justify-evenly gap-2 w-100">
                 <span className="text-lg">💰</span>
                 <Typography variant="h4" className="font-semibold">
@@ -237,7 +239,7 @@ export function RecordFilter({
           </div>
 
           {/* Somatória do Balance */}
-          {recordCount > 0 && (
+          {!isPublic && recordCount > 0 && (
             <div className="pt-4 border-t border-gray-100 dark:border-gray-700">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
