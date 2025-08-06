@@ -49,16 +49,19 @@ export default function HomePage() {
     // Filtro por data
     if (filters.dateFrom && filters.dateTo) {
       filtered = filtered.filter(record => 
-        isDateBetween(record.created_at, filters.dateFrom, filters.dateTo)
+        isDateBetween(record.created_at, filters.dateFrom!, filters.dateTo!)
       );
     } else if (filters.dateFrom) {
       filtered = filtered.filter(record => 
-        new Date(record.created_at) >= new Date(filters.dateFrom)
+        new Date(record.created_at) >= filters.dateFrom!
       );
     } else if (filters.dateTo) {
-      filtered = filtered.filter(record => 
-        new Date(record.created_at) <= new Date(filters.dateTo + "T23:59:59")
-      );
+      filtered = filtered.filter(record => {
+        const recordDate = new Date(record.created_at);
+        const filterDate = new Date(filters.dateTo!);
+        filterDate.setHours(23, 59, 59, 999); // Final do dia
+        return recordDate <= filterDate;
+      });
     }
 
     // Ordenação

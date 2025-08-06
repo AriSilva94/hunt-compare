@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Card } from "./Card";
 import { Typography } from "./Typography";
 import { Button } from "./Button";
-import { Input } from "./Input";
+import { DatePicker } from "./DatePicker";
 
 export type SortOption = 
   | "date-desc" 
@@ -15,8 +15,8 @@ export type SortOption =
   | "xp-asc";
 
 export interface FilterState {
-  dateFrom: string;
-  dateTo: string;
+  dateFrom: Date | null;
+  dateTo: Date | null;
   sortBy: SortOption;
 }
 
@@ -27,8 +27,8 @@ interface RecordFilterProps {
 
 export function RecordFilter({ onFilterChange, loading = false }: RecordFilterProps) {
   const [filters, setFilters] = useState<FilterState>({
-    dateFrom: "",
-    dateTo: "",
+    dateFrom: null,
+    dateTo: null,
     sortBy: "date-desc"
   });
 
@@ -42,8 +42,8 @@ export function RecordFilter({ onFilterChange, loading = false }: RecordFilterPr
 
   const clearFilters = () => {
     const clearedFilters: FilterState = {
-      dateFrom: "",
-      dateTo: "",
+      dateFrom: null,
+      dateTo: null,
       sortBy: "date-desc"
     };
     setFilters(clearedFilters);
@@ -62,7 +62,7 @@ export function RecordFilter({ onFilterChange, loading = false }: RecordFilterPr
   ];
 
   return (
-    <Card className="mb-6 overflow-hidden">
+    <Card className="mb-6">
       {/* Header compacto sempre visível */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -113,12 +113,12 @@ export function RecordFilter({ onFilterChange, loading = false }: RecordFilterPr
           <div className="flex flex-wrap gap-2">
             {filters.dateFrom && (
               <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full">
-                📅 A partir de {filters.dateFrom}
+                📅 A partir de {filters.dateFrom.toLocaleDateString('pt-BR')}
               </span>
             )}
             {filters.dateTo && (
               <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full">
-                📅 Até {filters.dateTo}
+                📅 Até {filters.dateTo.toLocaleDateString('pt-BR')}
               </span>
             )}
             {filters.sortBy !== "date-desc" && (
@@ -143,22 +143,20 @@ export function RecordFilter({ onFilterChange, loading = false }: RecordFilterPr
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Input
-                type="date"
+              <DatePicker
                 label="Data inicial"
                 value={filters.dateFrom}
-                onChange={(e) => handleFilterChange({ dateFrom: e.target.value })}
+                onChange={(date: Date | null) => handleFilterChange({ dateFrom: date })}
                 disabled={loading}
-                className="text-sm"
+                placeholder="Selecione a data inicial"
               />
               
-              <Input
-                type="date"
+              <DatePicker
                 label="Data final"
                 value={filters.dateTo}
-                onChange={(e) => handleFilterChange({ dateTo: e.target.value })}
+                onChange={(date: Date | null) => handleFilterChange({ dateTo: date })}
                 disabled={loading}
-                className="text-sm"
+                placeholder="Selecione a data final"
               />
             </div>
           </div>
