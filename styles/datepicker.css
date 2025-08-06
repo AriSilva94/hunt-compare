@@ -30,7 +30,7 @@
 
 /* Navegação - mais compacta */
 .react-datepicker__navigation {
-  top: 14px !important;
+  top: 4px !important;
   width: 24px !important;
   height: 24px !important;
   border-radius: 6px !important;
@@ -51,6 +51,17 @@
   right: 12px !important;
 }
 
+.react-datepicker__navigation-icon--next {
+  left: 1px !important;
+}
+
+.react-datepicker__navigation-icon--previous {
+  right: 3px !important;
+}
+
+.react-datepicker__navigation-icon {
+  top: 1px !important;
+}
 .react-datepicker__navigation-icon::before {
   border-color: white !important;
   border-width: 1px 1px 0 0 !important;

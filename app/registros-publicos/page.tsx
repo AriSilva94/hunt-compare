@@ -80,7 +80,10 @@ export default async function RegistrosPublicosPage() {
           <div className="flex items-center justify-between">
             <div>
               <Typography variant="small">Total de Registros</Typography>
-              <Typography variant="h3" className="text-blue-600">
+              <Typography
+                variant="h3"
+                className="text-blue-600 dark:text-blue-400"
+              >
                 {publicRecords.length}
               </Typography>
             </div>
@@ -92,7 +95,10 @@ export default async function RegistrosPublicosPage() {
           <div className="flex items-center justify-between">
             <div>
               <Typography variant="small">Sessões de Jogo</Typography>
-              <Typography variant="h3" className="text-green-600">
+              <Typography
+                variant="h3"
+                className="text-green-600 dark:text-green-400"
+              >
                 {publicRecords.filter((r) => r.data["Session start"]).length}
               </Typography>
             </div>
@@ -104,7 +110,10 @@ export default async function RegistrosPublicosPage() {
           <div className="flex items-center justify-between">
             <div>
               <Typography variant="small">Outros Registros</Typography>
-              <Typography variant="h3" className="text-purple-600">
+              <Typography
+                variant="h3"
+                className="text-purple-600 dark:text-purple-400"
+              >
                 {publicRecords.filter((r) => !r.data["Session start"]).length}
               </Typography>
             </div>

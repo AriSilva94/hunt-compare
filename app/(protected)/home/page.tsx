@@ -17,16 +17,19 @@ export default function HomePage() {
   const [filteredRecords, setFilteredRecords] = useState<Record[]>([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
+  const [totalBalance, setTotalBalance] = useState<number>(0);
 
   useEffect(() => {
     async function fetchData() {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
-      
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
       if (!user) return;
-      
+
       setUser(user);
-      
+
       const { data } = await supabase
         .from("records")
         .select("*")
@@ -43,20 +46,31 @@ export default function HomePage() {
     fetchData();
   }, []);
 
+  // Calcular somatória do Balance sempre que filteredRecords mudar
+  useEffect(() => {
+    const total = filteredRecords.reduce((sum, record) => {
+      const data = record.data as any;
+      const balance =
+        parseFloat(String(data.Balance || 0).replace(/[^\d.-]/g, "")) || 0;
+      return sum + balance;
+    }, 0);
+    setTotalBalance(total);
+  }, [filteredRecords]);
+
   const handleFilterChange = (filters: FilterState) => {
     let filtered = [...records];
 
     // Filtro por data
     if (filters.dateFrom && filters.dateTo) {
-      filtered = filtered.filter(record => 
+      filtered = filtered.filter((record) =>
         isDateBetween(record.created_at, filters.dateFrom!, filters.dateTo!)
       );
     } else if (filters.dateFrom) {
-      filtered = filtered.filter(record => 
-        new Date(record.created_at) >= filters.dateFrom!
+      filtered = filtered.filter(
+        (record) => new Date(record.created_at) >= filters.dateFrom!
       );
     } else if (filters.dateTo) {
-      filtered = filtered.filter(record => {
+      filtered = filtered.filter((record) => {
         const recordDate = new Date(record.created_at);
         const filterDate = new Date(filters.dateTo!);
         filterDate.setHours(23, 59, 59, 999); // Final do dia
@@ -71,27 +85,59 @@ export default function HomePage() {
 
       switch (filters.sortBy) {
         case "date-desc":
-          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+          return (
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+          );
         case "date-asc":
-          return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+          return (
+            new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+          );
         case "profit-desc": {
-          const aBalance = parseFloat(String(aData.Balance || 0).replace(/[^\d.-]/g, '')) || 0;
-          const bBalance = parseFloat(String(bData.Balance || 0).replace(/[^\d.-]/g, '')) || 0;
+          const aBalance =
+            parseFloat(String(aData.Balance || 0).replace(/[^\d.-]/g, "")) || 0;
+          const bBalance =
+            parseFloat(String(bData.Balance || 0).replace(/[^\d.-]/g, "")) || 0;
           return bBalance - aBalance;
         }
         case "profit-asc": {
-          const aBalance = parseFloat(String(aData.Balance || 0).replace(/[^\d.-]/g, '')) || 0;
-          const bBalance = parseFloat(String(bData.Balance || 0).replace(/[^\d.-]/g, '')) || 0;
+          const aBalance =
+            parseFloat(String(aData.Balance || 0).replace(/[^\d.-]/g, "")) || 0;
+          const bBalance =
+            parseFloat(String(bData.Balance || 0).replace(/[^\d.-]/g, "")) || 0;
           return aBalance - bBalance;
         }
         case "xp-desc": {
-          const aXp = parseFloat(String(aData["XP Gain"] || aData["Raw XP Gain"] || 0).replace(/[^\d.-]/g, '')) || 0;
-          const bXp = parseFloat(String(bData["XP Gain"] || bData["Raw XP Gain"] || 0).replace(/[^\d.-]/g, '')) || 0;
+          const aXp =
+            parseFloat(
+              String(aData["XP Gain"] || aData["Raw XP Gain"] || 0).replace(
+                /[^\d.-]/g,
+                ""
+              )
+            ) || 0;
+          const bXp =
+            parseFloat(
+              String(bData["XP Gain"] || bData["Raw XP Gain"] || 0).replace(
+                /[^\d.-]/g,
+                ""
+              )
+            ) || 0;
           return bXp - aXp;
         }
         case "xp-asc": {
-          const aXp = parseFloat(String(aData["XP Gain"] || aData["Raw XP Gain"] || 0).replace(/[^\d.-]/g, '')) || 0;
-          const bXp = parseFloat(String(bData["XP Gain"] || bData["Raw XP Gain"] || 0).replace(/[^\d.-]/g, '')) || 0;
+          const aXp =
+            parseFloat(
+              String(aData["XP Gain"] || aData["Raw XP Gain"] || 0).replace(
+                /[^\d.-]/g,
+                ""
+              )
+            ) || 0;
+          const bXp =
+            parseFloat(
+              String(bData["XP Gain"] || bData["Raw XP Gain"] || 0).replace(
+                /[^\d.-]/g,
+                ""
+              )
+            ) || 0;
           return aXp - bXp;
         }
         default:
@@ -155,7 +201,10 @@ export default function HomePage() {
           <div className="flex items-center justify-between">
             <div>
               <Typography variant="small">Total de Registros</Typography>
-              <Typography variant="h3" className="text-blue-600">
+              <Typography
+                variant="h3"
+                className="text-blue-600 dark:text-blue-400"
+              >
                 {loading ? "..." : records.length}
               </Typography>
             </div>
@@ -167,7 +216,10 @@ export default function HomePage() {
           <div className="flex items-center justify-between">
             <div>
               <Typography variant="small">Registros Públicos</Typography>
-              <Typography variant="h3" className="text-green-600">
+              <Typography
+                variant="h3"
+                className="text-green-600 dark:text-green-400"
+              >
                 {loading ? "..." : records.filter((r) => r.is_public).length}
               </Typography>
             </div>
@@ -179,7 +231,10 @@ export default function HomePage() {
           <div className="flex items-center justify-between">
             <div>
               <Typography variant="small">Registros Privados</Typography>
-              <Typography variant="h3" className="text-purple-600">
+              <Typography
+                variant="h3"
+                className="text-purple-600 dark:text-purple-400"
+              >
                 {loading ? "..." : records.filter((r) => !r.is_public).length}
               </Typography>
             </div>
@@ -192,11 +247,11 @@ export default function HomePage() {
             <div>
               <Typography variant="small">Último Registro</Typography>
               <Typography
-                variant="small"
-                className="font-medium text-amber-600"
+                variant="h4"
+                className="font-medium text-amber-600 dark:text-amber-400"
               >
-                {loading 
-                  ? "..." 
+                {loading
+                  ? "..."
                   : records.length > 0
                   ? formatDateOnly(records[0].created_at)
                   : "Nenhum"}
@@ -281,7 +336,12 @@ export default function HomePage() {
         </div>
 
         {/* Componente de Filtro */}
-        <RecordFilter onFilterChange={handleFilterChange} loading={loading} />
+        <RecordFilter
+          onFilterChange={handleFilterChange}
+          loading={loading}
+          totalBalance={totalBalance}
+          recordCount={filteredRecords.length}
+        />
 
         {loading ? (
           <Card>
