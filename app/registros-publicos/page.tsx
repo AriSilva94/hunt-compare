@@ -222,7 +222,9 @@ export default function RegistrosPublicosPage() {
               >
                 {loading
                   ? "..."
-                  : records.filter((r) => r.data["Session start"]).length}
+                  : records.filter(
+                      (r) => r.data && (r.data as any)["Session start"]
+                    ).length}
               </Typography>
             </div>
             <span className="text-3xl">🎮</span>
@@ -239,7 +241,8 @@ export default function RegistrosPublicosPage() {
               >
                 {loading
                   ? "..."
-                  : records.filter((r) => !r.data["Session start"]).length}
+                  : records.filter((r) => !(r.data as any)["Session start"])
+                      .length}
               </Typography>
             </div>
             <span className="text-3xl">📁</span>
