@@ -1,20 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { recordsService } from "@/services/records.service";
-import { createMetadata } from "@/lib/seo";
+"use client";
+
+import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 import { Card } from "@/components/ui/Card";
 import { Typography } from "@/components/ui/Typography";
-import { formatDateOnly } from "@/utils/date";
+import { RecordFilter, FilterState } from "@/components/ui/RecordFilter";
+import { formatDateOnly, isDateBetween } from "@/utils/date";
 import Link from "next/link";
+import type { Database } from "@/types/database.types";
 
-// Enable ISR for better performance on public pages
-export const revalidate = 180; // 3 minutes
-
-export const metadata = createMetadata({
-  title: "Registros Públicos",
-  description:
-    "Explore registros de hunt do Tibia compartilhados pela comunidade. Analise sessões, compare performances e aprenda com outros jogadores.",
-  path: "/registros-publicos",
-});
+type Record = Database["public"]["Tables"]["records"]["Row"];
 
 function getRecordPreview(data: any) {
   // Para sessões de jogo
@@ -62,8 +58,133 @@ function getRecordPreview(data: any) {
   };
 }
 
-export default async function RegistrosPublicosPage() {
-  const publicRecords = await recordsService.getPublicRecords();
+export default function RegistrosPublicosPage() {
+  const [records, setRecords] = useState<Record[]>([]);
+  const [filteredRecords, setFilteredRecords] = useState<Record[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [totalBalance, setTotalBalance] = useState<number>(0);
+
+  useEffect(() => {
+    async function fetchData() {
+      const supabase = createClient();
+
+      const { data } = await supabase
+        .from("records")
+        .select("*")
+        .eq("is_public", true)
+        .order("created_at", { ascending: false });
+
+      if (data) {
+        setRecords(data);
+        setFilteredRecords(data);
+      }
+      setLoading(false);
+    }
+
+    fetchData();
+  }, []);
+
+  // Calcular somatória do Balance sempre que filteredRecords mudar
+  useEffect(() => {
+    const total = filteredRecords.reduce((sum, record) => {
+      const data = record.data as any;
+      const balance =
+        parseFloat(String(data.Balance || 0).replace(/[^\d.-]/g, "")) || 0;
+      return sum + balance;
+    }, 0);
+    setTotalBalance(total);
+  }, [filteredRecords]);
+
+  const handleFilterChange = (filters: FilterState) => {
+    let filtered = [...records];
+
+    // Filtro por data
+    if (filters.dateFrom && filters.dateTo) {
+      filtered = filtered.filter((record) =>
+        isDateBetween(record.created_at, filters.dateFrom!, filters.dateTo!)
+      );
+    } else if (filters.dateFrom) {
+      filtered = filtered.filter(
+        (record) => new Date(record.created_at) >= filters.dateFrom!
+      );
+    } else if (filters.dateTo) {
+      filtered = filtered.filter((record) => {
+        const recordDate = new Date(record.created_at);
+        const filterDate = new Date(filters.dateTo!);
+        filterDate.setHours(23, 59, 59, 999); // Final do dia
+        return recordDate <= filterDate;
+      });
+    }
+
+    // Ordenação
+    filtered.sort((a, b) => {
+      const aData = a.data as any;
+      const bData = b.data as any;
+
+      switch (filters.sortBy) {
+        case "date-desc":
+          return (
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+          );
+        case "date-asc":
+          return (
+            new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+          );
+        case "profit-desc": {
+          const aBalance =
+            parseFloat(String(aData.Balance || 0).replace(/[^\d.-]/g, "")) || 0;
+          const bBalance =
+            parseFloat(String(bData.Balance || 0).replace(/[^\d.-]/g, "")) || 0;
+          return bBalance - aBalance;
+        }
+        case "profit-asc": {
+          const aBalance =
+            parseFloat(String(aData.Balance || 0).replace(/[^\d.-]/g, "")) || 0;
+          const bBalance =
+            parseFloat(String(bData.Balance || 0).replace(/[^\d.-]/g, "")) || 0;
+          return aBalance - bBalance;
+        }
+        case "xp-desc": {
+          const aXp =
+            parseFloat(
+              String(aData["XP Gain"] || aData["Raw XP Gain"] || 0).replace(
+                /[^\d.-]/g,
+                ""
+              )
+            ) || 0;
+          const bXp =
+            parseFloat(
+              String(bData["XP Gain"] || bData["Raw XP Gain"] || 0).replace(
+                /[^\d.-]/g,
+                ""
+              )
+            ) || 0;
+          return bXp - aXp;
+        }
+        case "xp-asc": {
+          const aXp =
+            parseFloat(
+              String(aData["XP Gain"] || aData["Raw XP Gain"] || 0).replace(
+                /[^\d.-]/g,
+                ""
+              )
+            ) || 0;
+          const bXp =
+            parseFloat(
+              String(bData["XP Gain"] || bData["Raw XP Gain"] || 0).replace(
+                /[^\d.-]/g,
+                ""
+              )
+            ) || 0;
+          return aXp - bXp;
+        }
+        default:
+          return 0;
+      }
+    });
+
+    setFilteredRecords(filtered);
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -84,7 +205,7 @@ export default async function RegistrosPublicosPage() {
                 variant="h3"
                 className="text-blue-600 dark:text-blue-400"
               >
-                {publicRecords.length}
+                {loading ? "..." : records.length}
               </Typography>
             </div>
             <span className="text-3xl">📊</span>
@@ -99,7 +220,11 @@ export default async function RegistrosPublicosPage() {
                 variant="h3"
                 className="text-green-600 dark:text-green-400"
               >
-                {publicRecords.filter((r) => r.data["Session start"]).length}
+                {loading
+                  ? "..."
+                  : records.filter(
+                      (r) => r.data && (r.data as any)["Session start"]
+                    ).length}
               </Typography>
             </div>
             <span className="text-3xl">🎮</span>
@@ -114,7 +239,10 @@ export default async function RegistrosPublicosPage() {
                 variant="h3"
                 className="text-purple-600 dark:text-purple-400"
               >
-                {publicRecords.filter((r) => !r.data["Session start"]).length}
+                {loading
+                  ? "..."
+                  : records.filter((r) => !(r.data as any)["Session start"])
+                      .length}
               </Typography>
             </div>
             <span className="text-3xl">📁</span>
@@ -122,7 +250,22 @@ export default async function RegistrosPublicosPage() {
         </Card>
       </div>
 
-      {publicRecords.length === 0 ? (
+      {/* Componente de Filtro */}
+      <RecordFilter
+        onFilterChange={handleFilterChange}
+        loading={loading}
+        totalBalance={totalBalance}
+        recordCount={filteredRecords.length}
+        isPublic={true}
+      />
+
+      {loading ? (
+        <Card>
+          <div className="text-center py-12">
+            <Typography variant="p">Carregando registros...</Typography>
+          </div>
+        </Card>
+      ) : records.length === 0 ? (
         <Card>
           <div className="text-center py-12">
             <span className="text-6xl mb-4 block">🔍</span>
@@ -134,9 +277,21 @@ export default async function RegistrosPublicosPage() {
             </Typography>
           </div>
         </Card>
+      ) : filteredRecords.length === 0 ? (
+        <Card>
+          <div className="text-center py-12">
+            <span className="text-6xl mb-4 block">🔍</span>
+            <Typography variant="p" className="mb-4">
+              Nenhum registro encontrado com os filtros aplicados.
+            </Typography>
+            <Typography variant="small" className="text-gray-500">
+              Tente ajustar os filtros para ver mais resultados.
+            </Typography>
+          </div>
+        </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {publicRecords.map((record) => {
+          {filteredRecords.map((record) => {
             const preview = getRecordPreview(record.data);
 
             return (
