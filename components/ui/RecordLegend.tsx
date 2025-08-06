@@ -4,6 +4,7 @@
 import { Card } from "@/components/ui/Card";
 import { Typography } from "@/components/ui/Typography";
 import { getRecordColor } from "@/utils/recordColors";
+import { formatDateOnly } from "@/utils/date";
 
 interface Record {
   id: string;
@@ -61,7 +62,7 @@ export function RecordLegend({ records, getRecordTitle }: RecordLegendProps) {
                 </div>
 
                 <Typography variant="small" className="mb-2">
-                  {new Date(record.created_at).toLocaleDateString("pt-BR")}
+                  {formatDateOnly(record.created_at)}
                 </Typography>
 
                 <div className="flex items-center justify-between">

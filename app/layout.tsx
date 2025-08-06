@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { Header } from "@/components/shared/Header";
 import { createMetadata } from "@/lib/seo";
 import "./globals.css";
+import "../styles/datepicker.css";
 
 const inter = Inter({ 
   subsets: ["latin"],
