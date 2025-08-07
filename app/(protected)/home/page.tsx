@@ -262,67 +262,6 @@ export default function HomePage() {
         </Card>
       </div>
 
-      <div className="mb-8">
-        <Card>
-          <Typography variant="h2" className="mb-4">
-            Como funciona?
-          </Typography>
-          <div className="space-y-4">
-            <Typography variant="p">
-              Este sistema permite que você gerencie registros JSON de forma
-              simples e segura.
-            </Typography>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex items-start">
-                <span className="text-2xl mr-3">📝</span>
-                <div>
-                  <Typography variant="p" className="font-medium">
-                    Crie registros
-                  </Typography>
-                  <Typography variant="small">
-                    Adicione dados JSON como sessões de jogos, relatórios ou
-                    qualquer estrutura
-                  </Typography>
-                </div>
-              </div>
-              <div className="flex items-start">
-                <span className="text-2xl mr-3">🔐</span>
-                <div>
-                  <Typography variant="p" className="font-medium">
-                    Controle a privacidade
-                  </Typography>
-                  <Typography variant="small">
-                    Defina se o registro será público ou privado
-                  </Typography>
-                </div>
-              </div>
-              <div className="flex items-start">
-                <span className="text-2xl mr-3">📊</span>
-                <div>
-                  <Typography variant="p" className="font-medium">
-                    Visualize seus dados
-                  </Typography>
-                  <Typography variant="small">
-                    Veja estatísticas detalhadas e informações formatadas
-                  </Typography>
-                </div>
-              </div>
-              <div className="flex items-start">
-                <span className="text-2xl mr-3">🔗</span>
-                <div>
-                  <Typography variant="p" className="font-medium">
-                    Compartilhe facilmente
-                  </Typography>
-                  <Typography variant="small">
-                    Gere links públicos para compartilhar seus registros
-                  </Typography>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Card>
-      </div>
-
       <div>
         <div className="flex justify-between items-center mb-6">
           <Typography variant="h2">Seus Registros</Typography>
