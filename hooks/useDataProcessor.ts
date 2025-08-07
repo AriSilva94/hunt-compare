@@ -5,7 +5,7 @@ import { parseSessionText } from "@/utils/sessionParser";
 
 export function useDataProcessor() {
   const [jsonPreview, setJsonPreview] = useState<any>(null);
-  const [inputFormat, setInputFormat] = useState<FormatType | null>(null);
+  const [inputFormat, setInputFormat] = useState<"json" | "text" | null>(null);
 
   const updatePreview = (input: string) => {
     const format = detectFormat(input);

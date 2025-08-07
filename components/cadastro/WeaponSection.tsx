@@ -62,7 +62,12 @@ export function WeaponSection({
         <ProficiencyTable
           proficiencies={weaponDetail?.proficiencies ?? null}
           selectedPerks={selectedPerks}
-          setSelectedPerks={onPerksChange}
+          onPerkChange={(level, selectedProficiency) => {
+            onPerksChange({
+              ...selectedPerks,
+              [level]: selectedProficiency,
+            });
+          }}
         />
       </div>
     </Card>

@@ -8,15 +8,18 @@ interface PublicRecordHeaderProps {
 }
 
 export function PublicRecordHeader({ record }: PublicRecordHeaderProps) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const data = record.data as any;
+  
   return (
     <div className="mb-8">
       <Typography variant="h1">Registro Público</Typography>
       <Typography variant="lead" className="mt-2">
-        {record.data._metadata?.title || `Registro #${record.id.slice(0, 8)}`}
+        {data?._metadata?.title || `Registro #${record.id.slice(0, 8)}`}
       </Typography>
-      {record.data._metadata?.description && (
+      {data?._metadata?.description && (
         <Typography variant="p" className="mt-1">
-          {record.data._metadata.description}
+          {data._metadata.description}
         </Typography>
       )}
     </div>
