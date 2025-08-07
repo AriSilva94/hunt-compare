@@ -13,7 +13,8 @@
       "Bash(find:*)",
       "Bash(timeout 10 npm run dev)",
       "Bash(npm run check-missing-images:*)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "WebFetch(domain:developers.facebook.com)"
     ],
     "deny": []
   }

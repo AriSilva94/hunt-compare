@@ -1,7 +1,8 @@
 import { MetadataRoute } from 'next'
+import { siteConfig } from '@/lib/seo'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://hunt-compare.vercel.app'
+  const baseUrl = siteConfig.url
 
   return [
     {
