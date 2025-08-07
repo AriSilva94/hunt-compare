@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://hunt-compare.vercel.app/sitemap.xml
+Sitemap: https://hunt-compare.com/sitemap.xml
 
 # Block crawlers from sensitive or irrelevant paths
 Disallow: /api/
