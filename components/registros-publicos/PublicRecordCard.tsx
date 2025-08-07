@@ -15,10 +15,7 @@ export function PublicRecordCard({ record }: PublicRecordCardProps) {
   const preview = getPublicRecordPreview(record.data);
 
   return (
-    <Link
-      href={`/detalhe-publico/${record.id}`}
-      className="block"
-    >
+    <Link href={`/detalhe-publico/${record.id}`} className="block">
       <Card className="hover:shadow-lg transition-all hover:-translate-y-1 cursor-pointer h-full">
         <div className="mb-3">
           <div className="flex justify-between items-start mb-2">
@@ -39,7 +36,7 @@ export function PublicRecordCard({ record }: PublicRecordCardProps) {
             {preview.highlights.map((highlight, idx) => (
               <div
                 key={idx}
-                className="bg-gray-50 p-2 rounded text-center"
+                className="bg-gray-50 dark:bg-gray-700 p-2 rounded text-center"
               >
                 <span className="text-lg mr-1">{highlight.icon}</span>
                 <Typography variant="caption">

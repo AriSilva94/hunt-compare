@@ -40,7 +40,7 @@ export function RecordCard({ record }: RecordCardProps) {
           {summary.stats.map((stat, idx) => (
             <div
               key={idx}
-              className="text-center p-2 bg-gray-50 rounded"
+              className="text-center p-2 bg-gray-50 dark:bg-gray-700 rounded"
             >
               <Typography variant="caption">{stat.label}</Typography>
               <Typography variant="p" className="font-bold">

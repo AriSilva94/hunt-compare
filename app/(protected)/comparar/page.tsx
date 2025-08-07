@@ -354,13 +354,13 @@ export default function CompararPage() {
                       {preview.highlights.map((highlight, idx) => (
                         <div
                           key={idx}
-                          className="bg-gray-50 p-2 rounded text-center"
+                          className="bg-gray-50 dark:bg-gray-700 p-2 rounded text-center"
                         >
                           <span className="text-lg mr-1">{highlight.icon}</span>
                           <Typography variant="caption">
                             {highlight.label}
                           </Typography>
-                          <Typography variant="caption" className="font-bold">
+                          <Typography variant="p" className="font-bold">
                             {highlight.value}
                           </Typography>
                         </div>
@@ -374,7 +374,7 @@ export default function CompararPage() {
                     </Typography>
                     <span
                       className={`font-medium ${
-                        isSelected ? "text-blue-600" : "text-gray-600"
+                        isSelected ? "text-blue-600" : "text-gray-500"
                       }`}
                     >
                       {isSelected ? "Selecionado" : "Clique para selecionar"}

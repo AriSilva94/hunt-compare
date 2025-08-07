@@ -36,9 +36,9 @@ const typographyVariants = {
   h2: "text-3xl font-bold text-gray-900 dark:text-white",
   h3: "text-2xl font-semibold text-gray-900 dark:text-white",
   h4: "text-xl font-semibold text-gray-900 dark:text-white",
-  p: "text-base text-gray-700 dark:text-gray-300",
+  p: "text-base text-gray-700 dark:text-white",
   small: "text-sm text-gray-600 dark:text-gray-400",
-  caption: "text-xs text-gray-500 dark:text-gray-500",
+  caption: "text-xs text-gray-500 dark:text-gray-300",
   lead: "text-lg text-gray-700 dark:text-gray-300 font-medium",
   muted: "text-sm text-gray-500 dark:text-gray-500",
 };
