@@ -26,17 +26,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <head>
-        <meta
-          property="og:image"
-          content="https://www.hunt-compare.com/social.png"
-        />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:type" content="image/png" />
-        <meta
-          name="twitter:image"
-          content="https://www.hunt-compare.com/social.png"
-        />
+        <link rel="icon" href="/logo.png" type="image/png" />
       </head>
       <body className={inter.className}>
         <ThemeProvider>

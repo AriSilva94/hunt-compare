@@ -2,14 +2,19 @@ import type { Metadata } from "next";
 
 const siteConfig = {
   name: "Hunt Compare",
-  description: "Analise suas sessões de hunt do Tibia com gráficos detalhados, compare armas e proficiências, e otimize sua performance no jogo.",
+  description:
+    "Analise suas sessões de hunt do Tibia com gráficos detalhados, compare armas e proficiências, e otimize sua performance no jogo.",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://hunt-compare.vercel.app",
-  ogImage: "/images/social.png",
+  ogImage: "/social.png",
   author: "Ari Silva",
   twitter: "@hunt_compare",
+  creator: {
+    name: "Ari Silva",
+    email: "ariovaldo.bsjunior@gmail.com",
+  },
   keywords: [
     "tibia hunt analysis",
-    "tibia xp calculator", 
+    "tibia xp calculator",
     "tibia profit tracker",
     "tibia session analyzer",
     "mmo analytics",
@@ -22,8 +27,8 @@ const siteConfig = {
     "proficiencies calculator",
     "hunt comparison",
     "tibia efficiency",
-    "session tracker"
-  ]
+    "session tracker",
+  ],
 };
 
 export function createMetadata({
@@ -62,7 +67,9 @@ export function createMetadata({
           url: image || siteConfig.ogImage,
           width: 1200,
           height: 630,
-          alt: title || siteConfig.name,
+          alt: title
+            ? `${title} | ${siteConfig.name}`
+            : `${siteConfig.name} - ${siteConfig.description}`,
           type: "image/png",
         },
       ],
