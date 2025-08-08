@@ -28,7 +28,7 @@ export async function middleware(request: NextRequest) {
     // Exceção: redireciona usuários logados tentando acessar login
     if (pathname === "/login" && user) {
       url.pathname = "/home";
-      return Response.redirect(url);
+      return NextResponse.redirect(url);
     }
     return supabaseResponse;
   }
@@ -36,7 +36,7 @@ export async function middleware(request: NextRequest) {
   // Todas as outras rotas precisam de autenticação
   if (!user) {
     url.pathname = "/login";
-    return Response.redirect(url);
+    return NextResponse.redirect(url);
   }
 
   return supabaseResponse;

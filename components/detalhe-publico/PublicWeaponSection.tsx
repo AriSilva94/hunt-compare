@@ -10,10 +10,10 @@ interface PublicWeaponSectionProps {
   selectedPerks: { [level: number]: number | null };
 }
 
-export function PublicWeaponSection({ 
-  weapons, 
-  weaponDetail, 
-  selectedPerks 
+export function PublicWeaponSection({
+  weapons,
+  weaponDetail,
+  selectedPerks,
 }: PublicWeaponSectionProps) {
   if (!weaponDetail) return null;
 
@@ -33,10 +33,7 @@ export function PublicWeaponSection({
           <div className="my-1 max-w-md text-green-700 dark:text-green-400 font-bold text-xs">
             {weaponDetail?.description_raw ? (
               weaponDetail.description_raw
-                .replace(
-                  /(Max\. Tier: \d+)\s+(It weighs)/,
-                  "$1.|||BREAK|||$2"
-                )
+                .replace(/(Max\. Tier: \d+)\s+(It weighs)/, "$1.|||BREAK|||$2")
                 .split(
                   /(?<!\b(?:Max|Mr|Ms|St|Dr))\. (?=[A-Z])|\|\|\|BREAK\|\|\|/g
                 )
@@ -60,13 +57,11 @@ export function PublicWeaponSection({
             )}
           </div>
         </div>
-        <div className="mt-4">
-          <ProficiencyTable
-            proficiencies={weaponDetail?.proficiencies ?? null}
-            selectedPerks={selectedPerks}
-            isDisabled={true}
-          />
-        </div>
+        <ProficiencyTable
+          proficiencies={weaponDetail?.proficiencies ?? null}
+          selectedPerks={selectedPerks}
+          isDisabled={true}
+        />
       </div>
     </Card>
   );

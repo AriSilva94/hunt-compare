@@ -30,10 +30,7 @@ export function WeaponSection({
           <div className="my-1 max-w-md text-green-700 dark:text-green-400 font-bold text-xs">
             {weaponDetail?.description_raw ? (
               weaponDetail.description_raw
-                .replace(
-                  /(Max\. Tier: \d+)\s+(It weighs)/,
-                  "$1.|||BREAK|||$2"
-                )
+                .replace(/(Max\. Tier: \d+)\s+(It weighs)/, "$1.|||BREAK|||$2")
                 .split(
                   /(?<!\b(?:Max|Mr|Ms|St|Dr))\. (?=[A-Z])|\|\|\|BREAK\|\|\|/g
                 )
@@ -58,18 +55,16 @@ export function WeaponSection({
           </div>
         </div>
       </div>
-      <div className="mt-4">
-        <ProficiencyTable
-          proficiencies={weaponDetail?.proficiencies ?? null}
-          selectedPerks={selectedPerks}
-          onPerkChange={(level, selectedProficiency) => {
-            onPerksChange({
-              ...selectedPerks,
-              [level]: selectedProficiency,
-            });
-          }}
-        />
-      </div>
+      <ProficiencyTable
+        proficiencies={weaponDetail?.proficiencies ?? null}
+        selectedPerks={selectedPerks}
+        onPerkChange={(level, selectedProficiency) => {
+          onPerksChange({
+            ...selectedPerks,
+            [level]: selectedProficiency,
+          });
+        }}
+      />
     </Card>
   );
 }
