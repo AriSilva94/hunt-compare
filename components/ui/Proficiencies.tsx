@@ -51,7 +51,7 @@ export default function ProficiencyTable({
   };
 
   return (
-    <div className="overflow-x-auto">
+    <div className="mt-4 overflow-scroll">
       <table className="table-auto border border-gray-300 dark:border-gray-600 w-full text-center">
         <thead>
           <tr className="bg-gray-200 dark:bg-gray-700">
@@ -65,7 +65,10 @@ export default function ProficiencyTable({
         <tbody>
           <tr>
             {Object.entries(grouped).map(([level, perks]) => (
-              <td key={level} className="p-2 align-middle bg-white dark:bg-gray-800">
+              <td
+                key={level}
+                className="p-2 align-middle bg-white dark:bg-gray-800"
+              >
                 <div
                   className={`flex flex-col ${
                     perks.length > 1 ? "justify-around gap-3" : "items-center"
@@ -112,7 +115,9 @@ export default function ProficiencyTable({
                               />
                             )}
                         </div>
-                        <p className="text-xs text-gray-900 dark:text-gray-100">{perk.description}</p>
+                        <p className="text-xs text-gray-900 dark:text-gray-100">
+                          {perk.description}
+                        </p>
                       </div>
                     );
                   })}

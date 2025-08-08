@@ -114,7 +114,10 @@ export default function DetalhePage({ params }: PageProps) {
     setTimeout(() => setCopySuccess(false), 2000);
   };
 
-  const handleSave = async (updateData: { is_public?: boolean; data?: any }) => {
+  const handleSave = async (updateData: {
+    is_public?: boolean;
+    data?: any;
+  }) => {
     try {
       const response = await fetch(`/api/records/${resolvedParams.id}`, {
         method: "PUT",
@@ -130,27 +133,31 @@ export default function DetalhePage({ params }: PageProps) {
 
       const updatedRecord = await response.json();
       setRecord(updatedRecord);
-      
+
       // Atualizar proficiências se foram alteradas
       if (updateData.data?.weaponDetail?.proficiencies) {
         setSelectedPerks(updateData.data.weaponDetail.proficiencies);
       }
-      
+
       setIsEditing(false);
     } catch (error) {
       console.error("Erro ao salvar registro:", error);
-      showError("Erro ao salvar", "Não foi possível salvar as alterações no registro.");
+      showError(
+        "Erro ao salvar",
+        "Não foi possível salvar as alterações no registro."
+      );
     }
   };
 
   const handleDelete = async () => {
     const confirmed = await confirm({
       title: "Excluir registro",
-      message: "Tem certeza que deseja excluir este registro? Esta ação não pode ser desfeita.",
+      message:
+        "Tem certeza que deseja excluir este registro? Esta ação não pode ser desfeita.",
       confirmText: "Excluir",
-      cancelText: "Cancelar"
+      cancelText: "Cancelar",
     });
-    
+
     if (!confirmed) return;
 
     try {
@@ -191,7 +198,9 @@ export default function DetalhePage({ params }: PageProps) {
             <Typography variant="h1" className="text-3xl">
               {record.data._metadata?.title || "Detalhes do Registro"}
             </Typography>
-            <Typography variant="lead" className="mt-2">ID: {record.id}</Typography>
+            <Typography variant="lead" className="mt-2">
+              ID: {record.id}
+            </Typography>
             {record.data._metadata?.description && (
               <Typography variant="p" className="mt-1">
                 {record.data._metadata.description}
@@ -345,13 +354,11 @@ export default function DetalhePage({ params }: PageProps) {
                 )}
               </div>
             </div>
-            <div className="mt-4">
-              <ProficiencyTable
-                proficiencies={weaponDetail?.proficiencies ?? null}
-                selectedPerks={selectedPerks}
-                isDisabled={true}
-              />
-            </div>
+            <ProficiencyTable
+              proficiencies={weaponDetail?.proficiencies ?? null}
+              selectedPerks={selectedPerks}
+              isDisabled={true}
+            />
           </div>
         </Card>
 

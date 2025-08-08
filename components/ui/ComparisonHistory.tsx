@@ -22,7 +22,9 @@ interface ComparisonHistoryProps {
   onSelectComparison?: (recordIds: string[]) => void;
 }
 
-export function ComparisonHistory({ onSelectComparison }: ComparisonHistoryProps) {
+export function ComparisonHistory({
+  onSelectComparison,
+}: ComparisonHistoryProps) {
   const [history, setHistory] = useState<ComparisonRecord[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
   const { confirm, confirmProps } = useConfirm();
@@ -38,7 +40,7 @@ export function ComparisonHistory({ onSelectComparison }: ComparisonHistoryProps
       await ComparisonHistoryService.cleanInvalidComparisons();
       loadHistory(); // Recarregar após limpeza
     } catch (error) {
-      console.error('Erro ao limpar comparações inválidas:', error);
+      console.error("Erro ao limpar comparações inválidas:", error);
     }
   };
 
@@ -55,17 +57,17 @@ export function ComparisonHistory({ onSelectComparison }: ComparisonHistoryProps
   const handleClearHistory = async () => {
     const confirmed = await confirm({
       title: "Limpar histórico",
-      message: "Tem certeza que deseja limpar todo o histórico? Esta ação não pode ser desfeita.",
+      message:
+        "Tem certeza que deseja limpar todo o histórico? Esta ação não pode ser desfeita.",
       confirmText: "Limpar",
-      cancelText: "Cancelar"
+      cancelText: "Cancelar",
     });
-    
+
     if (confirmed) {
       ComparisonHistoryService.clearHistory();
       loadHistory();
     }
   };
-
 
   if (history.length === 0) {
     return null;
@@ -77,7 +79,10 @@ export function ComparisonHistory({ onSelectComparison }: ComparisonHistoryProps
     <Card className="mb-6">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <Typography variant="lead" className="font-semibold flex items-center gap-2">
+          <Typography
+            variant="lead"
+            className="font-semibold flex items-center gap-2"
+          >
             🕒 Histórico de Comparações
           </Typography>
           <Typography variant="small">
@@ -85,11 +90,7 @@ export function ComparisonHistory({ onSelectComparison }: ComparisonHistoryProps
           </Typography>
         </div>
         {history.length > 0 && (
-          <Button
-            onClick={handleClearHistory}
-            variant="danger"
-            size="sm"
-          >
+          <Button onClick={handleClearHistory} variant="danger" size="sm">
             Limpar Histórico
           </Button>
         )}
@@ -99,37 +100,44 @@ export function ComparisonHistory({ onSelectComparison }: ComparisonHistoryProps
         {displayedHistory.map((comparison) => (
           <div
             key={comparison.id}
-            className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+            className="flex flex-col sm:flex-row sm:items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
           >
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-3">
-                <span className="text-lg">📊</span>
+                <span className="text-lg shrink-0">📊</span>
                 <div className="flex-1 min-w-0">
-                  <Typography variant="small" className="font-medium truncate">
+                  <Typography
+                    variant="small"
+                    className="font-medium truncate block"
+                  >
                     {comparison.recordNames.length > 0
                       ? comparison.recordNames.join(" vs ")
                       : comparison.title}
                   </Typography>
-                  <Typography variant="caption">
-                    {comparison.recordIds.length} registros • {formatDateTime(comparison.createdAt)}
+                  <Typography variant="caption" className="block truncate">
+                    {comparison.recordIds.length} registros •{" "}
+                    {formatDateTime(comparison.createdAt)}
                   </Typography>
                 </div>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 ml-4">
+            <div className="flex items-center justify-end-safe gap-2 sm:ml-4 flex-wrap">
               {onSelectComparison && (
                 <Button
                   onClick={() => onSelectComparison(comparison.recordIds)}
                   variant="primary"
                   size="sm"
+                  className="text-xs"
                 >
                   Recarregar
                 </Button>
               )}
               <Link
-                href={ComparisonHistoryService.formatComparisonUrl(comparison.recordIds)}
-                className="text-green-600 hover:text-green-800 px-2 py-1 rounded hover:bg-green-50"
+                href={ComparisonHistoryService.formatComparisonUrl(
+                  comparison.recordIds
+                )}
+                className="text-green-600 hover:text-green-800 px-2 py-1 rounded hover:bg-green-50 text-xs"
               >
                 <Typography variant="caption">Ver Resultado</Typography>
               </Link>
@@ -137,6 +145,7 @@ export function ComparisonHistory({ onSelectComparison }: ComparisonHistoryProps
                 onClick={() => handleRemoveComparison(comparison.id)}
                 variant="danger"
                 size="sm"
+                className="text-xs"
               >
                 ×
               </Button>
@@ -156,7 +165,7 @@ export function ComparisonHistory({ onSelectComparison }: ComparisonHistoryProps
           </Button>
         </div>
       )}
-    <ConfirmDialog {...confirmProps} />
+      <ConfirmDialog {...confirmProps} />
     </Card>
   );
 }
