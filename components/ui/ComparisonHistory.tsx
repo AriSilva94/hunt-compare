@@ -100,7 +100,7 @@ export function ComparisonHistory({
         {displayedHistory.map((comparison) => (
           <div
             key={comparison.id}
-            className="flex flex-col sm:flex-row sm:items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+            className="flex flex-col sm:flex-row sm:items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
           >
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-3">
@@ -137,9 +137,14 @@ export function ComparisonHistory({
                 href={ComparisonHistoryService.formatComparisonUrl(
                   comparison.recordIds
                 )}
-                className="text-green-600 hover:text-green-800 px-2 py-1 rounded hover:bg-green-50 text-xs"
+                className="px-2 py-1 rounded text-xs hover:bg-green-200 dark:hover:bg-blue-200"
               >
-                <Typography variant="caption">Ver Resultado</Typography>
+                <Typography
+                  variant="caption"
+                  className="text-green-600  dark:text-blue-600 "
+                >
+                  Ver Resultado
+                </Typography>
               </Link>
               <Button
                 onClick={() => handleRemoveComparison(comparison.id)}
