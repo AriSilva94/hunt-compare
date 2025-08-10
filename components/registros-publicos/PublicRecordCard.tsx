@@ -44,77 +44,64 @@ export function PublicRecordCard({ record }: PublicRecordCardProps) {
 
   return (
     <Link href={`/detalhe-publico/${record.id}`} className="block">
-      <Card className="hover:shadow-lg transition-all hover:-translate-y-1 cursor-pointer h-full">
-        <div className="mb-3">
+      <Card className="hover:shadow-lg transition-all hover:-translate-y-1 cursor-pointer h-full p-3">
+        <div className="mb-2">
           <div className="flex justify-between items-start mb-2">
             <div className="flex items-center gap-2 flex-1 min-w-0">
               {/* Avatar compacto do personagem */}
               {record.character ? (
-                <div className="flex items-center gap-2 flex-shrink-0">
-                  <div className={`w-8 h-8 rounded-full ${getVocationColor(record.character.vocation)} flex items-center justify-center shadow-sm`}>
-                    <span className="text-sm text-white" role="img" aria-label={record.character.vocation}>
+                <div className="flex items-center gap-1 flex-shrink-0">
+                  <div className={`w-6 h-6 rounded-full ${getVocationColor(record.character.vocation)} flex items-center justify-center shadow-sm`}>
+                    <span className="text-xs text-white" role="img" aria-label={record.character.vocation}>
                       {getVocationIcon(record.character.vocation)}
                     </span>
                   </div>
                 </div>
               ) : (
-                <div className="w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center flex-shrink-0">
+                <div className="w-6 h-6 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center flex-shrink-0">
                   <span className="text-xs text-gray-600 dark:text-gray-400">❓</span>
                 </div>
               )}
               
-              <Typography variant="h4" className="line-clamp-1 flex-1 min-w-0">
+              <Typography variant="small" className="line-clamp-1 flex-1 min-w-0 font-semibold">
                 {preview.title}
               </Typography>
             </div>
             
             {preview.type === "game-session" && (
-              <span className="ml-2 text-2xl flex-shrink-0">🎮</span>
+              <span className="ml-1 text-lg flex-shrink-0">🎮</span>
             )}
           </div>
           
-          {/* Informação compacta do personagem - sempre presente para layout consistente */}
-          <div className="mb-3 pb-2 border-b border-gray-100 dark:border-gray-700">
-            <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+          {/* Informação inline do personagem */}
+          <div className="mb-2">
+            <div className="text-xs text-gray-500 dark:text-gray-400">
               {record.character ? (
-                <>
-                  <span>👤 {record.character.name}</span>
-                  <div className="flex items-center gap-2">
-                    <span>{record.character.vocation}</span>
-                    <span>•</span>
-                    <span>Lv. {record.character.level}</span>
-                    <span>•</span>
-                    <span>{record.character.world}</span>
-                  </div>
-                </>
+                <span className="truncate block">
+                  👤 {record.character.name} • Lv.{record.character.level} • {record.character.world}
+                </span>
               ) : (
-                <>
-                  <span>👤 Personagem não informado</span>
-                  <div className="flex items-center gap-2">
-                    <span>—</span>
-                  </div>
-                </>
+                <span>👤 Personagem não informado</span>
               )}
             </div>
           </div>
           
-          <Typography variant="small" className="line-clamp-2">
+          <Typography variant="small" className="line-clamp-2 text-xs">
             {preview.description}
           </Typography>
         </div>
 
         {preview.highlights.length > 0 && (
-          <div className="grid grid-cols-2 gap-2 mb-4">
-            {preview.highlights.map((highlight, idx) => (
+          <div className="grid grid-cols-2 gap-1 mb-3">
+            {preview.highlights.slice(0, 4).map((highlight, idx) => (
               <div
                 key={idx}
-                className="bg-gray-50 dark:bg-gray-700 p-2 rounded text-center"
+                className="bg-gray-50 dark:bg-gray-700 p-1.5 rounded text-center"
               >
-                <span className="text-lg mr-1">{highlight.icon}</span>
-                <Typography variant="caption">
-                  {highlight.label}
-                </Typography>{" "}
-                <Typography variant="p" className="font-bold">
+                <Typography variant="caption" className="text-xs block">
+                  {highlight.icon} {highlight.label}
+                </Typography>
+                <Typography variant="small" className="font-bold text-xs block">
                   {highlight.value}
                 </Typography>
               </div>
@@ -122,15 +109,15 @@ export function PublicRecordCard({ record }: PublicRecordCardProps) {
           </div>
         )}
 
-        <div className="flex justify-between items-center text-sm">
-          <Typography variant="small" className="text-gray-500">
+        <div className="flex justify-between items-center text-xs">
+          <Typography variant="small" className="text-gray-500 text-xs">
             {formatDateOnly(record.created_at)}
           </Typography>
           <Typography
             variant="small"
-            className="text-blue-600 font-medium hover:text-blue-800"
+            className="text-blue-600 font-medium hover:text-blue-800 text-xs"
           >
-            Ver detalhes →
+            Ver →
           </Typography>
         </div>
       </Card>
