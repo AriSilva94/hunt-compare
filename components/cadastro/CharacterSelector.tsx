@@ -6,7 +6,11 @@ import { useCharacters } from "@/hooks/useCharacters";
 import { Typography } from "@/components/ui/Typography";
 import { ChevronDown, User } from "lucide-react";
 
-export function CharacterSelector() {
+interface CharacterSelectorProps {
+  onCharacterChange?: (characterId: string | undefined) => void;
+}
+
+export function CharacterSelector({ onCharacterChange }: CharacterSelectorProps) {
   const { characters, selectedCharacterId } = useCharacters();
   const [isOpen, setIsOpen] = useState(false);
   const [localSelectedId, setLocalSelectedId] = useState<string | undefined>(
@@ -17,6 +21,11 @@ export function CharacterSelector() {
   useEffect(() => {
     setLocalSelectedId(selectedCharacterId);
   }, [selectedCharacterId]);
+
+  // Notificar mudanças do personagem selecionado
+  useEffect(() => {
+    onCharacterChange?.(localSelectedId);
+  }, [localSelectedId, onCharacterChange]);
 
   const selectedCharacter = characters.find((c) => c.id === localSelectedId);
   const availableCharacters = characters.filter(

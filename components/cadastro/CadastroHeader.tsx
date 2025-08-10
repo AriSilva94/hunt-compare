@@ -1,7 +1,11 @@
 import { Typography } from "@/components/ui/Typography";
 import { CharacterSelector } from "./CharacterSelector";
 
-export function CadastroHeader() {
+interface CadastroHeaderProps {
+  onCharacterChange?: (characterId: string | undefined) => void;
+}
+
+export function CadastroHeader({ onCharacterChange }: CadastroHeaderProps) {
   return (
     <div className="mb-8">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
@@ -14,7 +18,7 @@ export function CadastroHeader() {
         
         {/* Seletor de personagem */}
         <div className="lg:min-w-[300px]">
-          <CharacterSelector />
+          <CharacterSelector onCharacterChange={onCharacterChange} />
         </div>
       </div>
     </div>
