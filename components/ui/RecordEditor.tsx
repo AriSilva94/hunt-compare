@@ -129,8 +129,8 @@ export function RecordEditor({
 
       <div className="space-y-4">
         {/* Seleção de Personagem */}
-        <div className="p-4 bg-white rounded-lg border">
-          <Typography variant="h4" className="mb-3 dark:text-gray-900">
+        <div className="p-4 bg-white dark:bg-gray-700/50 rounded-lg border">
+          <Typography variant="h4" className="mb-3 dark:text-white">
             👤 Personagem do Registro
           </Typography>
 
@@ -254,8 +254,8 @@ export function RecordEditor({
         </div>
 
         {/* Toggle de Visibilidade */}
-        <div className="p-4 bg-white rounded-lg border">
-          <Typography variant="h4" className="mb-3 dark:text-gray-900">
+        <div className="p-4 bg-white dark:bg-gray-700/50 rounded-lg border">
+          <Typography variant="h4" className="mb-3 dark:text-white">
             🔒 Visibilidade
           </Typography>
           <div className="flex items-center gap-4">
@@ -269,7 +269,7 @@ export function RecordEditor({
               />
               <Typography variant="small">
                 <span className="font-medium">Privado</span>
-                <span className="text-gray-600 ml-1">
+                <span className="text-blue-600 dark:text-orange-400 ml-1">
                   - Apenas você pode ver
                 </span>
               </Typography>
@@ -284,7 +284,7 @@ export function RecordEditor({
               />
               <Typography variant="small">
                 <span className="font-medium">Público</span>
-                <span className="text-gray-600 ml-1">
+                <span className="text-blue-600 dark:text-orange-400 ml-1">
                   - Qualquer pessoa pode ver
                 </span>
               </Typography>
@@ -305,7 +305,7 @@ export function RecordEditor({
 
         {/* Proficiências da Arma */}
         {weaponDetail && (
-          <div className="p-4 bg-white rounded-lg border">
+          <div className="p-4 bg-white dark:bg-gray-700/50 rounded-lg border">
             <Typography variant="h4" className="mb-3 dark:text-gray-900">
               ⚔️ Proficiências da Arma
             </Typography>

@@ -4,7 +4,6 @@ import { formatDateTime } from "@/utils/date";
 import { getRecordSummary } from "@/utils/recordSummary";
 import Link from "next/link";
 import type { Database } from "@/types/database.types";
-import type { TibiaCharacter } from "@/types/character.types";
 
 type Record = Database["public"]["Tables"]["records"]["Row"];
 

@@ -7,6 +7,7 @@ interface UseHomeLoadingProps {
 }
 
 /**
+ * @deprecated Use useHomeData instead - this hook is no longer needed
  * Hook para gerenciar o estado de loading unificado da página home
  * Evita o "pisca-pisca" sincronizando múltiplos loadings
  */

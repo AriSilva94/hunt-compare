@@ -10,11 +10,8 @@ interface RecordsListProps {
   loading: boolean;
 }
 
-export function RecordsList({ records, filteredRecords, loading }: RecordsListProps) {
-  // Durante loading, não mostra nada (será handled pelo loading unificado)
-  if (loading) {
-    return null;
-  }
+export function RecordsList({ records, filteredRecords }: RecordsListProps) {
+  // Loading é tratado na página principal - componente sempre renderiza
 
   if (records.length === 0) {
     return <EmptyState />;

@@ -22,7 +22,6 @@ export function CharacterList({
   onCharacterSelect,
   onCharacterRemove,
   selectedCharacterId,
-  loading = false,
 }: CharacterListProps) {
   const [localSelectedId, setLocalSelectedId] = useState<string | undefined>(
     selectedCharacterId
@@ -71,10 +70,8 @@ export function CharacterList({
     setCharacterToDelete(null);
   };
 
-  // Durante loading, não mostra estado vazio (será handled pelo loading unificado)
-  if (loading) {
-    return null;
-  }
+  // Durante loading, mostra loading interno ou retorna logo
+  // O loading geral é tratado na página principal
 
   if (characters.length === 0) {
     return (
