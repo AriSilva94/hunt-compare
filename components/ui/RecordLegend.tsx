@@ -56,7 +56,10 @@ export function RecordLegend({ records, getRecordTitle }: RecordLegendProps) {
                       {index + 1}
                     </span>
                   </div>
-                  <Typography variant="h4" className="truncate">
+                  <Typography
+                    variant="h4"
+                    className="truncate dark:text-gray-900"
+                  >
                     {getRecordTitle(record)}
                   </Typography>
                 </div>
@@ -92,7 +95,10 @@ export function RecordLegend({ records, getRecordTitle }: RecordLegendProps) {
       </div>
 
       <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-        <Typography variant="small" className="text-blue-800">
+        <Typography
+          variant="small"
+          className="text-blue-800 dark:text-blue-900"
+        >
           💡 <strong>Dica:</strong> Cada registro tem uma cor única que é
           mantida consistente em todos os gráficos e visualizações.
         </Typography>

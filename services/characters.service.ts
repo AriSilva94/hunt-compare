@@ -6,6 +6,7 @@ import {
   SavedCharacter,
   TibiaCharacter 
 } from "@/types/character.types";
+import { characterService } from "@/services/character.service";
 
 interface ICharactersService {
   createCharacter(userId: string, characterData: CreateCharacterDTO): Promise<DatabaseCharacter>;
@@ -13,10 +14,12 @@ interface ICharactersService {
   updateCharacter(id: string, userId: string, data: UpdateCharacterDTO): Promise<DatabaseCharacter>;
   deleteCharacter(id: string, userId: string): Promise<void>;
   setActiveCharacter(id: string, userId: string): Promise<void>;
+  getUserCharactersWithRefresh(userId: string): Promise<DatabaseCharacter[]>;
 }
 
 export class CharactersService implements ICharactersService {
   private readonly MAX_CHARACTERS = 5;
+  private readonly UPDATE_INTERVAL_SECONDS = 3 * 60 * 60; // 3 horas em segundos
 
   async createCharacter(userId: string, characterData: CreateCharacterDTO): Promise<DatabaseCharacter> {
     const supabase = createClient();
@@ -173,6 +176,66 @@ export class CharactersService implements ICharactersService {
 
     if (activateError) {
       throw new Error(`Erro ao ativar personagem: ${activateError.message}`);
+    }
+  }
+
+  async getUserCharactersWithRefresh(userId: string): Promise<DatabaseCharacter[]> {
+    const characters = await this.getUserCharacters(userId);
+    
+    // Verificar quais personagens precisam ser atualizados
+    const charactersToUpdate = characters.filter(character => 
+      this.needsUpdate(character.updated_at)
+    );
+
+    // Atualizar personagens que precisam
+    for (const character of charactersToUpdate) {
+      try {
+        await this.refreshCharacterData(character, userId);
+      } catch (error) {
+        console.error(`Erro ao atualizar personagem ${character.name}:`, error);
+        // Continua com os outros personagens mesmo se um falhar
+      }
+    }
+
+    // Retornar personagens atualizados se houve atualizações
+    if (charactersToUpdate.length > 0) {
+      return await this.getUserCharacters(userId);
+    }
+
+    return characters;
+  }
+
+  private needsUpdate(updatedAt: string): boolean {
+    const lastUpdate = new Date(updatedAt);
+    const now = new Date();
+    const diffInSeconds = (now.getTime() - lastUpdate.getTime()) / 1000;
+    
+    return diffInSeconds > this.UPDATE_INTERVAL_SECONDS;
+  }
+
+  private async refreshCharacterData(character: DatabaseCharacter, userId: string): Promise<void> {
+    try {
+      // Buscar dados atualizados da API
+      const tibiaCharacter = await characterService.getCharacterInfo(character.name);
+      
+      if (!tibiaCharacter) {
+        throw new Error(`Não foi possível obter dados atualizados para ${character.name}`);
+      }
+
+      // Atualizar no banco de dados
+      const updateData: UpdateCharacterDTO = {
+        level: tibiaCharacter.level,
+        vocation: tibiaCharacter.vocation,
+        world: tibiaCharacter.world,
+        sex: tibiaCharacter.sex,
+      };
+
+      await this.updateCharacter(character.id, userId, updateData);
+      
+      console.log(`Personagem ${character.name} atualizado com sucesso`);
+    } catch (error) {
+      console.error(`Erro ao atualizar dados do personagem ${character.name}:`, error);
+      throw error;
     }
   }
 

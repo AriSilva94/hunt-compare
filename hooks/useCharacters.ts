@@ -51,7 +51,8 @@ export function useCharacters() {
 
   const loadCharactersFromDatabase = async (userId: string) => {
     try {
-      const dbCharacters = await charactersService.getUserCharacters(userId)
+      // Usar o novo método que verifica e atualiza personagens automaticamente
+      const dbCharacters = await charactersService.getUserCharactersWithRefresh(userId)
       const savedCharacters = dbCharacters.map(CharactersService.databaseCharacterToSaved)
       setCharacters(savedCharacters)
       
