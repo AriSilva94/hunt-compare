@@ -92,7 +92,7 @@ export function CharacterCard({ character, onClick, onDelete, isSelected = false
         relative p-2 rounded-md transition-all duration-300 cursor-pointer hover:shadow-sm
         ${style.bg}
         hover:scale-[1.005] active:scale-[0.995]
-        ${isSelected ? 'border-2 border-transparent' : `border-2 ${style.border}`}
+        ${isSelected ? 'border-2 border-transparent opacity-100' : `border-2 ${style.border} opacity-60 hover:opacity-80`}
       `}
     >
       {/* Borda animada usando ::before pseudo-elemento */}
