@@ -133,6 +133,7 @@ export function useCharacters() {
         level: tibiaCharacter.level,
         vocation: tibiaCharacter.vocation,
         world: tibiaCharacter.world,
+        sex: tibiaCharacter.sex,
         addedAt: new Date().toISOString(),
         isSelected: characters.length === 0
       }

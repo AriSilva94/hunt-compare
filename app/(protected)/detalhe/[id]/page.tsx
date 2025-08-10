@@ -126,6 +126,7 @@ export default function DetalhePage({ params }: PageProps) {
   const handleSave = async (updateData: {
     is_public?: boolean;
     data?: any;
+    character_id?: string | null;
   }) => {
     try {
       const response = await fetch(`/api/records/${resolvedParams.id}`, {
@@ -248,63 +249,123 @@ export default function DetalhePage({ params }: PageProps) {
           <Typography variant="h3" className="mb-4">
             Informações do Registro
           </Typography>
-          
+
           {/* Layout responsivo: personagem + informações */}
           <div className="flex flex-col lg:flex-row gap-6">
             {/* Seção do Personagem */}
             <div className="lg:w-80 flex-shrink-0">
               {record.character ? (
                 <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4">
-                  <Typography variant="small" className="text-gray-600 dark:text-gray-400 mb-3 font-medium">
+                  <Typography
+                    variant="small"
+                    className="text-gray-600 dark:text-gray-900 mb-3 font-medium"
+                  >
                     👤 Personagem do registro
                   </Typography>
-                  
+
                   <div className="flex items-center gap-3">
                     {/* Avatar com ícone da vocação */}
                     <div className="relative flex-shrink-0">
-                      <div className={`w-12 h-12 rounded-full ${
-                        record.character.vocation.toLowerCase().includes('druid') ? 'bg-green-500' :
-                        record.character.vocation.toLowerCase().includes('knight') ? 'bg-red-500' :
-                        record.character.vocation.toLowerCase().includes('paladin') ? 'bg-yellow-500' :
-                        record.character.vocation.toLowerCase().includes('sorcerer') ? 'bg-blue-500' :
-                        record.character.vocation.toLowerCase().includes('monk') ? 'bg-orange-500' : 'bg-gray-500'
-                      } flex items-center justify-center shadow-md`}>
-                        <span className="text-lg text-white" role="img" aria-label={record.character.vocation}>
-                          {record.character.vocation.toLowerCase().includes('druid') ? '🍃' :
-                           record.character.vocation.toLowerCase().includes('knight') ? '⚔️' :
-                           record.character.vocation.toLowerCase().includes('paladin') ? '🏹' :
-                           record.character.vocation.toLowerCase().includes('sorcerer') ? '🔥' :
-                           record.character.vocation.toLowerCase().includes('monk') ? '🥋' : '👤'}
+                      <div
+                        className={`w-12 h-12 rounded-full ${
+                          record.character.vocation
+                            .toLowerCase()
+                            .includes("druid")
+                            ? "bg-green-500"
+                            : record.character.vocation
+                                .toLowerCase()
+                                .includes("knight")
+                            ? "bg-red-500"
+                            : record.character.vocation
+                                .toLowerCase()
+                                .includes("paladin")
+                            ? "bg-yellow-500"
+                            : record.character.vocation
+                                .toLowerCase()
+                                .includes("sorcerer")
+                            ? "bg-blue-500"
+                            : record.character.vocation
+                                .toLowerCase()
+                                .includes("monk")
+                            ? "bg-orange-500"
+                            : "bg-gray-500"
+                        } flex items-center justify-center shadow-md`}
+                      >
+                        <span
+                          className="text-lg text-white"
+                          role="img"
+                          aria-label={record.character.vocation}
+                        >
+                          {record.character.vocation
+                            .toLowerCase()
+                            .includes("druid")
+                            ? "🍃"
+                            : record.character.vocation
+                                .toLowerCase()
+                                .includes("knight")
+                            ? "⚔️"
+                            : record.character.vocation
+                                .toLowerCase()
+                                .includes("paladin")
+                            ? "🏹"
+                            : record.character.vocation
+                                .toLowerCase()
+                                .includes("sorcerer")
+                            ? "🔥"
+                            : record.character.vocation
+                                .toLowerCase()
+                                .includes("monk")
+                            ? "🥋"
+                            : "👤"}
                         </span>
                       </div>
-                      
+
                       {/* Indicador de sexo */}
                       <div className="absolute -bottom-1 -right-1 bg-white dark:bg-gray-800 rounded-full p-0.5 shadow-sm">
                         <span className="text-xs">
-                          {record.character.sex === 'male' ? '♂️' : record.character.sex === 'female' ? '♀️' : '❓'}
+                          {record.character.sex === "male"
+                            ? "♂️"
+                            : record.character.sex === "female"
+                            ? "♀️"
+                            : "❓"}
                         </span>
                       </div>
                     </div>
-                    
+
                     {/* Informações do personagem */}
                     <div className="flex-1 min-w-0">
-                      <Typography variant="lead" className="font-semibold truncate mb-1">
+                      <Typography
+                        variant="lead"
+                        className="font-semibold truncate mb-1"
+                      >
                         {record.character.name}
                       </Typography>
-                      
+
                       <div className="space-y-1 text-sm">
                         <div>
-                          <span className="text-gray-500 dark:text-gray-400">Vocação:</span>
-                          <span className="ml-1 font-medium">{record.character.vocation}</span>
+                          <span className="text-gray-500 dark:text-gray-400">
+                            Vocação:
+                          </span>
+                          <span className="ml-1 font-medium">
+                            {record.character.vocation}
+                          </span>
                         </div>
                         <div className="flex items-center gap-3">
                           <div>
-                            <span className="text-gray-500 dark:text-gray-400">Level:</span>
-                            <span className="ml-1 font-bold">{record.character.level.toLocaleString()}</span>
+                            <span className="text-gray-500 dark:text-gray-400">
+                              Level:
+                            </span>
+                            <span className="ml-1 font-bold">
+                              {record.character.level.toLocaleString()}
+                            </span>
                           </div>
                           <div>
-                            <span className="text-gray-500 dark:text-gray-400">Mundo:</span>
-                            <span className="ml-1">{record.character.world}</span>
+                            <span className="text-gray-500 dark:text-gray-400">
+                              Mundo:
+                            </span>
+                            <span className="ml-1">
+                              {record.character.world}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -324,27 +385,39 @@ export default function DetalhePage({ params }: PageProps) {
                 </div>
               )}
             </div>
-            
+
             {/* Seção das Informações do Registro */}
             <div className="flex-1">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                 <div className="space-y-3">
                   <div>
-                    <span className="font-medium text-gray-700 dark:text-gray-300 block mb-1">📅 Criado em:</span>
-                    <Typography variant="p" className="text-gray-600 dark:text-gray-400">
+                    <span className="font-medium text-gray-700 dark:text-gray-300 block mb-1">
+                      📅 Criado em:
+                    </span>
+                    <Typography
+                      variant="p"
+                      className="text-gray-600 dark:text-gray-400"
+                    >
                       {new Date(record.created_at).toLocaleString("pt-BR")}
                     </Typography>
                   </div>
                   <div>
-                    <span className="font-medium text-gray-700 dark:text-gray-300 block mb-1">🔄 Atualizado em:</span>
-                    <Typography variant="p" className="text-gray-600 dark:text-gray-400">
+                    <span className="font-medium text-gray-700 dark:text-gray-300 block mb-1">
+                      🔄 Atualizado em:
+                    </span>
+                    <Typography
+                      variant="p"
+                      className="text-gray-600 dark:text-gray-400"
+                    >
                       {new Date(record.updated_at).toLocaleString("pt-BR")}
                     </Typography>
                   </div>
                 </div>
-                
+
                 <div>
-                  <span className="font-medium text-gray-700 dark:text-gray-300 block mb-1">👁️ Visibilidade:</span>
+                  <span className="font-medium text-gray-700 dark:text-gray-300 block mb-1">
+                    👁️ Visibilidade:
+                  </span>
                   <span
                     className={`inline-flex px-3 py-1 text-xs font-medium rounded-full ${
                       record.is_public

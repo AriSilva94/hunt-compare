@@ -129,7 +129,17 @@ export class RecordsService {
       })
       .eq("id", id)
       .eq("user_id", userId)
-      .select()
+      .select(`
+        *,
+        character:characters(
+          id,
+          name,
+          level,
+          vocation,
+          world,
+          sex
+        )
+      `)
       .single();
 
     if (error) throw error;
