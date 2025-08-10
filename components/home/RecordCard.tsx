@@ -8,16 +8,20 @@ import type { TibiaCharacter } from "@/types/character.types";
 
 type Record = Database["public"]["Tables"]["records"]["Row"];
 
-interface RecordData {
-  character?: TibiaCharacter;
-}
-
 interface RecordCardProps {
-  record: Record;
+  record: Record & {
+    character?: {
+      id: string;
+      name: string;
+      level: number;
+      vocation: string;
+      world: string;
+      sex: string;
+    } | null;
+  };
 }
 
 export function RecordCard({ record }: RecordCardProps) {
-  const recordData = record.data as RecordData;
   const summary = getRecordSummary(record.data);
 
   // Helper functions para personagem
@@ -44,11 +48,11 @@ export function RecordCard({ record }: RecordCardProps) {
       <div className="flex justify-between items-start mb-2">
         <div className="flex items-center gap-2 flex-1 min-w-0">
           {/* Avatar compacto do personagem */}
-          {recordData.character ? (
+          {record.character ? (
             <div className="flex items-center gap-2 flex-shrink-0">
-              <div className={`w-8 h-8 rounded-full ${getVocationColor(recordData.character.vocation)} flex items-center justify-center shadow-sm`}>
-                <span className="text-sm text-white" role="img" aria-label={recordData.character.vocation}>
-                  {getVocationIcon(recordData.character.vocation)}
+              <div className={`w-8 h-8 rounded-full ${getVocationColor(record.character.vocation)} flex items-center justify-center shadow-sm`}>
+                <span className="text-sm text-white" role="img" aria-label={record.character.vocation}>
+                  {getVocationIcon(record.character.vocation)}
                 </span>
               </div>
             </div>
@@ -77,15 +81,15 @@ export function RecordCard({ record }: RecordCardProps) {
       {/* Informação compacta do personagem - sempre presente para layout consistente */}
       <div className="mb-3 pb-2 border-b border-gray-100 dark:border-gray-700">
         <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
-          {recordData.character ? (
+          {record.character ? (
             <>
-              <span>👤 {recordData.character.name}</span>
+              <span>👤 {record.character.name}</span>
               <div className="flex items-center gap-2">
-                <span>{recordData.character.vocation}</span>
+                <span>{record.character.vocation}</span>
                 <span>•</span>
-                <span>Lv. {recordData.character.level}</span>
+                <span>Lv. {record.character.level}</span>
                 <span>•</span>
-                <span>{recordData.character.world}</span>
+                <span>{record.character.world}</span>
               </div>
             </>
           ) : (
