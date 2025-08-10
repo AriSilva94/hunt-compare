@@ -243,7 +243,7 @@ export default function CompararPage() {
 
       {/* Barra de seleção */}
       {selectedRecords.length > 0 && (
-        <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <div className="mb-6 p-4 bg-blue-50 border dark:bg-blue-900 border-blue-200 rounded-lg">
           <div className="flex items-center justify-between">
             <div>
               <Typography variant="p" className="text-blue-900 font-medium">
