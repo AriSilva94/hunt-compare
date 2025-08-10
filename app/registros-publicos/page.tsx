@@ -7,19 +7,24 @@ import { PublicRecordsInfo } from "@/components/registros-publicos/PublicRecords
 import { RecordFilter } from "@/components/ui/RecordFilter";
 import { usePublicRecords } from "@/hooks/usePublicRecords";
 import { useRecordFilters } from "@/hooks/useRecordFilters";
+import { Loading } from "@/components/ui/Loading";
 
 export default function RegistrosPublicosPage() {
   const { records, loading } = usePublicRecords();
   const { filteredRecords, totalBalance, handleFilterChange } = useRecordFilters(records);
 
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <PublicRecordsHeader />
-      <PublicStatisticsCards records={records} loading={loading} />
+      <PublicStatisticsCards records={records} loading={false} />
       
       <RecordFilter
         onFilterChange={handleFilterChange}
-        loading={loading}
+        loading={false}
         totalBalance={totalBalance}
         recordCount={filteredRecords.length}
         isPublic={true}
@@ -28,7 +33,7 @@ export default function RegistrosPublicosPage() {
       <PublicRecordsList
         records={records}
         filteredRecords={filteredRecords}
-        loading={loading}
+        loading={false}
       />
 
       <PublicRecordsInfo />

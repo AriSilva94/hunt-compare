@@ -44,6 +44,13 @@ export function useRecordFilters(records: Record[]) {
       });
     }
 
+    // Filtro por personagem
+    if (filters.characterId) {
+      filtered = filtered.filter((record) => 
+        record.character_id === filters.characterId
+      );
+    }
+
     filtered.sort((a, b) => {
       const aData = a.data as any;
       const bData = b.data as any;

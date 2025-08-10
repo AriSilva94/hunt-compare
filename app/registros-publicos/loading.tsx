@@ -1,5 +1,5 @@
-import { PageSkeleton } from "@/components/ui/Skeleton";
+import { Loading } from "@/components/ui/Loading";
 
-export default function Loading() {
-  return <PageSkeleton showStats={true} recordCount={6} />;
+export default function LoadingPage() {
+  return <Loading />;
 }

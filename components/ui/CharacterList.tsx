@@ -14,6 +14,7 @@ interface CharacterListProps {
   onCharacterSelect: (character: SavedCharacter) => void;
   onCharacterRemove?: (characterId: string) => void;
   selectedCharacterId?: string;
+  loading?: boolean;
 }
 
 export function CharacterList({
@@ -68,6 +69,9 @@ export function CharacterList({
     setIsConfirmOpen(false);
     setCharacterToDelete(null);
   };
+
+  // Durante loading, mostra loading interno ou retorna logo
+  // O loading geral é tratado na página principal
 
   if (characters.length === 0) {
     return (

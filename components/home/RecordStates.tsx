@@ -2,26 +2,12 @@ import { Card } from "@/components/ui/Card";
 import { Typography } from "@/components/ui/Typography";
 import Link from "next/link";
 
-interface LoadingStateProps {
-  children?: never;
-}
-
 interface EmptyStateProps {
   children?: never;
 }
 
 interface NoResultsStateProps {
   children?: never;
-}
-
-export function LoadingState({}: LoadingStateProps) {
-  return (
-    <Card>
-      <div className="text-center py-12">
-        <Typography variant="p">Carregando registros...</Typography>
-      </div>
-    </Card>
-  );
 }
 
 export function EmptyState({}: EmptyStateProps) {

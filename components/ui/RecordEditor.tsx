@@ -50,6 +50,7 @@ export function RecordEditor({
     record.character_id
   );
   const [isSaving, setIsSaving] = useState(false);
+  const [activeTab, setActiveTab] = useState<"basic" | "advanced">("basic");
 
   const { characters, loading: charactersLoading } = useCharacters();
 
@@ -108,7 +109,8 @@ export function RecordEditor({
 
   return (
     <Card className="border-blue-200 bg-blue-50">
-      <div className="flex items-center justify-between mb-4">
+      {/* Header compacto */}
+      <div className="flex items-center justify-between mb-3">
         <Typography variant="h4" className="text-blue-900">
           ✏️ Editando Registro
         </Typography>
@@ -127,227 +129,216 @@ export function RecordEditor({
         </div>
       </div>
 
-      <div className="space-y-4">
-        {/* Seleção de Personagem */}
-        <div className="p-4 bg-white rounded-lg border">
-          <Typography variant="h4" className="mb-3 dark:text-gray-900">
-            👤 Personagem do Registro
-          </Typography>
+      {/* Sistema de Abas */}
+      <div className="mb-3">
+        <div className="flex border-b border-blue-200">
+          <button
+            onClick={() => setActiveTab("basic")}
+            className={`px-4 py-2 text-sm font-medium transition-colors ${
+              activeTab === "basic"
+                ? "border-b-2 border-blue-600 text-blue-600"
+                : "text-gray-600 hover:text-blue-600"
+            }`}
+          >
+            📝 Básico
+          </button>
+          {weaponDetail && (
+            <button
+              onClick={() => setActiveTab("advanced")}
+              className={`px-4 py-2 text-sm font-medium transition-colors ${
+                activeTab === "advanced"
+                  ? "border-b-2 border-blue-600 text-blue-600"
+                  : "text-gray-600 hover:text-blue-600"
+              }`}
+            >
+              ⚔️ Proficiências
+            </button>
+          )}
+        </div>
+      </div>
 
-          {charactersLoading ? (
-            <div className="animate-pulse">
-              <div className="h-12 bg-gray-200 rounded w-full"></div>
-            </div>
-          ) : characters.length > 0 ? (
-            <>
-              <div className="mb-3">
-                <select
-                  value={selectedCharacterId || ""}
-                  onChange={(e) =>
-                    setSelectedCharacterId(e.target.value || null)
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  disabled={isSaving}
-                >
-                  <option value="">Nenhum personagem selecionado</option>
-                  {characters.map((character) => (
-                    <option key={character.id} value={character.id}>
-                      {character.name} - {character.vocation} (Lv.{" "}
-                      {character.level}) - {character.world}
-                    </option>
-                  ))}
-                </select>
-              </div>
+      {/* Conteúdo das Abas */}
+      {activeTab === "basic" ? (
+        <div className="space-y-3">
+          {/* Grid Layout para desktop - Personagem e Visibilidade lado a lado */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+            {/* Seleção de Personagem - Compacto */}
+            <div className="p-3 bg-white dark:bg-gray-700/50 rounded-lg border">
+              <Typography
+                variant="small"
+                className="font-medium mb-2 dark:text-white flex items-center gap-2"
+              >
+                👤 Personagem
+              </Typography>
 
-              {/* Preview do personagem selecionado */}
-              {selectedCharacterId &&
-                (() => {
-                  const character = characters.find(
-                    (c) => c.id === selectedCharacterId
-                  );
-                  return character ? (
-                    <div className="p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg border">
-                      <div className="flex items-center gap-3">
-                        <div
-                          className={`w-10 h-10 rounded-full ${
-                            character.vocation.toLowerCase().includes("druid")
-                              ? "bg-green-500"
-                              : character.vocation
-                                  .toLowerCase()
-                                  .includes("knight")
-                              ? "bg-red-500"
-                              : character.vocation
-                                  .toLowerCase()
-                                  .includes("paladin")
-                              ? "bg-yellow-500"
-                              : character.vocation
-                                  .toLowerCase()
-                                  .includes("sorcerer")
-                              ? "bg-blue-500"
-                              : character.vocation
-                                  .toLowerCase()
-                                  .includes("monk")
-                              ? "bg-orange-500"
-                              : "bg-gray-500"
-                          } flex items-center justify-center`}
-                        >
-                          <span className="text-sm text-white">
-                            {character.vocation.toLowerCase().includes("druid")
-                              ? "🍃"
-                              : character.vocation
-                                  .toLowerCase()
-                                  .includes("knight")
-                              ? "⚔️"
-                              : character.vocation
-                                  .toLowerCase()
-                                  .includes("paladin")
-                              ? "🏹"
-                              : character.vocation
-                                  .toLowerCase()
-                                  .includes("sorcerer")
-                              ? "🔥"
-                              : character.vocation
-                                  .toLowerCase()
-                                  .includes("monk")
-                              ? "🥋"
-                              : "👤"}
-                          </span>
+              {charactersLoading ? (
+                <div className="animate-pulse">
+                  <div className="h-10 bg-gray-200 rounded w-full"></div>
+                </div>
+              ) : characters.length > 0 ? (
+                <>
+                  <select
+                    value={selectedCharacterId || ""}
+                    onChange={(e) =>
+                      setSelectedCharacterId(e.target.value || null)
+                    }
+                    className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    disabled={isSaving}
+                  >
+                    <option value="">Selecionar personagem</option>
+                    {characters.map((character) => (
+                      <option key={character.id} value={character.id}>
+                        {character.name} ({character.level})
+                      </option>
+                    ))}
+                  </select>
+
+                  {/* Preview compacto */}
+                  {selectedCharacterId &&
+                    (() => {
+                      const character = characters.find(
+                        (c) => c.id === selectedCharacterId
+                      );
+                      return character ? (
+                        <div className="mt-2 p-2 bg-gray-50 dark:bg-gray-700/50 rounded border text-xs">
+                          <div className="flex items-center gap-2">
+                            <div className="w-6 h-6 rounded bg-blue-500 flex items-center justify-center text-white text-xs">
+                              👤
+                            </div>
+                            <div>
+                              <div className="font-medium">
+                                {character.name}
+                              </div>
+                              <div className="text-gray-500 dark:text-gray-400">
+                                {character.vocation} Lv.{character.level} •{" "}
+                                {character.world}
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                        <div>
-                          <Typography
-                            variant="small"
-                            className="font-semibold dark:text-white"
-                          >
-                            {character.name}
-                          </Typography>
-                          <Typography
-                            variant="caption"
-                            className="text-gray-500 dark:text-white"
-                          >
-                            {" "}
-                            {character.vocation} • Lv. {character.level} •{" "}
-                            {character.world}
-                          </Typography>
-                        </div>
-                      </div>
+                      ) : null;
+                    })()}
+
+                  {selectedCharacterId !== record.character_id && (
+                    <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded text-xs">
+                      <span className="text-blue-800 font-medium">ℹ️</span>
+                      <span className="text-blue-700 ml-1">
+                        Personagem será alterado
+                      </span>
                     </div>
-                  ) : null;
-                })()}
-
-              {selectedCharacterId !== record.character_id && (
-                <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded">
-                  <strong className="text-blue-800">ℹ️ Info:</strong>
-                  <span className="text-blue-700 ml-1">
-                    O personagem associado a este registro será alterado.
+                  )}
+                </>
+              ) : (
+                <div className="p-2 bg-yellow-50 border border-yellow-200 rounded text-xs">
+                  <span className="text-yellow-700">
+                    ⚠️ Nenhum personagem cadastrado
                   </span>
                 </div>
               )}
-            </>
-          ) : (
-            <div className="p-3 bg-yellow-50 border border-yellow-200 rounded">
-              <Typography variant="small" className="text-yellow-700">
-                ⚠️ Você não tem personagens cadastrados. Vá para a página
-                inicial para adicionar um personagem.
-              </Typography>
             </div>
-          )}
-        </div>
 
-        {/* Toggle de Visibilidade */}
-        <div className="p-4 bg-white rounded-lg border">
-          <Typography variant="h4" className="mb-3 dark:text-gray-900">
-            🔒 Visibilidade
-          </Typography>
-          <div className="flex items-center gap-4">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                name="visibility"
-                checked={!isPublic}
-                onChange={() => setIsPublic(false)}
-                className="w-4 h-4 text-blue-600"
-              />
-              <Typography variant="small">
-                <span className="font-medium">Privado</span>
-                <span className="text-gray-600 ml-1">
-                  - Apenas você pode ver
-                </span>
+            {/* Toggle de Visibilidade - Compacto */}
+            <div className="p-3 bg-white dark:bg-gray-700/50 rounded-lg border">
+              <Typography
+                variant="small"
+                className="font-medium mb-2 dark:text-white flex items-center gap-2"
+              >
+                🔒 Visibilidade
               </Typography>
-            </label>
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                name="visibility"
-                checked={isPublic}
-                onChange={() => setIsPublic(true)}
-                className="w-4 h-4 text-blue-600"
-              />
-              <Typography variant="small">
-                <span className="font-medium">Público</span>
-                <span className="text-gray-600 ml-1">
-                  - Qualquer pessoa pode ver
-                </span>
-              </Typography>
-            </label>
+
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="visibility"
+                    checked={!isPublic}
+                    onChange={() => setIsPublic(false)}
+                    className="w-3 h-3 text-blue-600"
+                  />
+                  <Typography variant="caption">
+                    <span className="font-medium">Privado</span>
+                    <span className="text-gray-500 ml-1 text-xs">
+                      - Apenas você
+                    </span>
+                  </Typography>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="visibility"
+                    checked={isPublic}
+                    onChange={() => setIsPublic(true)}
+                    className="w-3 h-3 text-blue-600"
+                  />
+                  <Typography variant="caption">
+                    <span className="font-medium">Público</span>
+                    <span className="text-gray-500 ml-1 text-xs">
+                      - Todos podem ver
+                    </span>
+                  </Typography>
+                </label>
+              </div>
+
+              {isPublic !== record.is_public && (
+                <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs">
+                  <span className="text-yellow-800 font-medium">⚠️</span>
+                  <span className="text-yellow-700 ml-1">
+                    {isPublic ? "Ficará público" : "Ficará privado"}
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
-
-          {isPublic !== record.is_public && (
-            <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded">
-              <strong className="text-yellow-800">⚠️ Atenção:</strong>
-              <span className="text-yellow-700 ml-1">
-                {isPublic
-                  ? "Este registro ficará visível publicamente e poderá ser usado em comparações por outros usuários."
-                  : "Este registro ficará privado e será removido automaticamente de comparações públicas existentes."}
-              </span>
-            </div>
-          )}
         </div>
-
-        {/* Proficiências da Arma */}
-        {weaponDetail && (
-          <div className="p-4 bg-white rounded-lg border">
-            <Typography variant="h4" className="mb-3 dark:text-gray-900">
-              ⚔️ Proficiências da Arma
-            </Typography>
-            <div className="flex flex-col items-center gap-4">
-              <div className="text-center">
-                <Typography variant="h4" className="dark:text-gray-900">
+      ) : (
+        /* Aba Avançado - Proficiências */
+        <div className="space-y-3">
+          {weaponDetail ? (
+            <div className="p-3 bg-white dark:bg-gray-700/50 rounded-lg border">
+              <div className="text-center mb-3">
+                <Typography
+                  variant="p"
+                  className="font-medium dark:text-gray-900"
+                >
                   {weaponDetail.name}
                 </Typography>
-                <Typography variant="small">
+                <Typography variant="caption" className="text-gray-600">
                   Ajuste as proficiências selecionadas
                 </Typography>
               </div>
+
               <ProficiencyTable
                 proficiencies={weaponDetail.proficiencies}
                 selectedPerks={selectedPerks}
                 onPerkChange={handlePerkChange}
                 isDisabled={false}
               />
+
+              {JSON.stringify(selectedPerks) !==
+                JSON.stringify(initialSelectedPerks) && (
+                <div className="mt-3 p-2 bg-blue-50 border border-blue-200 rounded text-xs">
+                  <span className="text-blue-800 font-medium">ℹ️</span>
+                  <span className="text-blue-700 ml-1">
+                    Proficiências alteradas
+                  </span>
+                </div>
+              )}
             </div>
-
-            {JSON.stringify(selectedPerks) !==
-              JSON.stringify(initialSelectedPerks) && (
-              <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded">
-                <strong className="text-blue-800">ℹ️ Info:</strong>
-                <span className="text-blue-700 ml-1">
-                  As proficiências selecionadas foram alteradas e afetarão os
-                  cálculos nas comparações.
-                </span>
-              </div>
-            )}
-          </div>
-        )}
-
-        {!weaponDetail && record.data.weaponDetail && (
-          <div className="p-4 bg-gray-50 rounded-lg border">
-            <Typography variant="small">
-              ⚠️ Não foi possível carregar os detalhes da arma para edição das
-              proficiências.
-            </Typography>
-          </div>
-        )}
-      </div>
+          ) : record.data.weaponDetail ? (
+            <div className="p-3 bg-gray-50 rounded-lg border">
+              <Typography variant="small">
+                ⚠️ Não foi possível carregar os detalhes da arma
+              </Typography>
+            </div>
+          ) : (
+            <div className="p-3 bg-gray-50 rounded-lg border text-center">
+              <Typography variant="small" className="text-gray-600">
+                Este registro não possui proficiências de arma
+              </Typography>
+            </div>
+          )}
+        </div>
+      )}
     </Card>
   );
 }

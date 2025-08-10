@@ -1,5 +1,5 @@
 import { RecordCard } from "./RecordCard";
-import { LoadingState, EmptyState, NoResultsState } from "./RecordStates";
+import { EmptyState, NoResultsState } from "./RecordStates";
 import type { Database } from "@/types/database.types";
 
 type Record = Database["public"]["Tables"]["records"]["Row"];
@@ -10,10 +10,8 @@ interface RecordsListProps {
   loading: boolean;
 }
 
-export function RecordsList({ records, filteredRecords, loading }: RecordsListProps) {
-  if (loading) {
-    return <LoadingState />;
-  }
+export function RecordsList({ records, filteredRecords }: RecordsListProps) {
+  // Loading é tratado na página principal - componente sempre renderiza
 
   if (records.length === 0) {
     return <EmptyState />;
