@@ -93,31 +93,29 @@ export function CharacterList({
   }
 
   return (
-    <div className="space-y-4">
-      {/* Header */}
+    <div className="space-y-3">
+      {/* Compact Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Users className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-          <Typography variant="h3">Seus Personagens</Typography>
+          <Users className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+          <Typography variant="h4" className="font-semibold">Personagens</Typography>
+          <Typography variant="small" className="text-gray-500 dark:text-gray-400">
+            ({characters.length}/5)
+          </Typography>
         </div>
-        <Typography
-          variant="small"
-          className="text-gray-500 dark:text-gray-400"
-        >
-          {characters.length}/5 personagens
-        </Typography>
       </div>
 
-      {/* Characters Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+      {/* Horizontal Scrollable Characters */}
+      <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
         {characters.map((character) => (
-          <CharacterCard
-            key={character.id}
-            character={character}
-            onClick={handleCharacterClick}
-            onDelete={onCharacterRemove ? handleDeleteClick : undefined}
-            isSelected={character.id === localSelectedId}
-          />
+          <div key={character.id} className="flex-shrink-0">
+            <CharacterCard
+              character={character}
+              onClick={handleCharacterClick}
+              onDelete={onCharacterRemove ? handleDeleteClick : undefined}
+              isSelected={character.id === localSelectedId}
+            />
+          </div>
         ))}
       </div>
 

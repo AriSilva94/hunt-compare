@@ -52,22 +52,22 @@ interface StatisticsCardsProps {
 
 export function StatisticsCards({ records, loading }: StatisticsCardsProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
       {statisticCards.map((stat) => (
-        <Card key={stat.title} className={stat.bgColor}>
+        <Card key={stat.title} className={`${stat.bgColor} p-3`}>
           <div className="flex items-center justify-between">
-            <div>
-              <Typography variant="small">{stat.title}</Typography>
+            <div className="min-w-0 flex-1">
+              <Typography variant="small" className="text-xs truncate">
+                {stat.title}
+              </Typography>
               <Typography
-                variant={stat.title === "Último Registro" ? "h4" : "h3"}
-                className={`${stat.textColor} ${
-                  stat.title === "Último Registro" ? "font-medium" : ""
-                }`}
+                variant={"p"}
+                className={`${stat.textColor} font-semibold truncate`}
               >
                 {loading ? "..." : stat.getValue(records)}
               </Typography>
             </div>
-            <span className="text-3xl">{stat.icon}</span>
+            <span className="text-xl ml-2 flex-shrink-0">{stat.icon}</span>
           </div>
         </Card>
       ))}

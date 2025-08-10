@@ -78,30 +78,32 @@ export function RecordsHeader({
 
   return (
     <>
-      <div className="flex flex-col md:flex-row gap-3 justify-between items-center mb-6">
-        <Typography variant="h2">Seus Registros</Typography>
+      <div className="flex flex-col sm:flex-row gap-2 justify-between items-start sm:items-center mb-4">
+        <Typography variant="h3" className="font-semibold">Seus Registros</Typography>
 
-        <div className="flex gap-3">
+        <div className="flex gap-2">
           <button
             onClick={() => setIsModalOpen(true)}
             disabled={!canAddMore}
-            className={`px-4 py-2 rounded-lg transition-colors inline-flex items-center ${
+            className={`px-3 py-2 rounded-lg transition-colors inline-flex items-center text-sm ${
               canAddMore
                 ? "bg-green-600 text-white hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600"
                 : "bg-gray-400 text-gray-200 cursor-not-allowed dark:bg-gray-600 dark:text-gray-400"
             }`}
             title={!canAddMore ? "Limite de 5 personagens atingido" : ""}
           >
-            <User className="w-4 h-4 mr-2" />
-            Adicionar Personagem
+            <User className="w-4 h-4 mr-1" />
+            <span className="hidden sm:inline">Adicionar</span>
+            <span className="sm:hidden">+Char</span>
           </button>
 
           <Link
             href="/cadastro"
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors inline-flex items-center"
+            className="bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors inline-flex items-center text-sm"
           >
-            <span className="mr-2">+</span>
-            Novo Registro
+            <span className="mr-1">+</span>
+            <span className="hidden sm:inline">Novo Registro</span>
+            <span className="sm:hidden">Novo</span>
           </Link>
         </div>
       </div>
