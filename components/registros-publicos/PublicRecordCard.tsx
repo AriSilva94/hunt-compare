@@ -14,18 +14,81 @@ interface PublicRecordCardProps {
 export function PublicRecordCard({ record }: PublicRecordCardProps) {
   const preview = getPublicRecordPreview(record.data);
 
+  // Helper functions para personagem
+  const getVocationIcon = (vocation: string): string => {
+    if (vocation.toLowerCase().includes('druid')) return '🍃'
+    if (vocation.toLowerCase().includes('knight')) return '⚔️'
+    if (vocation.toLowerCase().includes('paladin')) return '🏹'
+    if (vocation.toLowerCase().includes('sorcerer')) return '🔥'
+    if (vocation.toLowerCase().includes('monk')) return '🥋'
+    return '👤'
+  }
+
+  const getVocationColor = (vocation: string): string => {
+    if (vocation.toLowerCase().includes('druid')) return 'bg-green-500'
+    if (vocation.toLowerCase().includes('knight')) return 'bg-red-500'
+    if (vocation.toLowerCase().includes('paladin')) return 'bg-yellow-500'
+    if (vocation.toLowerCase().includes('sorcerer')) return 'bg-blue-500'
+    if (vocation.toLowerCase().includes('monk')) return 'bg-orange-500'
+    return 'bg-gray-500'
+  }
+
   return (
     <Link href={`/detalhe-publico/${record.id}`} className="block">
       <Card className="hover:shadow-lg transition-all hover:-translate-y-1 cursor-pointer h-full">
         <div className="mb-3">
           <div className="flex justify-between items-start mb-2">
-            <Typography variant="h4" className="line-clamp-1 flex-1">
-              {preview.title}
-            </Typography>
+            <div className="flex items-center gap-2 flex-1 min-w-0">
+              {/* Avatar compacto do personagem */}
+              {(record as any).character ? (
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <div className={`w-8 h-8 rounded-full ${getVocationColor((record as any).character.vocation)} flex items-center justify-center shadow-sm`}>
+                    <span className="text-sm text-white" role="img" aria-label={(record as any).character.vocation}>
+                      {getVocationIcon((record as any).character.vocation)}
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <div className="w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center flex-shrink-0">
+                  <span className="text-xs text-gray-600 dark:text-gray-400">❓</span>
+                </div>
+              )}
+              
+              <Typography variant="h4" className="line-clamp-1 flex-1 min-w-0">
+                {preview.title}
+              </Typography>
+            </div>
+            
             {preview.type === "game-session" && (
-              <span className="ml-2 text-2xl">🎮</span>
+              <span className="ml-2 text-2xl flex-shrink-0">🎮</span>
             )}
           </div>
+          
+          {/* Informação compacta do personagem - sempre presente para layout consistente */}
+          <div className="mb-3 pb-2 border-b border-gray-100 dark:border-gray-700">
+            <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+              {(record as any).character ? (
+                <>
+                  <span>👤 {(record as any).character.name}</span>
+                  <div className="flex items-center gap-2">
+                    <span>{(record as any).character.vocation}</span>
+                    <span>•</span>
+                    <span>Lv. {(record as any).character.level}</span>
+                    <span>•</span>
+                    <span>{(record as any).character.world}</span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <span>👤 Personagem não informado</span>
+                  <div className="flex items-center gap-2">
+                    <span>—</span>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+          
           <Typography variant="small" className="line-clamp-2">
             {preview.description}
           </Typography>
