@@ -229,47 +229,19 @@ export function RecordFilter({
                 </Typography>
               </div>
 
-              <div className="space-y-2">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="character"
-                    checked={!filters.characterId}
-                    onChange={() => handleFilterChange({ characterId: null })}
-                    disabled={loading}
-                    className="w-4 h-4 text-blue-600"
-                  />
-                  <Typography variant="small">
-                    Todos os personagens
-                  </Typography>
-                </label>
-                
+              <select
+                value={filters.characterId || ""}
+                onChange={(e) => handleFilterChange({ characterId: e.target.value || null })}
+                disabled={loading}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">👥 Todos os personagens</option>
                 {characters.map((character) => (
-                  <label key={character.id} className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="character"
-                      checked={filters.characterId === character.id}
-                      onChange={() => handleFilterChange({ characterId: character.id })}
-                      disabled={loading}
-                      className="w-4 h-4 text-blue-600"
-                    />
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded bg-blue-500 flex items-center justify-center text-white text-xs">
-                        👤
-                      </div>
-                      <div className="flex flex-col">
-                        <Typography variant="small" className="font-medium">
-                          {character.name}
-                        </Typography>
-                        <Typography variant="caption" className="text-gray-500 dark:text-gray-400">
-                          {character.vocation} Lv.{character.level} • {character.world}
-                        </Typography>
-                      </div>
-                    </div>
-                  </label>
+                  <option key={character.id} value={character.id}>
+                    👤 {character.name} - {character.vocation} (Lv.{character.level}) • {character.world}
+                  </option>
                 ))}
-              </div>
+              </select>
             </div>
           )}
 
