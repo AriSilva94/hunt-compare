@@ -92,6 +92,7 @@ export default function HomePage() {
           loading={loading}
           totalBalance={totalBalance}
           recordCount={filteredRecords.length}
+          characters={characters}
         />
         <RecordsList
           records={records}

@@ -18,6 +18,15 @@ export interface FilterState {
   dateFrom: Date | null;
   dateTo: Date | null;
   sortBy: SortOption;
+  characterId?: string | null;
+}
+
+interface SavedCharacter {
+  id: string;
+  name: string;
+  level: number;
+  vocation: string;
+  world: string;
 }
 
 interface RecordFilterProps {
@@ -26,6 +35,7 @@ interface RecordFilterProps {
   totalBalance?: number;
   recordCount?: number;
   isPublic?: boolean;
+  characters?: SavedCharacter[];
 }
 
 export function RecordFilter({
@@ -34,11 +44,13 @@ export function RecordFilter({
   totalBalance = 0,
   recordCount = 0,
   isPublic = false,
+  characters = [],
 }: RecordFilterProps) {
   const [filters, setFilters] = useState<FilterState>({
     dateFrom: null,
     dateTo: null,
     sortBy: "date-desc",
+    characterId: null,
   });
 
   const [isExpanded, setIsExpanded] = useState(false);
@@ -54,13 +66,14 @@ export function RecordFilter({
       dateFrom: null,
       dateTo: null,
       sortBy: "date-desc",
+      characterId: null,
     };
     setFilters(clearedFilters);
     onFilterChange(clearedFilters);
   };
 
   const hasActiveFilters =
-    filters.dateFrom || filters.dateTo || filters.sortBy !== "date-desc";
+    filters.dateFrom || filters.dateTo || filters.sortBy !== "date-desc" || filters.characterId;
 
   const sortOptions = [
     { value: "date-desc", label: "📅 Data (mais recente)", icon: "📅" },
@@ -128,6 +141,11 @@ export function RecordFilter({
               {filters.dateTo && (
                 <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full">
                   📅 Até {filters.dateTo.toLocaleDateString("pt-BR")}
+                </span>
+              )}
+              {filters.characterId && (
+                <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs rounded-full">
+                  👤 {characters.find(c => c.id === filters.characterId)?.name}
                 </span>
               )}
               {filters.sortBy !== "date-desc" && (
@@ -200,6 +218,60 @@ export function RecordFilter({
               />
             </div>
           </div>
+
+          {/* Seção de Filtro por Personagem - só na tela /home */}
+          {characters.length > 0 && (
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-lg">👤</span>
+                <Typography variant="h4" className="font-medium">
+                  Filtrar por Personagem
+                </Typography>
+              </div>
+
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="character"
+                    checked={!filters.characterId}
+                    onChange={() => handleFilterChange({ characterId: null })}
+                    disabled={loading}
+                    className="w-4 h-4 text-blue-600"
+                  />
+                  <Typography variant="small">
+                    Todos os personagens
+                  </Typography>
+                </label>
+                
+                {characters.map((character) => (
+                  <label key={character.id} className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="character"
+                      checked={filters.characterId === character.id}
+                      onChange={() => handleFilterChange({ characterId: character.id })}
+                      disabled={loading}
+                      className="w-4 h-4 text-blue-600"
+                    />
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded bg-blue-500 flex items-center justify-center text-white text-xs">
+                        👤
+                      </div>
+                      <div className="flex flex-col">
+                        <Typography variant="small" className="font-medium">
+                          {character.name}
+                        </Typography>
+                        <Typography variant="caption" className="text-gray-500 dark:text-gray-400">
+                          {character.vocation} Lv.{character.level} • {character.world}
+                        </Typography>
+                      </div>
+                    </div>
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Seção de Ordenação */}
           <div>
@@ -285,6 +357,7 @@ export function RecordFilter({
                       filters.dateFrom,
                       filters.dateTo,
                       filters.sortBy !== "date-desc",
+                      filters.characterId,
                     ].filter(Boolean).length
                   } filtro(s) ativo(s)`
                 : "Nenhum filtro ativo"}
