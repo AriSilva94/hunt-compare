@@ -29,14 +29,6 @@ const statisticCards: StatisticCard[] = [
     getValue: (records) =>
       records.filter((r) => r.data && (r.data as any)["Session start"]).length,
   },
-  {
-    title: "Outros Registros",
-    icon: "📁",
-    bgColor: "bg-purple-50",
-    textColor: "text-purple-600 dark:text-purple-400",
-    getValue: (records) =>
-      records.filter((r) => !(r.data as any)["Session start"]).length,
-  },
 ];
 
 interface PublicStatisticsCardsProps {
@@ -49,17 +41,17 @@ export function PublicStatisticsCards({
   loading,
 }: PublicStatisticsCardsProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+    <div className="grid grid-cols-2 gap-3 mb-6">
       {statisticCards.map((stat) => (
-        <Card key={stat.title} className={stat.bgColor}>
+        <Card key={stat.title} className={`${stat.bgColor} p-3`}>
           <div className="flex items-center justify-between">
-            <div>
-              <Typography variant="small">{stat.title}</Typography>
-              <Typography variant="h3" className={stat.textColor}>
+            <div className="min-w-0 flex-1">
+              <Typography variant="small" className="text-xs truncate">{stat.title}</Typography>
+              <Typography variant="h4" className={`${stat.textColor} font-semibold truncate`}>
                 {loading ? "..." : stat.getValue(records)}
               </Typography>
             </div>
-            <span className="text-3xl">{stat.icon}</span>
+            <span className="text-xl ml-2 flex-shrink-0">{stat.icon}</span>
           </div>
         </Card>
       ))}

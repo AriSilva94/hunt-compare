@@ -338,10 +338,10 @@ export default function ResultadoComparacaoPage() {
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <Typography variant="p" className="mt-4">
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto"></div>
+          <Typography variant="small" className="mt-3">
             Carregando comparação...
           </Typography>
         </div>
@@ -351,15 +351,15 @@ export default function ResultadoComparacaoPage() {
 
   if (error) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Card className="text-center py-12">
-          <span className="text-6xl mb-4 block">⚠️</span>
-          <Typography variant="p" className="text-red-600 font-medium mb-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <Card className="text-center py-8 p-4">
+          <span className="text-4xl mb-3 block">⚠️</span>
+          <Typography variant="small" className="text-red-600 font-medium mb-3">
             {error}
           </Typography>
           <Link
             href="/comparar"
-            className="text-blue-600 hover:text-blue-800 font-medium"
+            className="text-blue-600 hover:text-blue-800 font-medium text-sm"
           >
             ← Voltar para seleção
           </Link>
@@ -379,18 +379,18 @@ export default function ResultadoComparacaoPage() {
   const activeCharts = activeMetrics.filter((m) => m.active);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8">
-        <div className="flex items-center gap-4 mb-4">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="mb-6">
+        <div className="flex items-center gap-3 mb-3">
           <Link
             href="/comparar"
-            className="text-blue-600 hover:text-blue-800 font-medium"
+            className="text-blue-600 hover:text-blue-800 font-medium text-sm"
           >
             ← Voltar
           </Link>
-          <Typography variant="h1">Comparação Detalhada</Typography>
+          <Typography variant="h2">Comparação Detalhada</Typography>
         </div>
-        <Typography variant="lead">
+        <Typography variant="small" className="text-gray-600 dark:text-gray-400">
           Análise comparativa de {records.length} registros selecionados
         </Typography>
       </div>
@@ -399,24 +399,25 @@ export default function ResultadoComparacaoPage() {
       <RecordLegend records={records} getRecordTitle={getRecordTitle} />
 
       {/* Controles de filtros */}
-      <div className="mb-8">
-        <Card>
-          <div className="mb-4">
-            <Typography variant="h3" className="mb-2">
+      <div className="mb-6">
+        <Card className="p-4">
+          <div className="mb-3">
+            <Typography variant="small" className="mb-1 font-semibold">
               🎛️ Filtros de Análise
             </Typography>
-            <Typography variant="small">
+            <Typography variant="small" className="text-gray-600 dark:text-gray-400 text-xs">
               Selecione as métricas que deseja visualizar nos gráficos
             </Typography>
           </div>
 
-          <div className="flex flex-wrap gap-2 mb-4">
+          <div className="flex flex-wrap gap-2 mb-3">
             {activeMetrics.map((metric) => (
               <Button
                 key={metric.id}
                 onClick={() => toggleMetric(metric.id)}
                 variant={metric.active ? "primary" : "secondary"}
                 size="sm"
+                className="text-xs px-2 py-1"
               >
                 <span className="mr-1">{metric.icon}</span>
                 {metric.label}
@@ -424,8 +425,8 @@ export default function ResultadoComparacaoPage() {
             ))}
           </div>
 
-          <div className="flex gap-2">
-            <Typography variant="small" className="mr-2">
+          <div className="flex gap-2 items-center">
+            <Typography variant="small" className="mr-2 text-xs">
               Tipo de gráfico:
             </Typography>
             {(["bar", "line", "pie"] as ChartType[]).map((type) => (
@@ -434,6 +435,7 @@ export default function ResultadoComparacaoPage() {
                 onClick={() => setChartType(type)}
                 variant={chartType === type ? "primary" : "secondary"}
                 size="sm"
+                className="text-xs px-2 py-1"
               >
                 {type === "bar" ? "📊" : type === "line" ? "📈" : "🥧"}
                 {type.charAt(0).toUpperCase() + type.slice(1)}
@@ -444,12 +446,12 @@ export default function ResultadoComparacaoPage() {
       </div>
 
       {/* Comparação de armas */}
-      <div className="mb-8">
+      <div className="mb-6">
         <WeaponComparison weapons={weaponInfo} />
       </div>
 
       {/* Gráficos de comparação */}
-      <div className="space-y-6">
+      <div className="space-y-4">
         {activeCharts.map((metric) => {
           const chartData = generateChartData(records, metric.id);
 
@@ -460,7 +462,7 @@ export default function ResultadoComparacaoPage() {
               title={`${metric.icon} ${metric.label}`}
               type={chartType}
               color={CHART_COLORS[metric.id as keyof typeof CHART_COLORS]}
-              height={350}
+              height={300}
               valueFormatter={getValueFormatter(metric.id)}
               useRecordColors={true}
             />
@@ -469,18 +471,18 @@ export default function ResultadoComparacaoPage() {
       </div>
 
       {/* Insights automáticos */}
-      <div className="mt-12">
+      <div className="mt-8">
         <MetricInsights records={records} />
       </div>
 
       {/* Ações */}
-      <div className="mt-8 flex gap-4">
-        <Button onClick={() => router.back()} variant="secondary">
+      <div className="mt-6 flex gap-3">
+        <Button onClick={() => router.back()} variant="secondary" size="sm">
           Voltar
         </Button>
         <Link
           href="/comparar"
-          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
         >
           Nova Comparação
         </Link>
