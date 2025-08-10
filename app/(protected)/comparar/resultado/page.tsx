@@ -229,13 +229,15 @@ export default function ResultadoComparacaoPage() {
       // Verificar se alguns registros ficaram inacessíveis
       const inaccessibleCount = fetchedRecords.length - allowedRecords.length;
       if (inaccessibleCount > 0) {
-        console.warn(`${inaccessibleCount} registro(s) tornaram-se inacessíveis`);
+        console.warn(
+          `${inaccessibleCount} registro(s) tornaram-se inacessíveis`
+        );
       }
 
       if (allowedRecords.length < 2) {
         setError(
           `Você não tem permissão para visualizar registros suficientes para comparação. ${
-            inaccessibleCount > 0 
+            inaccessibleCount > 0
               ? `${inaccessibleCount} registro(s) podem ter sido tornados privados.`
               : ""
           }`
@@ -247,10 +249,10 @@ export default function ResultadoComparacaoPage() {
       // Se alguns registros ficaram inacessíveis mas ainda temos o suficiente para comparação
       if (inaccessibleCount > 0 && allowedRecords.length >= 2) {
         // Atualizar a URL com apenas os registros válidos
-        const validIds = allowedRecords.map(r => r.id);
-        const newUrl = `/comparar/resultado?ids=${validIds.join(',')}`;
+        const validIds = allowedRecords.map((r) => r.id);
+        const newUrl = `/comparar/resultado?ids=${validIds.join(",")}`;
         if (window.location.pathname + window.location.search !== newUrl) {
-          window.history.replaceState({}, '', newUrl);
+          window.history.replaceState({}, "", newUrl);
         }
       }
 
@@ -262,7 +264,9 @@ export default function ResultadoComparacaoPage() {
       setRecords(orderedRecords);
 
       // Salvar no histórico com os nomes dos registros
-      const recordNames = orderedRecords.map(record => getRecordTitle(record));
+      const recordNames = orderedRecords.map((record) =>
+        getRecordTitle(record)
+      );
       ComparisonHistoryService.addComparison(recordIds, recordNames);
 
       // Carregar informações das armas
@@ -337,7 +341,9 @@ export default function ResultadoComparacaoPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <Typography variant="p" className="mt-4">Carregando comparação...</Typography>
+          <Typography variant="p" className="mt-4">
+            Carregando comparação...
+          </Typography>
         </div>
       </div>
     );
@@ -348,7 +354,9 @@ export default function ResultadoComparacaoPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Card className="text-center py-12">
           <span className="text-6xl mb-4 block">⚠️</span>
-          <Typography variant="p" className="text-red-600 font-medium mb-4">{error}</Typography>
+          <Typography variant="p" className="text-red-600 font-medium mb-4">
+            {error}
+          </Typography>
           <Link
             href="/comparar"
             className="text-blue-600 hover:text-blue-800 font-medium"
@@ -380,9 +388,7 @@ export default function ResultadoComparacaoPage() {
           >
             ← Voltar
           </Link>
-          <Typography variant="h1">
-            Comparação Detalhada
-          </Typography>
+          <Typography variant="h1">Comparação Detalhada</Typography>
         </div>
         <Typography variant="lead">
           Análise comparativa de {records.length} registros selecionados
@@ -419,7 +425,9 @@ export default function ResultadoComparacaoPage() {
           </div>
 
           <div className="flex gap-2">
-            <Typography variant="small" className="mr-2">Tipo de gráfico:</Typography>
+            <Typography variant="small" className="mr-2">
+              Tipo de gráfico:
+            </Typography>
             {(["bar", "line", "pie"] as ChartType[]).map((type) => (
               <Button
                 key={type}
@@ -467,10 +475,7 @@ export default function ResultadoComparacaoPage() {
 
       {/* Ações */}
       <div className="mt-8 flex gap-4">
-        <Button
-          onClick={() => router.back()}
-          variant="secondary"
-        >
+        <Button onClick={() => router.back()} variant="secondary">
           Voltar
         </Button>
         <Link

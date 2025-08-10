@@ -17,6 +17,15 @@ interface Record {
   user_id: string;
   data: any;
   is_public: boolean;
+  character_id: string | null;
+  character?: {
+    id: string;
+    name: string;
+    level: number;
+    vocation: string;
+    world: string;
+    sex: string;
+  } | null;
   created_at: string;
   updated_at: string;
 }
@@ -69,6 +78,25 @@ function getRecordPreview(data: any) {
   };
 }
 
+// Helper functions para personagem
+const getVocationIcon = (vocation: string): string => {
+  if (vocation.toLowerCase().includes('druid')) return '🍃'
+  if (vocation.toLowerCase().includes('knight')) return '⚔️'
+  if (vocation.toLowerCase().includes('paladin')) return '🏹'
+  if (vocation.toLowerCase().includes('sorcerer')) return '🔥'
+  if (vocation.toLowerCase().includes('monk')) return '🥋'
+  return '👤'
+}
+
+const getVocationColor = (vocation: string): string => {
+  if (vocation.toLowerCase().includes('druid')) return 'bg-green-500'
+  if (vocation.toLowerCase().includes('knight')) return 'bg-red-500'
+  if (vocation.toLowerCase().includes('paladin')) return 'bg-yellow-500'
+  if (vocation.toLowerCase().includes('sorcerer')) return 'bg-blue-500'
+  if (vocation.toLowerCase().includes('monk')) return 'bg-orange-500'
+  return 'bg-gray-500'
+}
+
 export default function CompararPage() {
   const [records, setRecords] = useState<Record[]>([]);
   const [filteredRecords, setFilteredRecords] = useState<Record[]>([]);
@@ -112,7 +140,17 @@ export default function CompararPage() {
       // Buscar registros públicos
       const { data: publicRecords } = await supabase
         .from("records")
-        .select("*")
+        .select(`
+          *,
+          character:characters(
+            id,
+            name,
+            level,
+            vocation,
+            world,
+            sex
+          )
+        `)
         .eq("is_public", true)
         .order("created_at", { ascending: false });
 
@@ -122,7 +160,17 @@ export default function CompararPage() {
       if (user) {
         const { data: userRecords } = await supabase
           .from("records")
-          .select("*")
+          .select(`
+            *,
+            character:characters(
+              id,
+              name,
+              level,
+              vocation,
+              world,
+              sex
+            )
+          `)
           .eq("user_id", user.id)
           .order("created_at", { ascending: false });
 
@@ -337,13 +385,57 @@ export default function CompararPage() {
 
                   <div className="mb-3">
                     <div className="flex justify-between items-start mb-2">
-                      <Typography variant="h4" className="line-clamp-1 flex-1">
-                        {preview.title}
-                      </Typography>
+                      <div className="flex items-center gap-2 flex-1 min-w-0">
+                        {/* Avatar compacto do personagem */}
+                        {record.character ? (
+                          <div className="flex items-center gap-2 flex-shrink-0">
+                            <div className={`w-8 h-8 rounded-full ${getVocationColor(record.character.vocation)} flex items-center justify-center shadow-sm`}>
+                              <span className="text-sm text-white" role="img" aria-label={record.character.vocation}>
+                                {getVocationIcon(record.character.vocation)}
+                              </span>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center flex-shrink-0">
+                            <span className="text-xs text-gray-600 dark:text-gray-400">❓</span>
+                          </div>
+                        )}
+                        
+                        <Typography variant="h4" className="line-clamp-1 flex-1 min-w-0">
+                          {preview.title}
+                        </Typography>
+                      </div>
+                      
                       {preview.type === "game-session" && (
-                        <span className="ml-2 text-2xl">🎮</span>
+                        <span className="ml-2 text-2xl flex-shrink-0">🎮</span>
                       )}
                     </div>
+                    
+                    {/* Informação compacta do personagem - sempre presente para layout consistente */}
+                    <div className="mb-3 pb-2 border-b border-gray-100 dark:border-gray-700">
+                      <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+                        {record.character ? (
+                          <>
+                            <span>👤 {record.character.name}</span>
+                            <div className="flex items-center gap-2">
+                              <span>{record.character.vocation}</span>
+                              <span>•</span>
+                              <span>Lv. {record.character.level}</span>
+                              <span>•</span>
+                              <span>{record.character.world}</span>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <span>👤 Personagem não informado</span>
+                            <div className="flex items-center gap-2">
+                              <span>—</span>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    
                     <Typography variant="small" className="line-clamp-2">
                       {preview.description}
                     </Typography>

@@ -6,6 +6,7 @@ interface Record {
   user_id: string;
   data: any;
   is_public: boolean;
+  character_id: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -13,6 +14,7 @@ interface Record {
 interface CreateRecordDTO {
   data: any;
   is_public: boolean;
+  character_id?: string | null;
 }
 
 export class RecordsService {
@@ -25,6 +27,7 @@ export class RecordsService {
         user_id: userId,
         data: data.data,
         is_public: data.is_public,
+        character_id: data.character_id || null,
       })
       .select()
       .single();
@@ -49,7 +52,20 @@ export class RecordsService {
   async getRecord(id: string, userId?: string): Promise<Record | null> {
     const supabase = await createClient();
 
-    let query = supabase.from("records").select("*").eq("id", id);
+    let query = supabase
+      .from("records")
+      .select(`
+        *,
+        character:characters(
+          id,
+          name,
+          level,
+          vocation,
+          world,
+          sex
+        )
+      `)
+      .eq("id", id);
 
     if (userId) {
       query = query.eq("user_id", userId);
@@ -66,7 +82,17 @@ export class RecordsService {
 
     const { data: record, error } = await supabase
       .from("records")
-      .select("*")
+      .select(`
+        *,
+        character:characters(
+          id,
+          name,
+          level,
+          vocation,
+          world,
+          sex
+        )
+      `)
       .eq("id", id)
       .eq("is_public", true)
       .single();
@@ -103,7 +129,17 @@ export class RecordsService {
       })
       .eq("id", id)
       .eq("user_id", userId)
-      .select()
+      .select(`
+        *,
+        character:characters(
+          id,
+          name,
+          level,
+          vocation,
+          world,
+          sex
+        )
+      `)
       .single();
 
     if (error) throw error;

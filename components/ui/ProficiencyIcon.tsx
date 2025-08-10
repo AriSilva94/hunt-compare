@@ -65,7 +65,10 @@ export function ProficiencyIcon({
 
       {/* Descrição completa sem truncate */}
       <div className="text-center max-w-24">
-        <Typography variant="caption" className="leading-tight break-words">
+        <Typography
+          variant="caption"
+          className="leading-tight break-words dark:text-gray-900"
+        >
           {description}
         </Typography>
       </div>

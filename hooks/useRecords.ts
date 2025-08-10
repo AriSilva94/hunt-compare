@@ -23,7 +23,17 @@ export function useRecords() {
 
       const { data } = await supabase
         .from("records")
-        .select("*")
+        .select(`
+          *,
+          character:characters(
+            id,
+            name,
+            level,
+            vocation,
+            world,
+            sex
+          )
+        `)
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
 

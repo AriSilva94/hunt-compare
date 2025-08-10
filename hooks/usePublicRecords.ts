@@ -14,7 +14,17 @@ export function usePublicRecords() {
 
       const { data } = await supabase
         .from("records")
-        .select("*")
+        .select(`
+          *,
+          character:characters(
+            id,
+            name,
+            level,
+            vocation,
+            world,
+            sex
+          )
+        `)
         .eq("is_public", true)
         .order("created_at", { ascending: false });
 

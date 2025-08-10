@@ -36,6 +36,7 @@ interface CadastroFormProps {
   inputFormat: "json" | "text" | null;
   weaponDetail: WeaponDetails | null;
   selectedPerks: { [level: number]: number | null };
+  selectedCharacterId?: string;
   onPreviewUpdate: (input: string) => void;
   onDataProcess: (data: string) => any;
   onDataTypeDetect: (data: any) => string;
@@ -46,6 +47,7 @@ export function CadastroForm({
   inputFormat,
   weaponDetail,
   selectedPerks,
+  selectedCharacterId,
   onPreviewUpdate,
   onDataProcess,
   onDataTypeDetect,
@@ -132,6 +134,7 @@ export function CadastroForm({
         body: JSON.stringify({
           data: enrichedData,
           is_public: data.isPublic,
+          character_id: selectedCharacterId || null,
         }),
       });
 
