@@ -4,13 +4,13 @@
 import { useState, useEffect, useCallback } from "react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { PageSkeleton } from "@/components/ui/Skeleton";
 import { Typography } from "@/components/ui/Typography";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { ComparisonHistory } from "@/components/ui/ComparisonHistory";
 import { ComparisonHistoryService } from "@/services/comparison-history.service";
 import { formatDateOnly } from "@/utils/date";
+import { Loading } from "@/components/ui/Loading";
 
 interface Record {
   id: string;
@@ -248,7 +248,7 @@ export default function CompararPage() {
   const stats = getFilterStats();
 
   if (loading) {
-    return <PageSkeleton showStats={false} recordCount={9} />;
+    return <Loading />;
   }
 
   return (

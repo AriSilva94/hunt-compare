@@ -14,6 +14,7 @@ interface CharacterListProps {
   onCharacterSelect: (character: SavedCharacter) => void;
   onCharacterRemove?: (characterId: string) => void;
   selectedCharacterId?: string;
+  loading?: boolean;
 }
 
 export function CharacterList({
@@ -21,6 +22,7 @@ export function CharacterList({
   onCharacterSelect,
   onCharacterRemove,
   selectedCharacterId,
+  loading = false,
 }: CharacterListProps) {
   const [localSelectedId, setLocalSelectedId] = useState<string | undefined>(
     selectedCharacterId
@@ -68,6 +70,11 @@ export function CharacterList({
     setIsConfirmOpen(false);
     setCharacterToDelete(null);
   };
+
+  // Durante loading, não mostra estado vazio (será handled pelo loading unificado)
+  if (loading) {
+    return null;
+  }
 
   if (characters.length === 0) {
     return (

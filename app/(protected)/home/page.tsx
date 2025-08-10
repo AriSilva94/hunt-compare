@@ -11,12 +11,21 @@ import { useCharacters } from "@/hooks/useCharacters";
 import { useToast } from "@/hooks/useToast";
 import { ToastContainer } from "@/components/ui/ToastContainer";
 import { TibiaCharacter } from "@/types/character.types";
+import { Loading } from "@/components/ui/Loading";
+import { useHomeLoading } from "@/hooks/useHomeLoading";
 
 export default function HomePage() {
   const { records, loading, user } = useRecords();
   const { filteredRecords, totalBalance, handleFilterChange } = useRecordFilters(records);
-  const { characters, selectCharacter, selectedCharacterId, addCharacter, removeCharacter, canAddMore } = useCharacters();
+  const { characters, selectCharacter, selectedCharacterId, addCharacter, removeCharacter, canAddMore, loading: charactersLoading } = useCharacters();
   const { success, error: showError, toasts, removeToast } = useToast();
+  
+  // Hook unificado para gerenciar loading da home
+  const { isLoading } = useHomeLoading({
+    recordsLoading: loading,
+    charactersLoading,
+    user
+  });
 
   const handleAddCharacter = async (character: TibiaCharacter) => {
     try {
@@ -50,10 +59,15 @@ export default function HomePage() {
 
   if (!user) return null;
 
+  // Mostrar loading único durante carregamento inicial
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <DashboardHeader />
-      <StatisticsCards records={records} loading={loading} />
+      <StatisticsCards records={records} loading={false} />
       
       {/* Seção de Personagens */}
       <div className="mb-8">
@@ -62,6 +76,7 @@ export default function HomePage() {
           onCharacterSelect={selectCharacter}
           onCharacterRemove={handleRemoveCharacter}
           selectedCharacterId={selectedCharacterId}
+          loading={isLoading}
         />
       </div>
       
@@ -74,14 +89,14 @@ export default function HomePage() {
         />
         <RecordFilter
           onFilterChange={handleFilterChange}
-          loading={loading}
+          loading={false}
           totalBalance={totalBalance}
           recordCount={filteredRecords.length}
         />
         <RecordsList
           records={records}
           filteredRecords={filteredRecords}
-          loading={loading}
+          loading={isLoading}
         />
       </div>
 
