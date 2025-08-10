@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { SavedCharacter } from "@/types/character.types";
 import { useCharacters } from "@/hooks/useCharacters";
 import { Typography } from "@/components/ui/Typography";
 import { ChevronDown, User } from "lucide-react";

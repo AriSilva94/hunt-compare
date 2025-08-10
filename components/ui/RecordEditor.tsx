@@ -8,7 +8,6 @@ import { Typography } from "@/components/ui/Typography";
 import ProficiencyTable from "@/components/ui/Proficiencies";
 import { WeaponDetails } from "@/types/weapon.types";
 import { useCharacters } from "@/hooks/useCharacters";
-import { SavedCharacter } from "@/types/character.types";
 
 interface RecordEditorProps {
   record: {
