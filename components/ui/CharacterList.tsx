@@ -92,6 +92,13 @@ export function CharacterList({
     );
   }
 
+  // Sort characters to put selected character first
+  const sortedCharacters = [...characters].sort((a, b) => {
+    if (a.id === localSelectedId) return -1;
+    if (b.id === localSelectedId) return 1;
+    return 0;
+  });
+
   return (
     <div className="space-y-3">
       {/* Compact Header */}
@@ -107,7 +114,7 @@ export function CharacterList({
 
       {/* Horizontal Scrollable Characters */}
       <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-        {characters.map((character) => (
+        {sortedCharacters.map((character) => (
           <div key={character.id} className="flex-shrink-0">
             <CharacterCard
               character={character}
