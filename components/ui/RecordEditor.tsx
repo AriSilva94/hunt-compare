@@ -8,6 +8,7 @@ import { Typography } from "@/components/ui/Typography";
 import ProficiencyTable from "@/components/ui/Proficiencies";
 import { WeaponDetails } from "@/types/weapon.types";
 import { useCharacters } from "@/hooks/useCharacters";
+import { BookOpen } from "lucide-react";
 
 interface RecordEditorProps {
   record: {
@@ -15,6 +16,7 @@ interface RecordEditorProps {
     user_id: string;
     data: any;
     is_public: boolean;
+    has_bestiary: boolean;
     character_id: string | null;
     character?: {
       id: string;
@@ -31,6 +33,7 @@ interface RecordEditorProps {
   selectedPerks: { [level: number]: number | null };
   onSave: (updatedData: {
     is_public?: boolean;
+    has_bestiary?: boolean;
     data?: any;
     character_id?: string | null;
   }) => Promise<void>;
@@ -45,6 +48,7 @@ export function RecordEditor({
   onCancel,
 }: RecordEditorProps) {
   const [isPublic, setIsPublic] = useState(record.is_public);
+  const [hasBestiary, setHasBestiary] = useState(record.has_bestiary);
   const [selectedPerks, setSelectedPerks] = useState(initialSelectedPerks);
   const [selectedCharacterId, setSelectedCharacterId] = useState<string | null>(
     record.character_id
@@ -62,6 +66,11 @@ export function RecordEditor({
       // Verificar se houve mudança na visibilidade
       if (isPublic !== record.is_public) {
         updateData.is_public = isPublic;
+      }
+
+      // Verificar se houve mudança no bestiário
+      if (hasBestiary !== record.has_bestiary) {
+        updateData.has_bestiary = hasBestiary;
       }
 
       // Verificar se houve mudança no personagem
@@ -160,8 +169,8 @@ export function RecordEditor({
       {/* Conteúdo das Abas */}
       {activeTab === "basic" ? (
         <div className="space-y-3">
-          {/* Grid Layout para desktop - Personagem e Visibilidade lado a lado */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+          {/* Grid Layout para desktop - 3 colunas */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
             {/* Seleção de Personagem - Compacto */}
             <div className="p-3 bg-white dark:bg-gray-700/50 rounded-lg border">
               <Typography
@@ -232,6 +241,59 @@ export function RecordEditor({
                 <div className="p-2 bg-yellow-50 border border-yellow-200 rounded text-xs">
                   <span className="text-yellow-700">
                     ⚠️ Nenhum personagem cadastrado
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* Toggle de Bestiário - Compacto */}
+            <div className="p-3 bg-white dark:bg-gray-700/50 rounded-lg border">
+              <Typography
+                variant="small"
+                className="font-medium mb-2 dark:text-white flex items-center gap-2"
+              >
+                <BookOpen className="h-4 w-4 text-amber-600" />
+                Bestiário
+              </Typography>
+
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="bestiary"
+                    checked={!hasBestiary}
+                    onChange={() => setHasBestiary(false)}
+                    className="w-3 h-3 text-blue-600"
+                  />
+                  <Typography variant="caption">
+                    <span className="font-medium">Sem bestiário</span>
+                    <span className="text-gray-500 ml-1 text-xs">
+                      - Dados normais
+                    </span>
+                  </Typography>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="bestiary"
+                    checked={hasBestiary}
+                    onChange={() => setHasBestiary(true)}
+                    className="w-3 h-3 text-blue-600"
+                  />
+                  <Typography variant="caption">
+                    <span className="font-medium">Com bestiário</span>
+                    <span className="text-gray-500 ml-1 text-xs">
+                      - Dados incluem bestiário
+                    </span>
+                  </Typography>
+                </label>
+              </div>
+
+              {hasBestiary !== record.has_bestiary && (
+                <div className="mt-2 p-2 bg-amber-50 border border-amber-200 rounded text-xs">
+                  <span className="text-amber-800 font-medium">📖</span>
+                  <span className="text-amber-700 ml-1">
+                    {hasBestiary ? "Com bestiário" : "Sem bestiário"}
                   </span>
                 </div>
               )}

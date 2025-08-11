@@ -79,15 +79,22 @@ export function RecordCard({ record }: RecordCardProps) {
           </Typography>
         </div>
 
-        <span
-          className={`px-2 py-1 text-xs rounded flex-shrink-0 ml-2 ${
-            record.is_public
-              ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
-              : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
-          }`}
-        >
-          {record.is_public ? "Público" : "Privado"}
-        </span>
+        <div className="flex flex-col gap-1 flex-shrink-0 ml-2">
+          <span
+            className={`px-2 py-1 text-xs rounded ${
+              record.is_public
+                ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
+                : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
+            }`}
+          >
+            {record.is_public ? "Público" : "Privado"}
+          </span>
+          {record.has_bestiary && (
+            <span className="px-2 py-1 text-xs rounded bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400">
+              📖 Bestiário
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Informação inline do personagem */}

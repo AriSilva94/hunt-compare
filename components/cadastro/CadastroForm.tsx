@@ -11,6 +11,7 @@ import { Typography } from "@/components/ui/Typography";
 import { detectFormat } from "@/utils/formatDetector";
 import { DataPreview } from "./DataPreview";
 import { WeaponDetails } from "@/types/weapon.types";
+import { Globe, BookOpen } from "lucide-react";
 
 const recordSchema = z.object({
   jsonData: z.string().refine(
@@ -24,6 +25,7 @@ const recordSchema = z.object({
     }
   ),
   isPublic: z.boolean(),
+  hasBestiary: z.boolean(),
   title: z.string().optional(),
   description: z.string().optional(),
   weapon_id: z.string().optional(),
@@ -67,6 +69,7 @@ export function CadastroForm({
     defaultValues: {
       jsonData: "",
       isPublic: false,
+      hasBestiary: false,
       title: "",
       description: "",
       weapon_id: "",
@@ -134,6 +137,7 @@ export function CadastroForm({
         body: JSON.stringify({
           data: enrichedData,
           is_public: data.isPublic,
+          has_bestiary: data.hasBestiary,
           character_id: selectedCharacterId || null,
         }),
       });
@@ -172,6 +176,57 @@ export function CadastroForm({
           />
         </div>
 
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex items-center p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+            <Globe className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2" />
+            <input
+              {...register("isPublic")}
+              type="checkbox"
+              id="isPublic"
+              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            />
+            <label
+              htmlFor="isPublic"
+              className="ml-3 block cursor-pointer flex-1"
+            >
+              <Typography variant="small" className="font-medium">
+                Tornar este registro público
+              </Typography>
+              <Typography
+                variant="caption"
+                className="text-gray-500 dark:text-gray-400"
+              >
+                Qualquer pessoa poderá visualizar
+              </Typography>
+            </label>
+          </div>
+
+          <div className="flex items-center p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+            <BookOpen className="h-5 w-5 text-amber-600 dark:text-amber-400 mr-2" />
+            <input
+              {...register("hasBestiary")}
+              type="checkbox"
+              id="hasBestiary"
+              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            />
+            <label
+              htmlFor="hasBestiary"
+              className="ml-3 block cursor-pointer flex-1"
+            >
+              <Typography variant="small" className="font-medium">
+                Tem bestiário?
+              </Typography>
+              <Typography
+                variant="caption"
+                className="text-gray-500 dark:text-gray-400"
+              >
+                {" "}
+                Dados incluem informações do bestiário
+              </Typography>
+            </label>
+          </div>
+        </div>
+
         <div>
           <div className="flex justify-between items-center mb-1">
             <label className="block text-sm font-medium text-gray-700">
@@ -193,7 +248,9 @@ export function CadastroForm({
             {...register("jsonData")}
             rows={12}
             className={`w-full px-3 py-2 border rounded-lg font-mono text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 ${
-              errors.jsonData ? "border-red-500 dark:border-red-400" : "border-gray-300 dark:border-gray-600"
+              errors.jsonData
+                ? "border-red-500 dark:border-red-400"
+                : "border-gray-300 dark:border-gray-600"
             }`}
             placeholder="Cole seu JSON ou texto de sessão aqui..."
             onChange={(e) => {
@@ -226,23 +283,6 @@ export function CadastroForm({
         </div>
 
         {jsonPreview && <DataPreview jsonPreview={jsonPreview} />}
-
-        <div className="flex items-center">
-          <input
-            {...register("isPublic")}
-            type="checkbox"
-            id="isPublic"
-            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-          />
-          <label htmlFor="isPublic" className="ml-2 block">
-            <Typography variant="small">
-              Tornar este registro público
-            </Typography>
-          </label>
-          <Typography variant="caption" className="ml-2 text-end">
-            (Qualquer pessoa poderá visualizar este registro)
-          </Typography>
-        </div>
 
         <div className="flex justify-end space-x-4">
           <Button

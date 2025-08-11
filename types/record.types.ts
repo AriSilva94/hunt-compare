@@ -3,6 +3,7 @@ export interface Record {
   user_id: string;
   data: JsonData;
   is_public: boolean;
+  has_bestiary: boolean;
   character_id: string | null;
   created_at: string;
   updated_at: string;
@@ -15,5 +16,6 @@ export interface JsonData {
 export interface CreateRecordDTO {
   data: JsonData;
   is_public: boolean;
+  has_bestiary?: boolean;
   character_id?: string | null;
 }

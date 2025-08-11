@@ -72,7 +72,10 @@ export default async function DetalhePublicoPage({ params }: PageProps) {
           selectedPerks={selectedPerks}
         />
 
-        <JsonViewer data={record.data} title="Visualização dos Dados" />
+        <JsonViewer 
+          data={record.data} 
+          title="Visualização dos Dados" 
+        />
       </div>
     </div>
   );

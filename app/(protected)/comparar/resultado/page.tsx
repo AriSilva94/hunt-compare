@@ -22,6 +22,7 @@ interface Record {
   user_id: string;
   data: any;
   is_public: boolean;
+  has_bestiary: boolean;
   created_at: string;
   updated_at: string;
 }

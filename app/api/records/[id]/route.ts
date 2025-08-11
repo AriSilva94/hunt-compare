@@ -53,10 +53,14 @@ export async function PUT(request: Request, { params }: RouteParams) {
 
     // Validar campos permitidos para edição
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const updateData: { is_public?: boolean; data?: any; character_id?: string | null } = {};
+    const updateData: { is_public?: boolean; has_bestiary?: boolean; data?: any; character_id?: string | null } = {};
 
     if (body.is_public !== undefined) {
       updateData.is_public = body.is_public;
+    }
+
+    if (body.has_bestiary !== undefined) {
+      updateData.has_bestiary = body.has_bestiary;
     }
 
     if (body.data) {

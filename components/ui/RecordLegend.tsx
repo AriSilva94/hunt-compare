@@ -11,6 +11,7 @@ interface Record {
   user_id: string;
   data: any;
   is_public: boolean;
+  has_bestiary: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -75,6 +76,15 @@ export function RecordLegend({ records, getRecordTitle }: RecordLegendProps) {
                         Público
                       </span>
                     )}
+                    <span
+                      className={`text-xs px-2 py-1 rounded ${
+                        record.has_bestiary
+                          ? "bg-amber-100 text-amber-800"
+                          : "bg-gray-100 text-gray-800"
+                      }`}
+                    >
+                      📖 {record.has_bestiary ? "Bestiário" : "Sem"}
+                    </span>
                   </div>
 
                   <div className="flex items-center gap-1 text-xs text-gray-600">

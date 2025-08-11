@@ -116,11 +116,26 @@ export function PublicRecordInfo({ record }: PublicRecordInfoProps) {
               </div>
             </div>
             
-            <div>
-              <span className="font-medium text-gray-700 dark:text-gray-300 block mb-1">🌍 Visibilidade:</span>
-              <span className="inline-flex px-3 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
-                Público
-              </span>
+            <div className="space-y-3">
+              <div>
+                <span className="font-medium text-gray-700 dark:text-gray-300 block mb-1">🌍 Visibilidade:</span>
+                <span className="inline-flex px-3 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                  Público
+                </span>
+              </div>
+              
+              <div>
+                <span className="font-medium text-gray-700 dark:text-gray-300 block mb-1">📖 Bestiário:</span>
+                <span
+                  className={`inline-flex px-3 py-1 text-xs font-medium rounded-full ${
+                    record.has_bestiary
+                      ? "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400"
+                      : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
+                  }`}
+                >
+                  {record.has_bestiary ? "Com bestiário" : "Sem bestiário"}
+                </span>
+              </div>
             </div>
           </div>
         </div>

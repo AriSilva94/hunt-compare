@@ -17,6 +17,7 @@ interface Record {
   user_id: string;
   data: any;
   is_public: boolean;
+  has_bestiary: boolean;
   character_id: string | null;
   character?: {
     id: string;
@@ -371,6 +372,11 @@ export default function CompararPage() {
                       {isMyRecord && (
                         <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
                           Meu
+                        </span>
+                      )}
+                      {record.has_bestiary && (
+                        <span className="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded">
+                          📖 Bestiário
                         </span>
                       )}
                     </div>

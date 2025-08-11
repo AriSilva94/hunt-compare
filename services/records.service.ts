@@ -6,6 +6,7 @@ interface Record {
   user_id: string;
   data: any;
   is_public: boolean;
+  has_bestiary: boolean;
   character_id: string | null;
   created_at: string;
   updated_at: string;
@@ -14,6 +15,7 @@ interface Record {
 interface CreateRecordDTO {
   data: any;
   is_public: boolean;
+  has_bestiary?: boolean;
   character_id?: string | null;
 }
 
@@ -27,6 +29,7 @@ export class RecordsService {
         user_id: userId,
         data: data.data,
         is_public: data.is_public,
+        has_bestiary: data.has_bestiary || false,
         character_id: data.character_id || null,
       })
       .select()
