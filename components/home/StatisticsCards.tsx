@@ -67,7 +67,7 @@ export function StatisticsCards({ records, loading }: StatisticsCardsProps) {
                 {loading ? "..." : stat.getValue(records)}
               </Typography>
             </div>
-            <span className="text-xl ml-2 flex-shrink-0">{stat.icon}</span>
+            <span className="mt-4 text-xl ml-2 flex-shrink-0">{stat.icon}</span>
           </div>
         </Card>
       ))}

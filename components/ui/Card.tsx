@@ -6,7 +6,7 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
 
 export function Card({
   className = "",
-  padding = "md",
+  padding = "sm",
   children,
   ...props
 }: CardProps) {
