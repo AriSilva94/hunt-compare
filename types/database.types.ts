@@ -15,6 +15,7 @@ export interface Database {
           user_id: string;
           data: Json;
           is_public: boolean;
+          has_bestiary: boolean;
           character_id: string | null;
           created_at: string;
           updated_at: string;
@@ -24,6 +25,7 @@ export interface Database {
           user_id: string;
           data: Json;
           is_public?: boolean;
+          has_bestiary?: boolean;
           character_id?: string | null;
           created_at?: string;
           updated_at?: string;
@@ -33,6 +35,7 @@ export interface Database {
           user_id?: string;
           data?: Json;
           is_public?: boolean;
+          has_bestiary?: boolean;
           character_id?: string | null;
           created_at?: string;
           updated_at?: string;

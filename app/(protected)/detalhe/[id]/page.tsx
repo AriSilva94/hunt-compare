@@ -22,6 +22,7 @@ interface Record {
   user_id: string;
   data: any;
   is_public: boolean;
+  has_bestiary: boolean;
   character_id: string | null;
   character?: {
     id: string;
@@ -125,6 +126,7 @@ export default function DetalhePage({ params }: PageProps) {
 
   const handleSave = async (updateData: {
     is_public?: boolean;
+    has_bestiary?: boolean;
     data?: any;
     character_id?: string | null;
   }) => {
@@ -414,19 +416,36 @@ export default function DetalhePage({ params }: PageProps) {
                   </div>
                 </div>
 
-                <div>
-                  <span className="font-medium text-gray-700 dark:text-gray-300 block mb-1">
-                    👁️ Visibilidade:
-                  </span>
-                  <span
-                    className={`inline-flex px-3 py-1 text-xs font-medium rounded-full ${
-                      record.is_public
-                        ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
-                        : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
-                    }`}
-                  >
-                    {record.is_public ? "Público" : "Privado"}
-                  </span>
+                <div className="space-y-3">
+                  <div>
+                    <span className="font-medium text-gray-700 dark:text-gray-300 block mb-1">
+                      👁️ Visibilidade:
+                    </span>
+                    <span
+                      className={`inline-flex px-3 py-1 text-xs font-medium rounded-full ${
+                        record.is_public
+                          ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
+                          : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
+                      }`}
+                    >
+                      {record.is_public ? "Público" : "Privado"}
+                    </span>
+                  </div>
+                  
+                  <div>
+                    <span className="font-medium text-gray-700 dark:text-gray-300 block mb-1">
+                      📖 Bestiário:
+                    </span>
+                    <span
+                      className={`inline-flex px-3 py-1 text-xs font-medium rounded-full ${
+                        record.has_bestiary
+                          ? "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400"
+                          : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
+                      }`}
+                    >
+                      {record.has_bestiary ? "Com bestiário" : "Sem bestiário"}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>

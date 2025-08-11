@@ -76,21 +76,21 @@ export function JsonViewer({ data, title }: JsonViewerProps) {
                 variant="p"
                 className="text-xl font-bold text-purple-600"
               >
-                {data["XP Gain"] || data["Raw XP Gain"]}
+                {data["XP Gain"]}
               </Typography>
               <Typography variant="caption">
                 ({data["XP/h"] || data["Raw XP/h"]}/h)
               </Typography>
             </div>
             <div>
-              <Typography variant="small">XP Gain</Typography>
+              <Typography variant="small">Raw XP</Typography>
               <Typography
                 variant="p"
                 className="text-xl font-bold text-blue-600"
               >
-                {data["XP Gain"]}
+                {data["Raw XP Gain"]}
               </Typography>
-              <Typography variant="caption">({data["XP/h"]}/h)</Typography>
+              <Typography variant="caption">({data["Raw XP/h"]}/h)</Typography>
             </div>
             <div>
               <Typography variant="small">Suprimentos Gastos</Typography>

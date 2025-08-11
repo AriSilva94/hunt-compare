@@ -25,22 +25,22 @@ export function PublicRecordCard({ record }: PublicRecordCardProps) {
 
   // Helper functions para personagem
   const getVocationIcon = (vocation: string): string => {
-    if (vocation.toLowerCase().includes('druid')) return '🍃'
-    if (vocation.toLowerCase().includes('knight')) return '⚔️'
-    if (vocation.toLowerCase().includes('paladin')) return '🏹'
-    if (vocation.toLowerCase().includes('sorcerer')) return '🔥'
-    if (vocation.toLowerCase().includes('monk')) return '🥋'
-    return '👤'
-  }
+    if (vocation.toLowerCase().includes("druid")) return "🍃";
+    if (vocation.toLowerCase().includes("knight")) return "⚔️";
+    if (vocation.toLowerCase().includes("paladin")) return "🏹";
+    if (vocation.toLowerCase().includes("sorcerer")) return "🔥";
+    if (vocation.toLowerCase().includes("monk")) return "🥋";
+    return "👤";
+  };
 
   const getVocationColor = (vocation: string): string => {
-    if (vocation.toLowerCase().includes('druid')) return 'bg-green-500'
-    if (vocation.toLowerCase().includes('knight')) return 'bg-red-500'
-    if (vocation.toLowerCase().includes('paladin')) return 'bg-yellow-500'
-    if (vocation.toLowerCase().includes('sorcerer')) return 'bg-blue-500'
-    if (vocation.toLowerCase().includes('monk')) return 'bg-orange-500'
-    return 'bg-gray-500'
-  }
+    if (vocation.toLowerCase().includes("druid")) return "bg-green-500";
+    if (vocation.toLowerCase().includes("knight")) return "bg-red-500";
+    if (vocation.toLowerCase().includes("paladin")) return "bg-yellow-500";
+    if (vocation.toLowerCase().includes("sorcerer")) return "bg-blue-500";
+    if (vocation.toLowerCase().includes("monk")) return "bg-orange-500";
+    return "bg-gray-500";
+  };
 
   return (
     <Link href={`/detalhe-publico/${record.id}`} className="block">
@@ -51,41 +51,62 @@ export function PublicRecordCard({ record }: PublicRecordCardProps) {
               {/* Avatar compacto do personagem */}
               {record.character ? (
                 <div className="flex items-center gap-1 flex-shrink-0">
-                  <div className={`w-6 h-6 rounded-full ${getVocationColor(record.character.vocation)} flex items-center justify-center shadow-sm`}>
-                    <span className="text-xs text-white" role="img" aria-label={record.character.vocation}>
+                  <div
+                    className={`w-6 h-6 rounded-full ${getVocationColor(
+                      record.character.vocation
+                    )} flex items-center justify-center shadow-sm`}
+                  >
+                    <span
+                      className="text-xs text-white"
+                      role="img"
+                      aria-label={record.character.vocation}
+                    >
                       {getVocationIcon(record.character.vocation)}
                     </span>
                   </div>
                 </div>
               ) : (
                 <div className="w-6 h-6 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center flex-shrink-0">
-                  <span className="text-xs text-gray-600 dark:text-gray-400">❓</span>
+                  <span className="text-xs text-gray-600 dark:text-gray-400">
+                    ❓
+                  </span>
                 </div>
               )}
-              
-              <Typography variant="small" className="line-clamp-1 flex-1 min-w-0 font-semibold">
+
+              <Typography
+                variant="small"
+                className="line-clamp-1 flex-1 min-w-0 font-semibold"
+              >
                 {preview.title}
               </Typography>
             </div>
-            
-            {preview.type === "game-session" && (
-              <span className="ml-1 text-lg flex-shrink-0">🎮</span>
-            )}
+
+            <div className="flex items-center gap-1 flex-shrink-0">
+              {preview.type === "game-session" && (
+                <span className="text-lg">🎮</span>
+              )}
+              {record.has_bestiary && (
+                <span className="px-2 py-1 text-xs rounded bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400">
+                  📖 Bestiário
+                </span>
+              )}
+            </div>
           </div>
-          
+
           {/* Informação inline do personagem */}
           <div className="mb-2">
             <div className="text-xs text-gray-500 dark:text-gray-400">
               {record.character ? (
                 <span className="truncate block">
-                  👤 {record.character.name} • Lv.{record.character.level} • {record.character.world}
+                  👤 {record.character.name} • Lv.{record.character.level} •{" "}
+                  {record.character.world}
                 </span>
               ) : (
                 <span>👤 Personagem não informado</span>
               )}
             </div>
           </div>
-          
+
           <Typography variant="small" className="line-clamp-2 text-xs">
             {preview.description}
           </Typography>

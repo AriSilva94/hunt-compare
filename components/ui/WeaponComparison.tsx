@@ -385,11 +385,11 @@ export function WeaponComparison({ weapons }: WeaponComparisonProps) {
         <div className="mt-6 p-4 bg-orange-50 border border-orange-200 rounded-lg">
           <Typography
             variant="h4"
-            className="text-orange-900 mb-2 flex items-center gap-2"
+            className="dark:text-orange-900 mb-2 flex items-center gap-2"
           >
             ⚠️ Diferenças nas Habilidades Detectadas
           </Typography>
-          <Typography variant="small" className="text-orange-800 mb-3">
+          <Typography variant="small" className="dark:text-orange-800 mb-3">
             Os jogadores fizeram escolhas diferentes nos seguintes níveis:
           </Typography>
           <div className="flex flex-wrap gap-2">
@@ -398,13 +398,13 @@ export function WeaponComparison({ weapons }: WeaponComparisonProps) {
               .map(([level]) => (
                 <span
                   key={level}
-                  className="bg-orange-100 text-orange-800 text-xs font-medium px-2 py-1 rounded"
+                  className="bg-orange-100 dark:text-orange-800 text-xs font-medium px-2 py-1 rounded"
                 >
                   Nível {level}
                 </span>
               ))}
           </div>
-          <Typography variant="caption" className="text-orange-700 mt-2">
+          <Typography variant="caption" className="dark:text-orange-700 mt-2">
             💡 Níveis destacados em laranja mostram onde há divergências entre
             as builds dos jogadores
           </Typography>

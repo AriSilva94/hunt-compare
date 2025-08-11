@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS records (
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
   data JSONB NOT NULL,
   is_public BOOLEAN DEFAULT false,
+  has_bestiary BOOLEAN DEFAULT false,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
@@ -15,6 +16,7 @@ CREATE TABLE IF NOT EXISTS records (
 -- Criar índices para melhor performance
 CREATE INDEX IF NOT EXISTS idx_records_user_id ON records(user_id);
 CREATE INDEX IF NOT EXISTS idx_records_is_public ON records(is_public);
+CREATE INDEX IF NOT EXISTS idx_records_has_bestiary ON records(has_bestiary);
 CREATE INDEX IF NOT EXISTS idx_records_created_at ON records(created_at DESC);
 
 -- Habilitar RLS (Row Level Security)
