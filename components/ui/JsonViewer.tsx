@@ -14,6 +14,11 @@ interface JsonViewerProps {
 
 export function JsonViewer({ data, title }: JsonViewerProps) {
   const [viewMode, setViewMode] = useState<"formatted" | "raw">("formatted");
+  const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
+
+  const handleImageError = (monsterName: string) => {
+    setImageErrors(prev => new Set(prev).add(monsterName));
+  };
 
   // Detecta o tipo de dados
   const dataType = detectDataType(data);
@@ -127,17 +132,24 @@ export function JsonViewer({ data, title }: JsonViewerProps) {
                 >
                   <div className="flex items-center justify-between gap-2 mb-1">
                     <div className="flex items-center justify-start gap-2">
-                      <Image
-                        unoptimized
-                        src={`https://pdscifxfuisrczpvofat.supabase.co/storage/v1/object/public/imagens-tibia/${monster.Name.toLowerCase().replace(
-                          /\s+/g,
-                          "_"
-                        )}.gif`}
-                        alt={monster.Name}
-                        className="w-12 h-12 object-contain"
-                        width={16}
-                        height={16}
-                      />
+                      {imageErrors.has(monster.Name) ? (
+                        <div className="w-12 h-12 flex items-center justify-center bg-gray-200 dark:bg-gray-600 rounded text-2xl">
+                          ❓
+                        </div>
+                      ) : (
+                        <Image
+                          unoptimized
+                          src={`https://pdscifxfuisrczpvofat.supabase.co/storage/v1/object/public/imagens-tibia/${monster.Name.toLowerCase().replace(
+                            /\s+/g,
+                            "_"
+                          )}.gif`}
+                          alt={monster.Name}
+                          className="w-12 h-12 object-contain"
+                          width={16}
+                          height={16}
+                          onError={() => handleImageError(monster.Name)}
+                        />
+                      )}
                       <Typography variant="p" className="font-medium">
                         {monster.Name.charAt(0).toUpperCase() +
                           monster.Name.slice(1)}
