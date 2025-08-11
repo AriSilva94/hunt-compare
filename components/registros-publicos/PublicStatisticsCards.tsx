@@ -46,12 +46,17 @@ export function PublicStatisticsCards({
         <Card key={stat.title} className={`${stat.bgColor} p-3`}>
           <div className="flex items-center justify-between">
             <div className="min-w-0 flex-1">
-              <Typography variant="small" className="text-xs truncate">{stat.title}</Typography>
-              <Typography variant="h4" className={`${stat.textColor} font-semibold truncate`}>
+              <Typography variant="small" className="text-xs truncate">
+                {stat.title}
+              </Typography>
+              <Typography
+                variant="h4"
+                className={`${stat.textColor} font-semibold truncate`}
+              >
                 {loading ? "..." : stat.getValue(records)}
               </Typography>
             </div>
-            <span className="text-xl ml-2 flex-shrink-0">{stat.icon}</span>
+            <span className="mt-4 text-xl ml-2 flex-shrink-0">{stat.icon}</span>
           </div>
         </Card>
       ))}
