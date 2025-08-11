@@ -196,6 +196,7 @@ export function CadastroForm({
                 variant="caption"
                 className="text-gray-500 dark:text-gray-400"
               >
+                {" "}
                 Qualquer pessoa poderá visualizar
               </Typography>
             </label>
