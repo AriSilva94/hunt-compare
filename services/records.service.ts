@@ -59,7 +59,7 @@ export class RecordsService {
       .from("records")
       .select(`
         *,
-        character:characters(
+        character:characters!character_id(
           id,
           name,
           level,
@@ -76,7 +76,10 @@ export class RecordsService {
 
     const { data: record, error } = await query.single();
 
-    if (error) return null;
+    if (error) {
+      console.error("Erro ao buscar registro:", error);
+      return null;
+    }
     return record;
   }
 
@@ -87,7 +90,7 @@ export class RecordsService {
       .from("records")
       .select(`
         *,
-        character:characters(
+        character:characters!character_id(
           id,
           name,
           level,
@@ -100,7 +103,10 @@ export class RecordsService {
       .eq("is_public", true)
       .single();
 
-    if (error) return null;
+    if (error) {
+      console.error("Erro ao buscar registro público:", error);
+      return null;
+    }
     return record;
   }
 
@@ -134,7 +140,7 @@ export class RecordsService {
       .eq("user_id", userId)
       .select(`
         *,
-        character:characters(
+        character:characters!character_id(
           id,
           name,
           level,
