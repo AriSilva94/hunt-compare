@@ -12,11 +12,11 @@ export function usePublicRecords() {
     async function fetchData() {
       const supabase = createClient();
 
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("records")
         .select(`
           *,
-          character:characters(
+          character:characters!character_id(
             id,
             name,
             level,
@@ -27,6 +27,10 @@ export function usePublicRecords() {
         `)
         .eq("is_public", true)
         .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Erro ao buscar registros públicos:", error);
+      }
 
       if (data) {
         setRecords(data);

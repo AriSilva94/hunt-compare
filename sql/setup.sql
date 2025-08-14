@@ -2,10 +2,27 @@
 -- SETUP DO BANCO DE DADOS - SUPABASE
 -- =============================================
 
+-- Criar tabela de personagens
+CREATE TABLE IF NOT EXISTS characters (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  level INTEGER NOT NULL,
+  vocation VARCHAR(100),
+  world VARCHAR(100),
+  sex VARCHAR(10),
+  avatar_url TEXT,
+  is_active BOOLEAN DEFAULT false,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
+  UNIQUE(user_id, name)
+);
+
 -- Criar tabela de registros
 CREATE TABLE IF NOT EXISTS records (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  character_id UUID REFERENCES characters(id) ON DELETE SET NULL,
   data JSONB NOT NULL,
   is_public BOOLEAN DEFAULT false,
   has_bestiary BOOLEAN DEFAULT false,
@@ -14,18 +31,67 @@ CREATE TABLE IF NOT EXISTS records (
 );
 
 -- Criar índices para melhor performance
+CREATE INDEX IF NOT EXISTS idx_characters_user_id ON characters(user_id);
+CREATE INDEX IF NOT EXISTS idx_characters_name ON characters(name);
+CREATE INDEX IF NOT EXISTS idx_characters_is_active ON characters(is_active);
+CREATE INDEX IF NOT EXISTS idx_characters_created_at ON characters(created_at DESC);
+
 CREATE INDEX IF NOT EXISTS idx_records_user_id ON records(user_id);
+CREATE INDEX IF NOT EXISTS idx_records_character_id ON records(character_id);
 CREATE INDEX IF NOT EXISTS idx_records_is_public ON records(is_public);
 CREATE INDEX IF NOT EXISTS idx_records_has_bestiary ON records(has_bestiary);
 CREATE INDEX IF NOT EXISTS idx_records_created_at ON records(created_at DESC);
 
 -- Habilitar RLS (Row Level Security)
+ALTER TABLE characters ENABLE ROW LEVEL SECURITY;
 ALTER TABLE records ENABLE ROW LEVEL SECURITY;
 
 -- =============================================
 -- POLÍTICAS DE SEGURANÇA (RLS)
 -- =============================================
 
+-- POLÍTICAS PARA CHARACTERS
+-- Política: Usuários podem ver seus próprios personagens
+CREATE POLICY "Users can view own characters" 
+ON characters 
+FOR SELECT 
+USING (auth.uid() = user_id);
+
+-- Política: Usuários podem criar seus próprios personagens
+CREATE POLICY "Users can create own characters" 
+ON characters 
+FOR INSERT 
+WITH CHECK (auth.uid() = user_id);
+
+-- Política: Usuários podem atualizar seus próprios personagens
+CREATE POLICY "Users can update own characters" 
+ON characters 
+FOR UPDATE 
+USING (auth.uid() = user_id)
+WITH CHECK (auth.uid() = user_id);
+
+-- Política: Usuários podem deletar seus próprios personagens
+CREATE POLICY "Users can delete own characters" 
+ON characters 
+FOR DELETE 
+USING (auth.uid() = user_id);
+
+-- Política: Personagens de registros públicos são visíveis para todos
+-- CRÍTICO: Esta política permite que usuários vejam personagens de outros usuários
+-- APENAS quando esses personagens estão associados a registros públicos
+-- Sem esta política, registros públicos aparecerão como "personagem não identificado"
+CREATE POLICY "Characters of public records are viewable by everyone" 
+ON characters 
+FOR SELECT 
+USING (
+  EXISTS (
+    SELECT 1 FROM records 
+    WHERE records.character_id = characters.id 
+    AND records.is_public = true
+  )
+);
+
+-- POLÍTICAS PARA RECORDS
 -- Política: Usuários podem ver seus próprios registros
 CREATE POLICY "Users can view own records" 
 ON records 
@@ -70,7 +136,12 @@ BEGIN
 END;
 $function$ LANGUAGE plpgsql;
 
--- Criar trigger que chama a função antes de cada UPDATE
+-- Criar triggers que chamam a função antes de cada UPDATE
+CREATE TRIGGER update_characters_updated_at 
+  BEFORE UPDATE ON characters
+  FOR EACH ROW 
+  EXECUTE FUNCTION update_updated_at_column();
+
 CREATE TRIGGER update_records_updated_at 
   BEFORE UPDATE ON records
   FOR EACH ROW 
