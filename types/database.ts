@@ -28,6 +28,7 @@ export interface Character {
   is_online: boolean
   last_login: string | null
   last_seen_at: string | null
+  slug: string
   created_at: string
   updated_at: string
 }
@@ -77,11 +78,20 @@ export interface UserEnemyList {
   created_at: string
 }
 
+export interface UserHuntedList {
+  id: number
+  user_id: string
+  character_id: number
+  note: string | null
+  created_at: string
+}
+
 // ---- Joined types for Supabase query results ----
 
 export interface CharacterSummary {
   id: number
   name: string
+  slug: string
   rank: number | null
   level: number | null
   vocation: Vocation | null
@@ -95,7 +105,18 @@ export interface SnapshotSummary {
 }
 
 export interface DeathWithCharacter extends Death {
-  characters: Pick<Character, 'name' | 'rank' | 'vocation'> | null
+  characters: Pick<Character, 'name' | 'slug' | 'rank' | 'vocation'> | null
+}
+
+export interface HuntedWithCharacter {
+  id: number
+  character_id: number
+  note: string | null
+  created_at: string
+  characters: (CharacterSummary & {
+    daily_snapshots: SnapshotSummary[]
+    deaths: Pick<Death, 'died_at' | 'level' | 'reason'>[]
+  }) | null
 }
 
 export interface EnemyWithCharacter {

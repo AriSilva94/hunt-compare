@@ -1,6 +1,7 @@
 /**
  * collect-character-details
- * Runs once per day after highscores (03:00 UTC).
+ * Runs 5x per day, processing all 1000 tracked characters per cycle.
+ * Each invocation handles one batch of 100 characters (batch 0–9).
  * Fetches character pages from TibiaData API to update
  * last_login and death records for each tracked player.
  * Idempotent: deaths deduped by unique (character_id, died_at).
@@ -12,7 +13,6 @@ import { fetchCharacter } from '../_shared/tibiadata.ts'
 
 const BATCH_SIZE = 100
 const REQUEST_DELAY_MS = 100
-const TOTAL_CHARS = 1000 // rotate through all tracked players over 10 days
 
 Deno.serve(async (req) => {
   const supabase = createClient(
@@ -22,17 +22,10 @@ Deno.serve(async (req) => {
 
   const runId = await startJob(supabase, 'collect-character-details')
 
-  // Allow manual offset override via request body, otherwise rotate daily
-  let offset: number
-  try {
-    const body = await req.json().catch(() => ({}))
-    offset = typeof body.offset === 'number'
-      ? body.offset
-      : (Math.floor(Date.now() / 86_400_000) % (TOTAL_CHARS / BATCH_SIZE)) * BATCH_SIZE
-  } catch {
-    const dayOfYear = Math.floor(Date.now() / 86_400_000)
-    offset = (dayOfYear % (TOTAL_CHARS / BATCH_SIZE)) * BATCH_SIZE
-  }
+  // batch (0–9) determines which 100-character slice to process
+  const body = await req.json().catch(() => ({}))
+  const batch = typeof body.batch === 'number' ? Math.max(0, Math.min(9, body.batch)) : 0
+  const offset = batch * BATCH_SIZE
 
   try {
     const { data: chars, error: charErr } = await supabase

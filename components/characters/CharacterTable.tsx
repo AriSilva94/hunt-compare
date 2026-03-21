@@ -3,15 +3,11 @@
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { Badge } from '@/components/ui/Badge'
+import { OnlineDot } from '@/components/ui/OnlineDot'
 import type { Character } from '@/types/database'
 
-interface Row extends Character {
-  xp_gained?: number | null
-}
-
-interface Props {
-  characters: Row[]
-}
+interface Row extends Character { xp_gained?: number | null }
+interface Props { characters: Row[] }
 
 export default function CharacterTable({ characters }: Props) {
   const [search, setSearch] = useState('')
@@ -20,116 +16,101 @@ export default function CharacterTable({ characters }: Props) {
 
   const filtered = useMemo(() => {
     let list = characters
-
     if (search.trim()) {
       const q = search.toLowerCase()
       list = list.filter((c) => c.name.toLowerCase().includes(q))
     }
-
-    if (onlineOnly) {
-      list = list.filter((c) => c.is_online)
-    }
-
-    if (sortBy === 'xp_gained') {
-      list = [...list].sort((a, b) => (b.xp_gained ?? 0) - (a.xp_gained ?? 0))
-    }
-
+    if (onlineOnly) list = list.filter((c) => c.is_online)
+    if (sortBy === 'xp_gained') list = [...list].sort((a, b) => (b.xp_gained ?? 0) - (a.xp_gained ?? 0))
     return list
   }, [characters, search, onlineOnly, sortBy])
 
   return (
-    <div className="space-y-4">
-      {/* Filters */}
-      <div className="flex flex-wrap gap-3 items-center">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+
+      {/* Filter bar */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', alignItems: 'center', padding: '0.75rem 1rem', background: '#161210', border: '1px solid #2a2018', borderBottom: 'none' }}>
         <input
           type="text"
           placeholder="Search by name..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="bg-gray-800 border border-gray-700 rounded px-3 py-1.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-amber-500 w-60"
+          className="chronicle-input"
+          style={{ padding: '5px 10px', fontSize: '0.8rem', width: '200px', fontFamily: 'var(--font-body, serif)' }}
         />
-        <label className="flex items-center gap-2 text-sm text-gray-400 cursor-pointer select-none">
-          <input
-            type="checkbox"
-            checked={onlineOnly}
-            onChange={(e) => setOnlineOnly(e.target.checked)}
-            className="accent-amber-500"
-          />
-          Online only
+        <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.72rem', letterSpacing: '0.06em', color: '#9a8a72', cursor: 'pointer', fontFamily: 'var(--font-display-var, serif)' }}>
+          <input type="checkbox" checked={onlineOnly} onChange={(e) => setOnlineOnly(e.target.checked)} style={{ accentColor: '#40c860' }} />
+          ONLINE ONLY
         </label>
-        <div className="flex gap-1 ml-auto">
-          <button
-            onClick={() => setSortBy('rank')}
-            className={`px-3 py-1 text-xs rounded transition-colors ${
-              sortBy === 'rank'
-                ? 'bg-amber-500 text-black font-medium'
-                : 'bg-gray-800 text-gray-400 hover:text-white'
-            }`}
-          >
-            By Rank
-          </button>
-          <button
-            onClick={() => setSortBy('xp_gained')}
-            className={`px-3 py-1 text-xs rounded transition-colors ${
-              sortBy === 'xp_gained'
-                ? 'bg-amber-500 text-black font-medium'
-                : 'bg-gray-800 text-gray-400 hover:text-white'
-            }`}
-          >
-            By Daily XP
-          </button>
+        <div style={{ marginLeft: 'auto', display: 'flex', gap: '4px' }}>
+          {(['rank', 'xp_gained'] as const).map((s) => (
+            <button
+              key={s}
+              onClick={() => setSortBy(s)}
+              className="display-font"
+              style={{ padding: '4px 12px', fontSize: '0.62rem', letterSpacing: '0.1em', cursor: 'pointer', border: '1px solid', borderColor: sortBy === s ? '#c07828' : '#2a2018', background: sortBy === s ? '#c07828' : 'transparent', color: sortBy === s ? '#0d0b08' : '#9a8a72', transition: 'all 0.15s' }}
+            >
+              {s === 'rank' ? 'BY RANK' : 'BY DAILY XP'}
+            </button>
+          ))}
         </div>
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-lg border border-gray-800">
-        <table className="w-full text-sm">
-          <thead className="bg-gray-800 text-gray-400 uppercase text-xs tracking-wider">
-            <tr>
-              <th className="px-4 py-3 text-left w-12">#</th>
-              <th className="px-4 py-3 text-left">Name</th>
-              <th className="px-4 py-3 text-left hidden md:table-cell">Vocation</th>
-              <th className="px-4 py-3 text-right">Level</th>
-              <th className="px-4 py-3 text-right hidden sm:table-cell">Daily XP</th>
-              <th className="px-4 py-3 text-center">Status</th>
+      <div style={{ overflowX: 'auto', border: '1px solid #2a2018' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.88rem' }}>
+          <thead>
+            <tr style={{ background: '#1a1510', borderBottom: '1px solid #2a2018' }}>
+              {[
+                { label: '#', w: '48px' },
+                { label: 'Name' },
+                { label: 'Vocation', hidden: 'md' },
+                { label: 'Level', right: true },
+                { label: 'Daily XP', right: true, hidden: 'sm' },
+                { label: 'Status', center: true },
+              ].map((col) => (
+                <th key={col.label}
+                  className={col.hidden ? `hidden ${col.hidden}:table-cell` : ''}
+                  style={{ padding: '10px 14px', textAlign: col.right ? 'right' : col.center ? 'center' : 'left', fontSize: '0.6rem', letterSpacing: '0.16em', color: '#6a5a44', fontFamily: 'var(--font-display-var, serif)', fontWeight: 600, width: col.w }}
+                >
+                  {col.label.toUpperCase()}
+                </th>
+              ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-800">
+          <tbody>
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
-                  No characters found.
+                <td colSpan={6} style={{ padding: '3rem', textAlign: 'center', color: '#6a5a44', fontStyle: 'italic' }}>
+                  No players found.
                 </td>
               </tr>
             ) : (
-              filtered.map((c) => (
-                <tr
-                  key={c.id}
-                  className="hover:bg-gray-800/60 transition-colors"
-                >
-                  <td className="px-4 py-3 text-gray-500">{c.rank ?? '–'}</td>
-                  <td className="px-4 py-3">
-                    <Link
-                      href={`/characters/${encodeURIComponent(c.name)}`}
-                      className="text-amber-400 hover:text-amber-300 font-medium transition-colors"
-                    >
-                      {c.name}
-                    </Link>
+              filtered.map((c, i) => (
+                <tr key={c.id} className="roster-row" style={{ borderBottom: '1px solid #1e1a14', background: i % 2 === 0 ? '#0f0d0a' : '#111009' }}>
+                  <td style={{ padding: '10px 14px', color: '#3a2e20', fontSize: '0.75rem', fontFamily: 'var(--font-mono-var, monospace)' }}>
+                    {c.rank ?? '–'}
                   </td>
-                  <td className="px-4 py-3 text-gray-400 hidden md:table-cell">
+                  <td style={{ padding: '10px 14px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      {c.is_online && <OnlineDot />}
+                      <Link href={`/characters/${c.slug}`} className="ember-link">
+                        {c.name}
+                      </Link>
+                    </div>
+                  </td>
+                  <td className="hidden md:table-cell" style={{ padding: '10px 14px', color: '#9a8a72', fontSize: '0.82rem', fontStyle: 'italic' }}>
                     {c.vocation ?? '–'}
                   </td>
-                  <td className="px-4 py-3 text-right text-white">{c.level ?? '–'}</td>
-                  <td className="px-4 py-3 text-right hidden sm:table-cell">
-                    {c.xp_gained != null ? (
-                      <span className="text-green-400">
-                        +{c.xp_gained.toLocaleString()}
-                      </span>
-                    ) : (
-                      <span className="text-gray-600">–</span>
-                    )}
+                  <td style={{ padding: '10px 14px', textAlign: 'right', color: '#9a8a72', fontFamily: 'var(--font-mono-var, monospace)', fontSize: '0.82rem' }}>
+                    {c.level ?? '–'}
                   </td>
-                  <td className="px-4 py-3 text-center">
+                  <td className="hidden sm:table-cell" style={{ padding: '10px 14px', textAlign: 'right', fontFamily: 'var(--font-mono-var, monospace)', fontSize: '0.82rem' }}>
+                    {c.xp_gained != null
+                      ? <span style={{ color: '#d4a840' }}>+{c.xp_gained.toLocaleString()}</span>
+                      : <span style={{ color: '#2a2018' }}>–</span>}
+                  </td>
+                  <td style={{ padding: '10px 14px', textAlign: 'center' }}>
                     <Badge variant={c.is_online ? 'online' : 'offline'}>
                       {c.is_online ? 'Online' : 'Offline'}
                     </Badge>
@@ -141,8 +122,8 @@ export default function CharacterTable({ characters }: Props) {
         </table>
       </div>
 
-      <p className="text-xs text-gray-600 text-right">
-        {filtered.length} of {characters.length} players
+      <p className="display-font" style={{ textAlign: 'right', fontSize: '0.62rem', letterSpacing: '0.1em', color: '#2a2018' }}>
+        {filtered.length} / {characters.length} PLAYERS
       </p>
     </div>
   )

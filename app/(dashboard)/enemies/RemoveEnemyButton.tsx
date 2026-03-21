@@ -5,28 +5,24 @@ import { useTransition } from 'react'
 import { removeEnemyAction } from './actions'
 
 interface Props {
-  userId: string
-  characterId: number
+  characterId: number | undefined
 }
 
-export default function RemoveEnemyButton({ userId, characterId }: Props) {
+export default function RemoveEnemyButton({ characterId }: Props) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
 
   function handleRemove() {
+    if (!characterId) return
     startTransition(async () => {
-      await removeEnemyAction(userId, characterId)
+      await removeEnemyAction(characterId)
       router.refresh()
     })
   }
 
   return (
-    <button
-      onClick={handleRemove}
-      disabled={isPending}
-      className="text-xs text-gray-500 hover:text-red-400 transition-colors disabled:opacity-50"
-    >
-      Remove
+    <button onClick={handleRemove} disabled={isPending} className="remove-btn">
+      REMOVE
     </button>
   )
 }
