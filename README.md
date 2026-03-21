@@ -1,36 +1,151 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CalmTracker
 
-## Getting Started
+Track the **top 1000 experience-ranked players** on the Tibia world **Calmera**.
 
-First, run the development server:
+Features: real-time online/offline status, daily XP tracking, death history, last login, and a personal enemy watchlist.
+
+---
+
+## Stack
+
+| Layer | Tech |
+| --- | --- |
+| Frontend | Next.js 15 (App Router), TypeScript, Tailwind CSS |
+| Backend | Supabase (Postgres, Auth, Edge Functions, Cron) |
+| Scraping | Tibia.com world/highscores/character pages |
+
+---
+
+## Project structure
+
+```text
+app/                    Next.js App Router pages
+  (auth)/               Login & signup routes
+  (dashboard)/          Protected dashboard & enemy list
+  characters/[name]/    Character detail page
+  online/               Online players page
+  deaths/               Recent deaths feed
+components/             Shared UI components
+lib/
+  supabase/             Browser/server/middleware clients
+  tibia/
+    adapters/           Adapter interfaces + mock adapters
+    scrapers/           Real Tibia scraper implementations
+  data/                 Server-side data access functions
+types/                  TypeScript types (database.ts)
+supabase/
+  functions/            Edge Functions (collectors)
+  migrations/           SQL migrations
+```
+
+---
+
+## Setup
+
+### 1. Clone and install
+
+```bash
+git clone <repo>
+cd calmtracker
+npm install
+```
+
+### 2. Create a Supabase project
+
+Go to [supabase.com](https://supabase.com) and create a new project.
+
+### 3. Environment variables
+
+```bash
+cp .env.local.example .env.local
+```
+
+Fill in your Supabase URL and anon key from **Project Settings → API**.
+
+### 4. Run migrations
+
+In the Supabase dashboard → **SQL Editor**, paste and run:
+
+1. `supabase/migrations/001_initial_schema.sql`
+
+### 5. Start local dev
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Deploying Edge Functions
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Install the Supabase CLI:
 
-## Learn More
+```bash
+npm install -g supabase
+supabase login
+supabase link --project-ref <your-project-ref>
+```
 
-To learn more about Next.js, take a look at the following resources:
+Deploy all functions:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+supabase functions deploy collect-online-status
+supabase functions deploy collect-highscores
+supabase functions deploy collect-character-details
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Cron setup
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+After deploying functions, enable `pg_cron` and `pg_net` in:
+**Supabase dashboard → Database → Extensions**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Then run `supabase/migrations/002_cron_jobs.sql` in the SQL Editor after setting:
+
+```sql
+alter database postgres set app.supabase_url = 'https://your-project.supabase.co';
+alter database postgres set app.service_role_key = 'your-service-role-key';
+```
+
+**Cron schedules:**
+
+| Job | Schedule |
+| --- | --- |
+| `collect-online-status` | Every 15 minutes |
+| `collect-highscores` | 00:30 UTC daily |
+| `collect-character-details` | 03:00 UTC daily |
+
+---
+
+## How data flows
+
+```text
+Tibia.com world page  ──►  collect-online-status   (15min) ──► characters.is_online
+Tibia.com highscores  ──►  collect-highscores       (daily) ──► characters + daily_snapshots
+Tibia.com char page   ──►  collect-character-details(daily) ──► characters.last_login + deaths
+```
+
+---
+
+## Environment variables
+
+| Variable | Description |
+| --- | --- |
+| `NEXT_PUBLIC_SUPABASE_URL` | Your Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Publishable key (safe for client) |
+| `SUPABASE_SECRET_KEY` | Secret key (server/edge functions only) |
+| `NEXT_PUBLIC_USE_MOCK_TIBIA` | Set to `true` to use mock data in dev |
+
+Edge Functions automatically receive `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` from Supabase.
+
+---
+
+## Future roadmap
+
+- [ ] XP gain chart (recharts)
+- [ ] Death notifications (email/webhook)
+- [ ] Multiple worlds support
+- [ ] Guild tracking
+- [ ] Rank history chart
+- [ ] Public API endpoints
