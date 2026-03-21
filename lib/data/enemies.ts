@@ -9,7 +9,7 @@ export async function getUserEnemies(userId: string) {
     .select(`
       *,
       characters (
-        id, name, rank, level, vocation, is_online, last_login,
+        id, name, slug, rank, level, vocation, is_online, last_login,
         daily_snapshots (xp_gained, snapshot_date)
       )
     `)

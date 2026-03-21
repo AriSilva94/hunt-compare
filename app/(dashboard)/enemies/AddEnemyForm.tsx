@@ -14,12 +14,11 @@ interface SearchResult {
 }
 
 interface Props {
-  userId: string
   searchResults: SearchResult[]
   initialQuery: string
 }
 
-export default function AddEnemyForm({ userId, searchResults, initialQuery }: Props) {
+export default function AddEnemyForm({ searchResults, initialQuery }: Props) {
   const router = useRouter()
   const [query, setQuery] = useState(initialQuery)
   const [isPending, startTransition] = useTransition()
@@ -31,50 +30,44 @@ export default function AddEnemyForm({ userId, searchResults, initialQuery }: Pr
 
   function handleAdd(characterId: number) {
     startTransition(async () => {
-      await addEnemyAction(userId, characterId)
+      await addEnemyAction(characterId)
       router.push('/enemies')
-      router.refresh()
     })
   }
 
   return (
-    <div className="space-y-3">
-      <form onSubmit={handleSearch} className="flex gap-2">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+      <form onSubmit={handleSearch} style={{ display: 'flex', gap: '8px' }}>
         <input
           type="text"
-          placeholder="Search character to add as enemy..."
+          placeholder="Search character to mark as enemy..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-amber-500 flex-1"
+          className="chronicle-input"
+          style={{ flex: 1, padding: '9px 12px', fontSize: '0.85rem', fontFamily: 'var(--font-body, serif)' }}
         />
-        <button
-          type="submit"
-          className="bg-amber-500 hover:bg-amber-400 text-black font-medium px-4 py-2 rounded text-sm transition-colors"
-        >
-          Search
+        <button type="submit" className="display-font ember-btn"
+          style={{ padding: '9px 18px', fontSize: '0.65rem', letterSpacing: '0.12em', fontWeight: 700, flexShrink: 0 }}>
+          SEARCH
         </button>
       </form>
 
       {searchResults.length > 0 && (
-        <div className="bg-gray-900 border border-gray-700 rounded-lg overflow-hidden">
-          {searchResults.map((r) => (
-            <div
-              key={r.id}
-              className="flex items-center justify-between px-4 py-2.5 border-b border-gray-800 last:border-0"
-            >
-              <div className="flex items-center gap-3">
-                <span className={`w-2 h-2 rounded-full ${r.is_online ? 'bg-green-500' : 'bg-gray-600'}`} />
-                <span className="text-white text-sm font-medium">{r.name}</span>
-                <span className="text-gray-500 text-xs">
+        <div style={{ border: '1px solid #2a2018', overflow: 'hidden' }}>
+          {searchResults.map((r, i) => (
+            <div key={r.id}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', background: i % 2 === 0 ? '#161210' : '#131008', borderBottom: i < searchResults.length - 1 ? '1px solid #1e1a14' : 'none' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: r.is_online ? '#40c860' : '#2a2018', flexShrink: 0, display: 'inline-block' }}
+                  className={r.is_online ? 'online-glow' : ''} />
+                <span style={{ color: '#e2d8c2', fontWeight: 600, fontSize: '0.88rem' }}>{r.name}</span>
+                <span style={{ color: '#3a2a18', fontSize: '0.75rem', fontStyle: 'italic' }}>
                   {r.vocation} · Lv {r.level} · #{r.rank}
                 </span>
               </div>
-              <button
-                onClick={() => handleAdd(r.id)}
-                disabled={isPending}
-                className="text-xs bg-red-900 hover:bg-red-800 border border-red-700 text-red-300 px-3 py-1 rounded transition-colors disabled:opacity-50"
-              >
-                + Add enemy
+              <button onClick={() => handleAdd(r.id)} disabled={isPending} className="display-font add-enemy-btn"
+                style={{ padding: '4px 12px', fontSize: '0.6rem', letterSpacing: '0.1em' }}>
+                + MARK ENEMY
               </button>
             </div>
           ))}

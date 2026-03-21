@@ -1,69 +1,82 @@
-import { getOnlineCharacters } from '@/lib/data/characters'
-import { Badge } from '@/components/ui/Badge'
-import Link from 'next/link'
+import { getOnlineCharactersWithStats } from '@/lib/data/characters'
+import { fmtXPLarge } from '@/lib/utils/format'
+import { StatCard } from '@/components/ui/StatCard'
+import OnlineBoard from '@/components/characters/OnlineBoard'
 
-export const revalidate = 300 // 5 min
-
+export const revalidate = 300
 export const metadata = { title: 'Online Now – CalmTracker' }
 
 export default async function OnlinePage() {
-  const players = await getOnlineCharacters()
+  const players = await getOnlineCharactersWithStats()
+
+  const onlineCount = players.length
+  const totalXPToday = players.reduce((sum, p) => sum + (p.xp_gained_today ?? 0), 0)
+  const deathsLast24h = players.filter((p) => {
+    if (!p.last_death_at) return false
+    return Date.now() - new Date(p.last_death_at).getTime() < 24 * 3_600_000
+  }).length
 
   return (
-    <div className="space-y-6">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+
+      {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-white">Online Now</h1>
-        <p className="text-gray-400 text-sm mt-1">
-          {players.length} tracked player{players.length !== 1 ? 's' : ''} currently online on Calmera
+        <div className="ruled-section display-font" style={{ fontSize: '0.58rem', letterSpacing: '0.28em', color: '#3a2a18', marginBottom: '1.25rem' }}>
+          LIVE INTELLIGENCE
+        </div>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: '1rem', flexWrap: 'wrap' }}>
+          <h1 className="display-font" style={{ fontSize: '2rem', letterSpacing: '0.12em', fontWeight: 700, color: '#e2d8c2', lineHeight: 1 }}>
+            ONLINE NOW
+          </h1>
+          {onlineCount > 0 && (
+            <span
+              className="display-font online-glow"
+              style={{
+                fontSize: '0.65rem', letterSpacing: '0.1em',
+                color: '#40c860', border: '1px solid #1a5c28',
+                background: '#0d2515', padding: '3px 10px',
+              }}
+            >
+              {onlineCount} ACTIVE
+            </span>
+          )}
+        </div>
+        <p style={{ fontSize: '0.82rem', color: '#9a8a72', marginTop: '0.35rem', fontStyle: 'italic', fontFamily: 'var(--font-body, serif)' }}>
+          Tracked operatives currently on Calmera · refreshes every 5 min
         </p>
       </div>
 
-      {players.length === 0 ? (
-        <div className="text-center py-16 text-gray-500">
-          No tracked players online right now.
-        </div>
-      ) : (
-        <div className="overflow-x-auto rounded-lg border border-gray-800">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-800 text-gray-400 uppercase text-xs tracking-wider">
-              <tr>
-                <th className="px-4 py-3 text-left w-12">#</th>
-                <th className="px-4 py-3 text-left">Name</th>
-                <th className="px-4 py-3 text-left hidden md:table-cell">Vocation</th>
-                <th className="px-4 py-3 text-right">Level</th>
-                <th className="px-4 py-3 text-left hidden sm:table-cell">Last Login</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-800">
-              {players.map((p) => (
-                <tr key={p.id} className="hover:bg-gray-800/50 transition-colors">
-                  <td className="px-4 py-3 text-gray-500">{p.rank ?? '–'}</td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-green-500 flex-shrink-0" />
-                      <Link
-                        href={`/characters/${encodeURIComponent(p.name)}`}
-                        className="text-amber-400 hover:text-amber-300 font-medium transition-colors"
-                      >
-                        {p.name}
-                      </Link>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-gray-400 hidden md:table-cell">
-                    {p.vocation ?? '–'}
-                  </td>
-                  <td className="px-4 py-3 text-right text-white">{p.level ?? '–'}</td>
-                  <td className="px-4 py-3 text-gray-400 hidden sm:table-cell text-xs">
-                    {p.last_login
-                      ? new Date(p.last_login).toLocaleString()
-                      : '–'}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {/* Stat strip */}
+      {onlineCount > 0 && (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1px', background: '#2a2018', border: '1px solid #2a2018' }}>
+          <StatCard label="Online" value={String(onlineCount)} color="#40c860" />
+          <StatCard
+            label="XP Today (sum)"
+            value={totalXPToday > 0 ? fmtXPLarge(totalXPToday) : '—'}
+            color="#c07828"
+          />
+          <StatCard
+            label="Deaths · 24h"
+            value={deathsLast24h > 0 ? String(deathsLast24h) : '—'}
+            color={deathsLast24h > 0 ? '#b82020' : '#6a5a44'}
+          />
         </div>
       )}
+
+      {/* Board */}
+      {onlineCount === 0 ? (
+        <div style={{
+          textAlign: 'center', padding: '5rem 2rem',
+          border: '1px solid #1e1a14', color: '#6a5a44',
+          fontStyle: 'italic', fontFamily: 'var(--font-body, serif)',
+          fontSize: '0.9rem',
+        }}>
+          No tracked operatives online. The battlefield is quiet.
+        </div>
+      ) : (
+        <OnlineBoard players={players} />
+      )}
+
     </div>
   )
 }

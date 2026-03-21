@@ -2,104 +2,57 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { getUserEnemies } from '@/lib/data/enemies'
 import type { EnemyWithCharacter } from '@/types/database'
+import { EnemyTable } from '@/components/characters/EnemyTable'
+import { StatCard } from '@/components/ui/StatCard'
 import Link from 'next/link'
-import { Badge } from '@/components/ui/Badge'
 
 export const metadata = { title: 'Dashboard – CalmTracker' }
 
 export default async function DashboardPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-
   if (!user) redirect('/login')
 
   const enemies = (await getUserEnemies(user.id)) as EnemyWithCharacter[]
-  const online = enemies.filter((e) => e.characters?.is_online)
+  const onlineCount = enemies.filter((e) => e.characters?.is_online).length
 
   return (
-    <div className="space-y-8">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+
       <div>
-        <h1 className="text-2xl font-bold text-white">Dashboard</h1>
-        <p className="text-gray-500 text-sm mt-1">{user.email}</p>
+        <div className="ruled-section display-font" style={{ fontSize: '0.6rem', letterSpacing: '0.28em', color: '#3a2a18', marginBottom: '1.25rem' }}>
+          COMMAND CENTER
+        </div>
+        <h1 className="display-font" style={{ fontSize: '2rem', letterSpacing: '0.12em', fontWeight: 700, color: '#e2d8c2' }}>
+          DASHBOARD
+        </h1>
+        <p className="mono-font" style={{ fontSize: '0.75rem', color: '#6a5a44', marginTop: '0.3rem' }}>
+          {user.email}
+        </p>
       </div>
 
-      <div className="grid sm:grid-cols-3 gap-4">
-        <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
-          <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">Enemies tracked</div>
-          <div className="text-3xl font-bold text-white">{enemies.length}</div>
-        </div>
-        <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
-          <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">Enemies online</div>
-          <div className="text-3xl font-bold text-green-400">{online.length}</div>
-        </div>
+      {/* Stats */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1px', background: '#2a2018', border: '1px solid #2a2018', maxWidth: '480px' }}>
+        <StatCard label="Enemies Tracked" value={String(enemies.length)} />
+        <StatCard label="Enemies Online" value={String(onlineCount)} highlight={onlineCount > 0} />
       </div>
 
+      {/* Enemy table */}
       <section>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-white">Enemy List</h2>
-          <Link
-            href="/enemies"
-            className="text-sm text-amber-400 hover:text-amber-300 transition-colors"
-          >
-            Manage →
-          </Link>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+          <div className="display-font" style={{ fontSize: '0.62rem', letterSpacing: '0.2em', color: '#9a8a72' }}>
+            ENEMY LIST
+          </div>
+          <Link href="/enemies" className="manage-link">MANAGE →</Link>
         </div>
 
         {enemies.length === 0 ? (
-          <div className="text-center py-10 text-gray-500 border border-gray-800 rounded-lg">
+          <div style={{ textAlign: 'center', padding: '3rem 2rem', border: '1px solid #2a2018', color: '#6a5a44', fontStyle: 'italic' }}>
             No enemies tracked yet.{' '}
-            <Link href="/enemies" className="text-amber-400 hover:underline">
-              Add one
-            </Link>
+            <Link href="/enemies" className="auth-link">Add one</Link>
           </div>
         ) : (
-          <div className="overflow-x-auto rounded-lg border border-gray-800">
-            <table className="w-full text-sm">
-              <thead className="bg-gray-800 text-gray-400 uppercase text-xs tracking-wider">
-                <tr>
-                  <th className="px-4 py-3 text-left">Name</th>
-                  <th className="px-4 py-3 text-left hidden md:table-cell">Vocation</th>
-                  <th className="px-4 py-3 text-right">Level</th>
-                  <th className="px-4 py-3 text-right hidden sm:table-cell">Today XP</th>
-                  <th className="px-4 py-3 text-center">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-800">
-                {enemies.map((e) => {
-                  const c = e.characters
-                  const xp = c?.daily_snapshots?.[0]?.xp_gained ?? null
-                  return (
-                    <tr key={e.id} className="hover:bg-gray-800/50 transition-colors">
-                      <td className="px-4 py-3">
-                        <Link
-                          href={`/characters/${encodeURIComponent(c?.name ?? '')}`}
-                          className="text-amber-400 hover:text-amber-300 font-medium transition-colors"
-                        >
-                          {c?.name ?? '–'}
-                        </Link>
-                      </td>
-                      <td className="px-4 py-3 text-gray-400 hidden md:table-cell">
-                        {c?.vocation ?? '–'}
-                      </td>
-                      <td className="px-4 py-3 text-right text-white">{c?.level ?? '–'}</td>
-                      <td className="px-4 py-3 text-right hidden sm:table-cell">
-                        {xp != null ? (
-                          <span className="text-green-400">+{xp.toLocaleString()}</span>
-                        ) : (
-                          <span className="text-gray-600">–</span>
-                        )}
-                      </td>
-                      <td className="px-4 py-3 text-center">
-                        <Badge variant={c?.is_online ? 'online' : 'offline'}>
-                          {c?.is_online ? 'Online' : 'Offline'}
-                        </Badge>
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </div>
+          <EnemyTable enemies={enemies} showXP />
         )}
       </section>
     </div>

@@ -4,8 +4,7 @@ import { getUserEnemies } from '@/lib/data/enemies'
 import { searchCharacters } from '@/lib/data/characters'
 import type { EnemyWithCharacter } from '@/types/database'
 import AddEnemyForm from './AddEnemyForm'
-import RemoveEnemyButton from './RemoveEnemyButton'
-import { Badge } from '@/components/ui/Badge'
+import { EnemyTable } from '@/components/characters/EnemyTable'
 import Link from 'next/link'
 
 export const metadata = { title: 'Enemy List – CalmTracker' }
@@ -27,90 +26,45 @@ export default async function EnemiesPage({
   ])
 
   const enemies = rawEnemies as EnemyWithCharacter[]
-  const filteredEnemies =
-    filter === 'online' ? enemies.filter((e) => e.characters?.is_online) : enemies
+  const filteredEnemies = filter === 'online' ? enemies.filter((e) => e.characters?.is_online) : enemies
+  const onlineCount = enemies.filter((e) => e.characters?.is_online).length
 
   return (
-    <div className="space-y-8">
-      <h1 className="text-2xl font-bold text-white">Enemy List</h1>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
 
-      {/* Search to add */}
-      <AddEnemyForm userId={user.id} searchResults={searchResults} initialQuery={q} />
-
-      {/* Filter */}
-      <div className="flex gap-2">
-        <Link
-          href="/enemies"
-          className={`text-xs px-3 py-1.5 rounded border transition-colors ${
-            filter !== 'online'
-              ? 'bg-amber-500 text-black border-amber-500'
-              : 'bg-gray-800 text-gray-400 border-gray-700 hover:text-white'
-          }`}
-        >
-          All ({enemies.length})
-        </Link>
-        <Link
-          href="/enemies?filter=online"
-          className={`text-xs px-3 py-1.5 rounded border transition-colors ${
-            filter === 'online'
-              ? 'bg-green-600 text-white border-green-600'
-              : 'bg-gray-800 text-gray-400 border-gray-700 hover:text-white'
-          }`}
-        >
-          Online ({enemies.filter((e) => e.characters?.is_online).length})
-        </Link>
+      <div>
+        <div className="ruled-section display-font" style={{ fontSize: '0.6rem', letterSpacing: '0.28em', color: '#3a2a18', marginBottom: '1.25rem' }}>
+          WAR ROOM
+        </div>
+        <h1 className="display-font" style={{ fontSize: '2rem', letterSpacing: '0.12em', fontWeight: 700, color: '#e2d8c2' }}>
+          ENEMY LIST
+        </h1>
+        <p style={{ fontSize: '0.88rem', color: '#9a8a72', marginTop: '0.4rem', fontStyle: 'italic' }}>
+          Track your targets. Monitor their movements.
+        </p>
       </div>
 
-      {/* Enemy list */}
+      <AddEnemyForm searchResults={searchResults} initialQuery={q} />
+
+      {/* Filter tabs */}
+      <div style={{ display: 'flex', gap: '4px' }}>
+        {[
+          { href: '/enemies', label: `ALL · ${enemies.length}`, active: filter !== 'online', online: false },
+          { href: '/enemies?filter=online', label: `ONLINE · ${onlineCount}`, active: filter === 'online', online: true },
+        ].map(({ href, label, active, online }) => (
+          <Link key={href} href={href} className="display-font"
+            style={{ padding: '5px 16px', fontSize: '0.62rem', letterSpacing: '0.12em', textDecoration: 'none', border: '1px solid', borderColor: active ? (online ? '#1a5c28' : '#c07828') : '#2a2018', background: active ? (online ? '#0d2515' : '#1e1408') : 'transparent', color: active ? (online ? '#40c860' : '#c07828') : '#6a5a44', transition: 'all 0.15s' }}>
+            {label}
+          </Link>
+        ))}
+      </div>
+
       {filteredEnemies.length === 0 ? (
-        <div className="text-center py-12 text-gray-500 border border-gray-800 rounded-lg">
+        <div style={{ textAlign: 'center', padding: '4rem 2rem', border: '1px solid #2a2018', color: '#6a5a44', fontStyle: 'italic' }}>
           No enemies {filter === 'online' ? 'online' : 'tracked'} yet.
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-gray-800">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-800 text-gray-400 uppercase text-xs tracking-wider">
-              <tr>
-                <th className="px-4 py-3 text-left">#</th>
-                <th className="px-4 py-3 text-left">Name</th>
-                <th className="px-4 py-3 text-left hidden md:table-cell">Vocation</th>
-                <th className="px-4 py-3 text-right">Level</th>
-                <th className="px-4 py-3 text-center">Status</th>
-                <th className="px-4 py-3"></th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-800">
-              {filteredEnemies.map((e) => {
-                const c = e.characters
-                return (
-                  <tr key={e.id} className="hover:bg-gray-800/50 transition-colors">
-                    <td className="px-4 py-3 text-gray-500">{c?.rank ?? '–'}</td>
-                    <td className="px-4 py-3">
-                      <Link
-                        href={`/characters/${encodeURIComponent(c?.name ?? '')}`}
-                        className="text-amber-400 hover:text-amber-300 font-medium transition-colors"
-                      >
-                        {c?.name ?? '–'}
-                      </Link>
-                    </td>
-                    <td className="px-4 py-3 text-gray-400 hidden md:table-cell">
-                      {c?.vocation ?? '–'}
-                    </td>
-                    <td className="px-4 py-3 text-right text-white">{c?.level ?? '–'}</td>
-                    <td className="px-4 py-3 text-center">
-                      <Badge variant={c?.is_online ? 'online' : 'offline'}>
-                        {c?.is_online ? 'Online' : 'Offline'}
-                      </Badge>
-                    </td>
-                    <td className="px-4 py-3 text-right">
-                      <RemoveEnemyButton userId={user.id} characterId={c?.id} />
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        </div>
+        <EnemyTable enemies={filteredEnemies} showRank showRemove />
       )}
     </div>
   )
